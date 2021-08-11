@@ -132,7 +132,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     shebang = shebang or interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
     cmd = '$TOOLS_PEX -s "%s" -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        shebang, CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON_INTERPRETER_OPTIONS)
+        shebang, CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
     if site:
         cmd += ' -S'
 
@@ -238,10 +238,10 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
                          `unittest`, `pytest`, or a custom test runner entry point.
     """
     interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
-    test_runner = test_runner or CONFIG.PYTHON_TEST_RUNNER
+    test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
     cmd = '$TOOLS_PEX -t -s "%s" -m "%s" -r "%s" --zip_safe --add_test_runner_deps --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        interpreter, CONFIG.PYTHON_MODULE_DIR, test_runner,
-        CONFIG.PYTHON_INTERPRETER_OPTIONS)
+        interpreter, CONFIG.PYTHON.MODULE_DIR, test_runner,
+        CONFIG.PYTHON.INTERPRETER_OPTIONS)
     if site:
         cmd += ' -S'
 
@@ -251,7 +251,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     #
     # If no bootstrap target is provided, then plz will provide a pinned set of dependencies to
     # support the specified test-runner framework.
-    bootstrap = CONFIG.PYTHON_TEST_RUNNER_BOOTSTRAP
+    bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
     if bootstrap:
         deps += [bootstrap] if bootstrap not in deps else []
         cmd = cmd.replace(' --add_test_runner_deps', '')
