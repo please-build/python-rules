@@ -1,0 +1,16 @@
+name: Python rules
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: thoughtmachine/please_ubuntu:20210720
+    steps:
+      - run: plz test -e e2e
+  test-e2e:
+    needs: Test
+    runs-on: ubuntu-latest
+    container:
+      image: thoughtmachine/please_ubuntu:20210720
+    steps:
+      - run: plz test -i e2e
