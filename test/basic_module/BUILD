@@ -1,5 +1,3 @@
-subinclude("//build_defs:python")
-
 python_library(
     name = "library",
     srcs = ["library.py"],
