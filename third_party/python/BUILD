@@ -285,26 +285,6 @@ pip_library(
     zip_safe = False,
 )
 
-pip_library(
-    name = "tensorflow",
-    licences = ["Apache 2.0"],
-    test_only = True,
-    version = "1.13.1",
-    deps = [
-        ":absl",
-        ":astor",
-        ":gast",
-        ":google-pasta",
-        ":grpcio",
-        ":keras_applications",
-        ":keras_preprocessing",
-        ":numpy",
-        ":opt_einsum",
-        ":protobuf",
-        ":termcolor",
-        ":wrapt",
-    ],
-)
 
 pip_library(
     name = "keras_applications",
