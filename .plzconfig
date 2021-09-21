@@ -11,7 +11,7 @@ DefaultValue = @self//tools/please_pex
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
-Optional = true
+DefaultValue = ""
 
 [PluginConfig "test_runner"]
 ConfigKey = TestRunner
