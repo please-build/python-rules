@@ -1,3 +1,9 @@
+[Parse]
+PreloadBuildDefs = build_defs/python.build_defs
+
+[Go]
+ImportPath = github.com/please-build/python-rules
+
 [PluginDefinition]
 name = python
 
