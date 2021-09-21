@@ -1,3 +1,6 @@
+[Please]
+Version = >=16.9.0
+
 [PluginDefinition]
 name = python
 
