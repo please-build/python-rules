@@ -289,7 +289,7 @@ pip_library(
     name = "tensorflow",
     licences = ["Apache 2.0"],
     test_only = True,
-    version = "2.6.0",
+    version = "1.13.1",
     deps = [
         ":absl",
         ":astor",
