@@ -289,9 +289,7 @@ pip_library(
     name = "tensorflow",
     licences = ["Apache 2.0"],
     test_only = True,
-    # the next version of TF breaks due to an upstream bug fixed in this pr:
-    # https://github.com/tensorflow/tensorflow/pull/38663
-    version = "1.13.1",
+    version = "2.6.0",
     deps = [
         ":absl",
         ":astor",
