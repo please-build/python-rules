@@ -388,15 +388,15 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
                                                                   initial=initial,
                                                                   version=version)]
 
-    cmd = ['found=false']
-    cmd += ['download=""']
+    cmd = ['FOUND=false']
+    cmd += ['DOWNLOAD=""']
     cmd += ['for URL in ' + ' '.join(urls)]
     cmd += ['do if wget -q --method=HEAD $URL']
-    cmd += ['then found=true']
-    cmd += ['download="$URL"']
+    cmd += ['then FOUND=true']
+    cmd += ['DOWNLOAD="$URL"']
     cmd += ['break; fi; done']
-    cmd += ['if [ "$found" = true ]']
-    cmd += ['then wget -O "$OUTS" "$download"']
+    cmd += ['if [ "$FOUND" = true ]']
+    cmd += ['then wget -O "$OUTS" "$DOWNLOAD"']
     cmd += ['else URL=$($TOOL --package ' + package_name + ' --version ' + version + ')']
     cmd += ['wget -q --method=HEAD "$URL" && wget -O "$OUTS" "$URL"; fi']
 
@@ -411,7 +411,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
             tools = [tool],
             hashes = hashes if CONFIG.FF_PYTHON_WHEEL_HASHING else None,
             licences = licences if licences else None,
-            building_description = 'Fetching with wheel tool...',
+            building_description = 'Extracting...',
         )
 
     else:
