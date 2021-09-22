@@ -356,6 +356,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
       name_scheme (str): The templatized wheel naming scheme (available template variables
                          are `url_base`, `package_name`, `initial`, and `version`).
       strip (list): Files to strip after install. Note that these are done at any level.
+      tool (list): Tool to locate python wheel file in an index
     """
     package_name = package_name or name.replace('-', '_')
     initial = package_name[0]
