@@ -388,21 +388,23 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
                                                                   initial=initial,
                                                                   version=version)]
 
-    cmd = ['FOUND=false']
-    cmd += ['DOWNLOAD=""']
-    cmd += ['for URL in ' + ' '.join(urls)]
-    cmd += ['do if wget -q --method=HEAD $URL']
-    cmd += ['then FOUND=true']
-    cmd += ['DOWNLOAD="$URL"']
-    cmd += ['break; fi; done']
-    cmd += ['if [ "$FOUND" = true ]']
-    cmd += ['then wget -O "$OUTS" "$DOWNLOAD"']
-    cmd += ['else URL=$($TOOL --package ' + package_name + ' --version ' + version + ')']
-    cmd += ['wget -q --method=HEAD "$URL" && wget -O "$OUTS" "$URL"; fi']
-
-    cmd = ';'.join(cmd)
     file_rule = None
     if tool:
+        # Try the urls generated using the default wheel name schemes. If those fail, try
+        # generating a url with the wheel_resolver tool and download that if successful.
+        cmd = ['FOUND=false']
+        cmd += ['DOWNLOAD=""']
+        cmd += ['for URL in ' + ' '.join(urls)]
+        cmd += ['do if wget -q --method=HEAD $URL']
+        cmd += ['then FOUND=true']
+        cmd += ['DOWNLOAD="$URL"']
+        cmd += ['break; fi; done']
+        cmd += ['if [ "$FOUND" = true ]']
+        cmd += ['then wget -O "$OUTS" "$DOWNLOAD"']
+        cmd += ['else URL=$($TOOL --package ' + package_name + ' --version ' + version + ')']
+        cmd += ['wget -q --method=HEAD "$URL" && wget -O "$OUTS" "$URL"; fi']
+        cmd = ';'.join(cmd)
+
         file_rule = build_rule(
             name = name,
             tag = 'download',
