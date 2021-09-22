@@ -1,3 +1,15 @@
+[Please]
+Version = >=16.9.0
+
+[Parse]
+PreloadBuildDefs = build_defs/python.build_defs
+
+[Go]
+ImportPath = github.com/please-build/python-rules
+
+[proto]
+protoctool = //third_party/proto:protoc
+
 [PluginDefinition]
 name = python
 
