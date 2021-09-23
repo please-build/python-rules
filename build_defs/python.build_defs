@@ -360,7 +360,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
     """
     package_name = package_name or name.replace('-', '_')
     initial = package_name[0]
-    url_base = repo or CONFIG.PYTHON_WHEEL_REPO
+    url_base = repo or CONFIG.PYTHON.WHEEL_REPO
     if not url_base:
         fail('python.wheel_repo is not set in the config, must pass repo explicitly to python_wheel')
     urls = []
@@ -369,9 +369,9 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
                                     package_name=package_name,
                                     initial=initial,
                                     version=version)]
-    elif CONFIG.PYTHON_WHEEL_NAME_SCHEME:
+    elif CONFIG.PYTHON.WHEEL_NAME_SCHEME:
         urls += [scheme.format(url_base=url_base, package_name=package_name, initial=initial, version=version)
-                 for scheme in CONFIG.PYTHON_WHEEL_NAME_SCHEME]
+                 for scheme in CONFIG.PYTHON.WHEEL_NAME_SCHEME]
     else:
         # Populate urls using a reasonable set of possible wheel naming schemes.
         # Look for an arch-specific wheel first; in some cases there can be both (e.g. protobuf
