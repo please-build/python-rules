@@ -37,3 +37,11 @@ Optional = true
 ConfigKey = ModuleDir
 DefaultValue = third_party.python
 Optional = true
+
+[PluginConfig "wheel_repo"]
+ConfigKey = WheelRepo
+Optional = true
+
+[PluginConfig "wheel_name_scheme"]
+ConfigKey = WheelNameScheme
+Optional = true
