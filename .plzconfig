@@ -37,3 +37,25 @@ Optional = true
 ConfigKey = ModuleDir
 DefaultValue = third_party.python
 Optional = true
+
+[PluginConfig "use_pypi"]
+ConfigKey = UsePyPi
+DefaultValue = true
+Type = bool
+
+[PluginConfig "disable_vendor_flags"]
+ConfigKey = DisableVendorFlags
+DefaultValue = false
+Type = bool
+
+[PluginConfig "pip_tool"]
+ConfigKey = PipTool
+Optional = true
+
+[PluginConfig "pip_flags"]
+ConfigKey = PipFlags
+Optional = true
+
+[PluginConfig "default_pip_repo"]
+ConfigKey = DefaultPipRepo
+Optional = true
