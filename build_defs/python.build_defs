@@ -415,7 +415,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
             building_description = 'Extracting...',
         )
 
-    else:
+    elif urls:
         file_rule = remote_file(
             name = name,
             _tag = 'download',
@@ -424,6 +424,9 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
             hashes = hashes if CONFIG.FF_PYTHON_WHEEL_HASHING else None,
             licences = licences if licences else None,
         )
+
+    else:
+        fail('Couldn\'t resolve any urls for python_wheel')
 
     cmd = ['$TOOL x $SRCS_SRC']
 
