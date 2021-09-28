@@ -361,33 +361,32 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
     package_name = package_name or name.replace('-', '_')
     initial = package_name[0]
     url_base = repo or CONFIG.PYTHON.WHEEL_REPO
-    if not url_base:
-        fail('python.wheel_repo is not set in the config, must pass repo explicitly to python_wheel')
     urls = []
-    if name_scheme:
-        urls += [name_scheme.format(url_base=url_base,
-                                    package_name=package_name,
-                                    initial=initial,
-                                    version=version)]
-    elif CONFIG.PYTHON.WHEEL_NAME_SCHEME:
-        urls += [scheme.format(url_base=url_base, package_name=package_name, initial=initial, version=version)
-                 for scheme in CONFIG.PYTHON.WHEEL_NAME_SCHEME]
-    else:
-        # Populate urls using a reasonable set of possible wheel naming schemes.
-        # Look for an arch-specific wheel first; in some cases there can be both (e.g. protobuf
-        # has optional arch-specific bits) and we prefer the one with the cool stuff.
-        urls += ['{url_base}/{package_name}-{version}-${{OS}}-${{ARCH}}.whl'.format(url_base=url_base,
-                                                                                    package_name=package_name,
-                                                                                    initial=initial,
-                                                                                    version=version),
-                 '{url_base}/{package_name}-{version}-${{OS}}_${{ARCH}}.whl'.format(url_base=url_base,
-                                                                                    package_name=package_name,
-                                                                                    initial=initial,
-                                                                                    version=version),
-                 '{url_base}/{package_name}-{version}.whl'.format(url_base=url_base,
-                                                                  package_name=package_name,
-                                                                  initial=initial,
-                                                                  version=version)]
+    if url_base:
+        if name_scheme:
+            urls += [name_scheme.format(url_base=url_base,
+                                        package_name=package_name,
+                                        initial=initial,
+                                        version=version)]
+        elif CONFIG.PYTHON.WHEEL_NAME_SCHEME:
+            urls += [scheme.format(url_base=url_base, package_name=package_name, initial=initial, version=version)
+                     for scheme in CONFIG.PYTHON.WHEEL_NAME_SCHEME]
+        else:
+            # Populate urls using a reasonable set of possible wheel naming schemes.
+            # Look for an arch-specific wheel first; in some cases there can be both (e.g. protobuf
+            # has optional arch-specific bits) and we prefer the one with the cool stuff.
+            urls += ['{url_base}/{package_name}-{version}-${{OS}}-${{ARCH}}.whl'.format(url_base=url_base,
+                                                                                        package_name=package_name,
+                                                                                        initial=initial,
+                                                                                        version=version),
+                     '{url_base}/{package_name}-{version}-${{OS}}_${{ARCH}}.whl'.format(url_base=url_base,
+                                                                                        package_name=package_name,
+                                                                                        initial=initial,
+                                                                                        version=version),
+                     '{url_base}/{package_name}-{version}.whl'.format(url_base=url_base,
+                                                                      package_name=package_name,
+                                                                      initial=initial,
+                                                                      version=version)]
 
     file_rule = None
     if tool:
