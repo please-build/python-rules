@@ -40,7 +40,6 @@ Optional = true
 
 [PluginConfig "wheel_repo"]
 ConfigKey = WheelRepo
-DefaultValue = "https://get.please.build/third_party/python/py3"
 Optional = true
 
 [PluginConfig "wheel_name_scheme"]
