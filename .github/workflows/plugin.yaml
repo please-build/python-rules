@@ -4,9 +4,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
         with:
           python-version: '3.6.9'
-      - run: ./pleasew test -e e2e
-      - run: ./pleasew test -i e2e
+      - name: Run tests
+        run: ./pleasew test -e e2e
+      - name: Run e2e test
+        run: ./pleasew test -i e2e

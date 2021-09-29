@@ -1,0 +1,14 @@
+name: Python rules
+on:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Release
+        uses: tatskaari/release-action@v0.1.0
+
