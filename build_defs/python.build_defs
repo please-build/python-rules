@@ -356,7 +356,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
       name_scheme (str): The templatized wheel naming scheme (available template variables
                          are `url_base`, `package_name`, `initial`, and `version`).
       strip (list): Files to strip after install. Note that these are done at any level.
-      tool (list): Tool to locate python wheel file in an index
+      tool (str): Tool to locate python wheel file in an index
     """
     package_name = package_name or name.replace('-', '_')
     initial = package_name[0]
@@ -463,12 +463,14 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
         sandbox = False,
         labels = ['py:zip-unsafe', label] if not zip_safe else [label],
     )
+
     cmd = '$TOOL x $SRCS -s $PKG_DIR'
     if outs:
         # Hacky solution to handle things being in subdirectories in awkward ways.
         before, _, after = outs[0].partition('/')
         if after:
             cmd = f'rm -rf {before} && {cmd}'
+
     return build_rule(
         name = name,
         srcs = [wheel_rule],
