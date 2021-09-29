@@ -426,7 +426,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
         )
 
     else:
-        fail('Couldn\'t resolve any urls for python_wheel')
+        fail(f'No urls found for python_wheel rule {name}')
 
     cmd = ['$TOOL x $SRCS_SRC']
 
