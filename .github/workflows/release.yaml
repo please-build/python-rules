@@ -9,8 +9,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: build
+        run: /.pleasew build //tools/...
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: tatskaari/release-action@master
+        with:
+          release-files: plz-out/package
 
