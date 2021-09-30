@@ -1,5 +1,5 @@
 [Please]
-Version = >=16.9.0
+Version = >=16.10.1
 
 [Parse]
 PreloadBuildDefs = build_defs/python.build_defs
@@ -36,4 +36,12 @@ Optional = true
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
 DefaultValue = third_party.python
+Optional = true
+
+[PluginConfig "wheel_repo"]
+ConfigKey = WheelRepo
+Optional = true
+
+[PluginConfig "wheel_name_scheme"]
+ConfigKey = WheelNameScheme
 Optional = true
