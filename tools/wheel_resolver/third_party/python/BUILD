@@ -1,14 +1,13 @@
 package(
     default_visibility = ["PUBLIC"],
-    python_wheel_repo = "https://get.please.build/third_party/python/py3",
 )
 
-python_wheel(
+pip_library(
     name = "distlib",
     version = "0.3.2",
 )
 
-python_wheel(
+pip_library(
     name = "packaging",
     version = "21.0",
     deps = [
@@ -16,22 +15,22 @@ python_wheel(
     ]
 )
 
-python_wheel(
+pip_library(
     name = "pyparsing",
     version = "2.4.7",
 )
 
-python_wheel(
+pip_library(
     name = "wheel-filename",
     version = "1.3.0",
 )
 
-python_wheel(
+pip_library(
     name = "docutils",
     version = "0.17.1",
 )
 
-python_wheel(
+pip_library(
     name = "bleach",
     version = "4.1.0",
     licences = ["..."],
@@ -41,17 +40,17 @@ python_wheel(
     ]
 )
 
-python_wheel(
+pip_library(
     name = "webencodings",
     version = "0.5.1",
 )
 
-python_wheel(
+pip_library(
     name = "six",
     version = "1.16.0",
 )
 
-python_wheel(
+pip_library(
     name = "argparse",
     version = "1.4.0",
 )
