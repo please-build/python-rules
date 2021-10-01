@@ -3,8 +3,8 @@ Tool to resolve a wheel file from an index given a package name
 """
 
 import sys
-import src.tags.tags as tg
-import third_party.python.argparse as argparse
+import tools.wheel_resolver.src.tags.tags as tg
+import tools.wheel_resolver.third_party.python.argparse as argparse
 
 # my_platform_tag = util.get_platform()
 # print('my os:', my_platform_tag)

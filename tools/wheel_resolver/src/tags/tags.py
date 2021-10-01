@@ -3,9 +3,9 @@ Some methods for wheel fetching and selection
 """
 
 import os
-from third_party.python.packaging.utils import parse_wheel_filename
-import third_party.python.packaging.tags as tags
-import third_party.python.distlib.locators as locators
+from tools.wheel_resolver.third_party.python.packaging.utils import parse_wheel_filename
+import tools.wheel_resolver.third_party.python.packaging.tags as tags
+import tools.wheel_resolver.third_party.python.distlib.locators as locators
 
 
 def is_compatible(wheel, taglist):
