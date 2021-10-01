@@ -3,7 +3,7 @@ Tool to resolve a wheel file from an index given a package name
 """
 
 import sys
-import tools.wheel_resolver.src.tags.tags as tg
+import tools.wheel_resolver.src.wheel_tags.tags as tg
 import tools.wheel_resolver.third_party.python.argparse as argparse
 
 

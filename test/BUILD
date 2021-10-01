@@ -184,3 +184,16 @@ python_test(
     ],
     deps = ["//third_party/python:cx_oracle"],
 )
+
+gentest(
+    name = "basic_wheel_resolver_test",
+    srcs = [":cryptography"],
+    test_cmd = "sleep 0.1",
+    no_test_output = True,
+)
+
+python_wheel(
+    name = "cryptography",
+    package_name = "cryptography",
+    version = "35.0.0",
+)
