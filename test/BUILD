@@ -186,7 +186,7 @@ python_test(
 )
 
 gentest(
-    name = "basic_wheel_resolver_test",
+    name = "simple_wheel_resolver_test",
     srcs = [":cryptography"],
     test_cmd = "sleep 0.1",
     no_test_output = True,
