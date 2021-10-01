@@ -13,7 +13,8 @@ python_test(
 
 gentest(
     name = "six_with_version_test",
-    test_cmd = "plz run //src:resolve -- --package six --version 1.16.0",
+    test_tools = ["//package:installed_files|please"],
+    test_cmd = "$TOOLS run //src:resolve -- --package six --version 1.16.0",
     no_test_output = True,
 )
 
