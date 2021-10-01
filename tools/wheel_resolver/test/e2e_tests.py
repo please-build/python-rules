@@ -12,4 +12,5 @@ class e2eTest(unittest.TestCase):
 
     def test_tensorflow_no_version(self):
         result = e2e.run('tensorflow')
+        self.assertIn('.whl', result)
         self.assertIn('tensorflow', result)

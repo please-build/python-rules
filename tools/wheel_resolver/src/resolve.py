@@ -6,9 +6,6 @@ import sys
 import tools.wheel_resolver.src.tags.tags as tg
 import tools.wheel_resolver.third_party.python.argparse as argparse
 
-# my_platform_tag = util.get_platform()
-# print('my os:', my_platform_tag)
-
 
 def main():
     """ main function """
@@ -29,10 +26,6 @@ def main():
             help='specify architecture')
 
     args = parser.parse_args()
-
-    # print('package:', args.package)
-    # print('version:', args.version)
-    # print('arch:', args.arch)
 
     # Fetch all available wheel urls from index
     urls = tg.get_download_urls(args.package, args.version)

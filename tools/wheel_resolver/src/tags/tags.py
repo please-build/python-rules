@@ -19,7 +19,6 @@ def is_compatible(wheel, taglist):
 
     # taglist is a list of tags that we've got either from the user
     # or we've auto-generated them for this system
-
     if taglist is None:
         taglist = tags.sys_tags()
 
