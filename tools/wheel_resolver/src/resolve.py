@@ -8,7 +8,13 @@ import tools.wheel_resolver.third_party.python.argparse as argparse
 
 
 def main():
-    """ main function """
+    """
+    Parse command line arguments
+    Get all download urls for a given package/version combo
+    Figure out which ones are compatible with our system (whether
+    that's our actual system or a system we've specified that we
+    are maybe cross-compiling for.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
             '--package',
