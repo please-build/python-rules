@@ -185,6 +185,8 @@ python_test(
     deps = ["//third_party/python:cx_oracle"],
 )
 
+# There's no wheel naming scheme in here so this
+# will use the wheel_resolver tool
 gentest(
     name = "simple_wheel_resolver_test",
     srcs = [":cryptography"],
