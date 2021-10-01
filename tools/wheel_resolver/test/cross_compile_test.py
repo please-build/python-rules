@@ -1,5 +1,5 @@
 import unittest
-import src.tags.tags as tg
+import tools.wheel_resolver.src.tags.tags as tg
 
 
 class CrossCompileTest(unittest.TestCase):
