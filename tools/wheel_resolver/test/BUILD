@@ -1,13 +1,13 @@
 python_test(
     name = "lib_test",
     srcs = ["test.py"],
-    deps = ["//src/tags:tags"],
+    deps = ["//tools/wheel_resolver/src/tags:tags"],
 )
 
 python_test(
     name = "cross_compile_test",
     srcs = ["cross_compile_test.py"],
-    deps = ["//src/tags:tags"],
+    deps = ["//tools/wheel_resolver/src/tags:tags"],
 )
 
 gentest(

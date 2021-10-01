@@ -1,12 +1,9 @@
 python_library(
     name = "tags",
     srcs = ["tags.py"],
-    visibility = [
-        "//src/...",
-        "//test/...",
-    ],
+    visibility = ["PUBLIC"],
     deps = [
-        "//third_party/python:packaging",
-        "//third_party/python:distlib",
+        "//tools/wheel_resolver/third_party/python:packaging",
+        "//tools/wheel_resolver/third_party/python:distlib",
     ],
 )
