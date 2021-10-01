@@ -11,21 +11,8 @@ python_test(
     labels = ["manual"],
 )
 
-gentest(
-    name = "six_with_version_test",
-    test_tools = ["//package:installed_files|please"],
-    test_cmd = "$TOOLS run //src:resolve -- --package six --version 1.16.0",
-    no_test_output = True,
-)
-
-gentest(
-    name = "tensorflow_no_version_test",
-    test_cmd = "plz run //src:resolve -- --package tensorflow",
-    no_test_output = True,
-)
-
-gentest(
-    name = "list_of_archs_test",
-    test_cmd = "plz run //src:resolve -- --package six --arch none any",
-    no_test_output = True,
+python_test(
+    name = "e2e_test",
+    srcs = ["e2e_tests.py"],
+    deps = ["//tools/wheel_resolver/src/e2e_test:e2e_test"],
 )
