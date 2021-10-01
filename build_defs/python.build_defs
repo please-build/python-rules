@@ -325,7 +325,8 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None, outs:list=None,
                  post_install_commands:list=None, patch:str|list=None, licences:list=None,
                  test_only:bool&testonly=False, repo:str=None, zip_safe:bool=True, visibility:list=None,
-                 deps:list=[], name_scheme:str=None, strip:list=['*.pyc', 'tests'], tool:str=None):
+                 deps:list=[], name_scheme:str=None, strip:list=['*.pyc', 'tests'],
+                 tool:str=CONFIG.PYTHON.WHEEL_TOOL):
     """Downloads a Python wheel and extracts it.
 
     This is a lightweight pip-free alternative to pip_library which supports cross-compiling.
