@@ -29,10 +29,6 @@ def is_compatible(wheel, taglist):
 
 
 def get_basename(url):
-    """
-    Return the url basename,
-    i.e. https://www.example.com/foo/bar.whl -> bar.whl
-    """
     return os.path.basename(url)
 
 
@@ -70,7 +66,7 @@ def get_url(urls, archs):
             print("Didn't generate any tags for arch list:", archs)
             return 1
 
-    # Loop through all the urls fetched from pypi and check them against
+    # Loop through all the urls fetched from index and check them against
     # out system tags
     for url in urls:
         if is_wheel_file(url) and is_compatible(get_basename(url), taglist):
