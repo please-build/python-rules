@@ -64,7 +64,7 @@ def get_url(urls, archs):
         # Just check that we've got some tags
         if len(taglist) == 0:
             print("Didn't generate any tags for arch list:", archs)
-            return 1
+            return None
 
     # Loop through all the urls fetched from index and check them against
     # out system tags
@@ -83,7 +83,7 @@ def get_url(urls, archs):
             _, _, _, tag = parse_wheel_filename(get_basename(url))
             print(tag)
 
-    return 1
+    return None
 
 
 def get_download_urls(package, version=None):
