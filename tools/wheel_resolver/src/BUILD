@@ -4,7 +4,6 @@ filegroup(
     visibility = ["PUBLIC"],
     deps = [
         "//tools/wheel_resolver/src/wheel_tags:tags",
-        "//tools/wheel_resolver/third_party/python:argparse",
-        "//third_party/python:_pkg_resources",
+        "//third_party/python:argparse",
     ],
 )
