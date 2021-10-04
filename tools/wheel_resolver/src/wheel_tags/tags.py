@@ -6,6 +6,7 @@ import os
 from tools.wheel_resolver.third_party.python.packaging.utils import parse_wheel_filename
 import tools.wheel_resolver.third_party.python.packaging.tags as tags
 import tools.wheel_resolver.third_party.python.distlib.locators as locators
+import third_party.python.setuptools as pkg
 
 
 def is_compatible(wheel, taglist):
@@ -105,3 +106,23 @@ def get_download_urls(package, version=None):
     if dist is not None:
         return dist.download_urls
     return 1
+
+
+def is_whl(wheel):
+    suffix = '.whl'
+    return wheel.endswith(suffix)
+
+
+def get_whl_license(wheel):
+    if not is_whl(wheel):
+        return 1
+
+    try:
+        lines = pkg.get_metadata_lines('METADATA')
+    except:
+        lines = pkg.get_metadata_lines('PKG-INFO')
+
+    for line in lines:
+        if line.startswith('License:'):
+            return line[9:]
+    return '(Licence not found)'
