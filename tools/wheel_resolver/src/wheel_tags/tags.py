@@ -104,4 +104,4 @@ def get_download_urls(package, version=None):
     dist = mylocator.locate(requirement)
     if dist is not None:
         return dist.download_urls
-    return 1
+    return None

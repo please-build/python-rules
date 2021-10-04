@@ -35,16 +35,13 @@ def main():
 
     # Fetch all available wheel urls from index
     urls = tg.get_download_urls(args.package, args.version)
-    if urls == 1:
+    if urls is None:
         print("Couldn't find any matching urls in the index")
         sys.exit(1)
 
     result = tg.get_url(urls, args.arch)
 
     if result is None:
-        print("error")
-        sys.exit(1)
-    elif result == 1:
         print("Found", len(urls), "urls but none are "
               "compatible with the specified architecture")
         sys.exit(1)

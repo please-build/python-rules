@@ -177,7 +177,7 @@ pip_library(
 
 pip_library(
     name = "packaging",
-    hashes = ["d51acb3f5b8e7b35d34c04a5a284da70dab9f2120b6f4dd6b11b89374483a213"],
+    hashes = ["51c9b1aff007a7498b08b1e9d0e0af1aac81ad082310d6cc73dd4270af11b334"],
     version = "21.0",
     deps = [
         ":pyparsing",
