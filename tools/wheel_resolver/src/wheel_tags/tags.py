@@ -64,7 +64,8 @@ def get_url(urls, archs):
         taglist = generate_tags_from_all_archs(archs)
         # Just check that we've got some tags
         if len(taglist) == 0:
-            logging.critical("Didn't generate any tags for arch list:", archs)
+            logging.critical("Didn't generate any tags for arch list: %s",
+                             archs)
 
     # Loop through all the urls fetched from index and check them against
     # out system tags
