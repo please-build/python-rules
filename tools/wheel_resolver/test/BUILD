@@ -11,8 +11,9 @@ python_test(
     labels = ["manual"],
 )
 
-python_test(
+gentest(
     name = "e2e_test",
-    srcs = ["e2e_tests.py"],
-    deps = ["//tools/wheel_resolver/src/e2e_test:e2e_test"],
+    data = ["//tools/wheel_resolver"],
+    test_cmd = "OUTPUT=$($DATA --package tensorflow); if [[ $OUTPUT == *\".whl\" ]]; then exit 0; else exit 1; fi;",
+    no_test_output = True,
 )
