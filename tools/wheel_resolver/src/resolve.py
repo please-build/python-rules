@@ -2,9 +2,10 @@
 Tool to resolve a wheel file from an index given a package name
 """
 
+import logging
 import sys
 import tools.wheel_resolver.src.wheel_tags.tags as tg
-import third_party.python.argparse as argparse
+import argparse as argparse
 
 
 def main():
@@ -36,15 +37,13 @@ def main():
     # Fetch all available wheel urls from index
     urls = tg.get_download_urls(args.package, args.version)
     if urls is None:
-        print("Couldn't find any matching urls in the index")
-        sys.exit(1)
+        logging.critical("Couldn't find any matching urls in the index")
 
     result = tg.get_url(urls, args.arch)
 
     if result is None:
-        print("Found", len(urls), "urls but none are "
-              "compatible with the specified architecture")
-        sys.exit(1)
+        logging.critical("Found", len(urls), "urls but none are "
+                         "compatible with the specified architecture")
     else:
         print(result)
 

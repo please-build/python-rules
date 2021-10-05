@@ -2,6 +2,7 @@
 Some methods for wheel fetching and selection
 """
 
+import logging
 import os
 from third_party.python.packaging.utils import parse_wheel_filename
 import third_party.python.packaging.tags as tags
@@ -63,8 +64,7 @@ def get_url(urls, archs):
         taglist = generate_tags_from_all_archs(archs)
         # Just check that we've got some tags
         if len(taglist) == 0:
-            print("Didn't generate any tags for arch list:", archs)
-            return None
+            logging.critical("Didn't generate any tags for arch list:", archs)
 
     # Loop through all the urls fetched from index and check them against
     # out system tags
@@ -72,18 +72,18 @@ def get_url(urls, archs):
         if is_wheel_file(url) and is_compatible(get_basename(url), taglist):
             return url
 
-    if taglist:
-        print("No compatible urls for", len(taglist), "system tags")
-        print("The tags given to me for this arch were:")
-        for tag in taglist:
-            print(tag)
-    print('The tags I was looking for were:')
-    for url in urls:
-        if is_wheel_file(url):
-            _, _, _, tag = parse_wheel_filename(get_basename(url))
-            print(tag)
+    # if taglist:
+    #     print("No compatible urls for", len(taglist), "system tags")
+    #     print("The tags given to me for this arch were:")
+    #     for tag in taglist:
+    #         print(tag)
+    # print('The tags I was looking for were:')
+    # for url in urls:
+    #     if is_wheel_file(url):
+    #         _, _, _, tag = parse_wheel_filename(get_basename(url))
+    #         print(tag)
 
-    return None
+    logging.critical("Reached end of get_url() without finding anything")
 
 
 def get_download_urls(package, version=None):
