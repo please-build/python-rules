@@ -402,13 +402,12 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
         cmd += ['if [ "$FOUND" = true ]']
         cmd += ['then wget -O "$OUTS" "$DOWNLOAD"']
         cmd += ['else $TOOL --package ' + package_name + ' --version ' + version + '; fi']
-        cmd = '; '.join(cmd)
 
         file_rule = build_rule(
             name = name,
             tag = 'download',
             outs = [name + '.whl'],
-            cmd = cmd,
+            cmd = '; '.join(cmd),
             tools = [tool],
             hashes = hashes if CONFIG.FF_PYTHON_WHEEL_HASHING else None,
             licences = licences if licences else None,
