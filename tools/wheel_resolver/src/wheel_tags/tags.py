@@ -60,31 +60,11 @@ def get_url(urls, archs):
     From the list of urls we got from the wheel index, return the first
     one that is compatible (either with our system or a provided one)
     """
-    #  taglist = None
-    #  if len(archs) != 0:
-    #      # Make a list of tags
-    #      taglist = generate_tags_from_all_archs(archs)
-    #      # Just check that we've got some tags
-    #      if len(taglist) == 0:
-    #          logging.critical("Didn't generate any tags for arch list: %s",
-    #                           archs)
-
     # Loop through all the urls fetched from index and check them against
     # out system tags
     for url in urls:
         if is_wheel_file(url) and is_compatible(get_basename(url), archs):
             return url
-
-    # if taglist:
-    #     print("No compatible urls for", len(taglist), "system tags")
-    #     print("The tags given to me for this arch were:")
-    #     for tag in taglist:
-    #         print(tag)
-    # print('The tags I was looking for were:')
-    # for url in urls:
-    #     if is_wheel_file(url):
-    #         _, _, _, tag = parse_wheel_filename(get_basename(url))
-    #         print(tag)
 
     logging.critical("Reached end of get_url() without finding anything")
 
@@ -107,4 +87,5 @@ def get_download_urls(package, version=None):
     dist = mylocator.locate(requirement)
     if dist is not None:
         return dist.download_urls
+
     return None
