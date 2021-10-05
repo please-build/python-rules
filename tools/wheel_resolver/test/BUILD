@@ -14,6 +14,6 @@ python_test(
 gentest(
     name = "e2e_test",
     data = ["//tools/wheel_resolver"],
-    test_cmd = "OUTPUT=$($DATA --package tensorflow); if [[ $OUTPUT == *\".whl\" ]]; then exit 0; else exit 1; fi;",
+    test_cmd = "PKG=tensorflow; OUTS=$PKG.whl; export OUTS; $DATA --package \"$PKG\"; if [[ -f \"$PKG\".whl ]]; then exit 0; else exit 1; fi;",
     no_test_output = True,
 )

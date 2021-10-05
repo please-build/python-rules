@@ -401,9 +401,8 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
 
         cmd += ['if [ "$FOUND" = true ]']
         cmd += ['then wget -O "$OUTS" "$DOWNLOAD"']
-        cmd += ['else URL=$($TOOL --package ' + package_name + ' --version ' + version + ')']
-        cmd += ['wget -q --method=HEAD "$URL" && wget -O "$OUTS" "$URL"; fi']
-        cmd = ';'.join(cmd)
+        cmd += ['else $TOOL --package ' + package_name + ' --version ' + version + '; fi']
+        cmd = '; '.join(cmd)
 
         file_rule = build_rule(
             name = name,

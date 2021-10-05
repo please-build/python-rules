@@ -9,7 +9,7 @@ import third_party.python.packaging.tags as tags
 import third_party.python.distlib.locators as locators
 
 
-def is_compatible(wheel, taglist):
+def is_compatible(wheel, archs):
     """
     Check whether the given python package is a wheel compatible with the
     current platform and python interpreter.
@@ -20,8 +20,7 @@ def is_compatible(wheel, taglist):
 
     # taglist is a list of tags that we've got either from the user
     # or we've auto-generated them for this system
-    if taglist is None:
-        taglist = tags.sys_tags()
+    taglist = generate_tags_from_all_archs(archs)
 
     for system_tag in taglist:
         if system_tag in tag:
@@ -41,6 +40,9 @@ def is_wheel_file(url):
 
 
 def generate_tags_from_all_archs(archs):
+    if len(archs) == 0:
+        return tags.sys_tags()
+
     result = []
     for arch in archs:
         result += list(tags.generic_tags(interpreter=None,
@@ -58,19 +60,19 @@ def get_url(urls, archs):
     From the list of urls we got from the wheel index, return the first
     one that is compatible (either with our system or a provided one)
     """
-    taglist = None
-    if len(archs) != 0:
-        # Make a list of tags
-        taglist = generate_tags_from_all_archs(archs)
-        # Just check that we've got some tags
-        if len(taglist) == 0:
-            logging.critical("Didn't generate any tags for arch list: %s",
-                             archs)
+    #  taglist = None
+    #  if len(archs) != 0:
+    #      # Make a list of tags
+    #      taglist = generate_tags_from_all_archs(archs)
+    #      # Just check that we've got some tags
+    #      if len(taglist) == 0:
+    #          logging.critical("Didn't generate any tags for arch list: %s",
+    #                           archs)
 
     # Loop through all the urls fetched from index and check them against
     # out system tags
     for url in urls:
-        if is_wheel_file(url) and is_compatible(get_basename(url), taglist):
+        if is_wheel_file(url) and is_compatible(get_basename(url), archs):
             return url
 
     # if taglist:
