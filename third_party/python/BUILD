@@ -168,17 +168,24 @@ python_wheel(
     version = "1.0.2",
 )
 
-python_wheel(
+pip_library(
     name = "pkg_resources",
     package_name = "setuptools",
-    hashes = ["1f2def70a3bf19b7bb037ddce3624115c444e0435f9f61e23d8f9dadcd135741"],
+    hashes = ["99066f1746e7488d9dfd2549ba8dadd13aecd78a207312adba600352d0678c0c"],
     version = "57.0.0",
 )
 
-python_wheel(
+pip_library(
     name = "packaging",
-    hashes = ["1caaf4bdc5895fb185160bc54ab19403f9b937895e9a69dad574fa59897ee8e5"],
-    version = "20.1",
+    version = "21.0",
+    deps = [
+        ":pyparsing",
+    ],
+)
+
+pip_library(
+    name = "pyparsing",
+    version = "2.4.7",
 )
 
 python_wheel(
@@ -434,3 +441,14 @@ pip_library(
     package_name = "cx-Oracle",
     version = "8.2.1",
 )
+
+pip_library(
+    name = "argparse",
+    version = "1.4.0",
+)
+
+pip_library(
+    name = "distlib",
+    version = "0.3.2",
+)
+

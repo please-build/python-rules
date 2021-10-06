@@ -325,7 +325,8 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None, outs:list=None,
                  post_install_commands:list=None, patch:str|list=None, licences:list=None,
                  test_only:bool&testonly=False, repo:str=None, zip_safe:bool=True, visibility:list=None,
-                 deps:list=[], name_scheme:str=None, strip:list=['*.pyc', 'tests'], tool:str=None):
+                 deps:list=[], name_scheme:str=None, strip:list=['*.pyc', 'tests'],
+                 tool:str=CONFIG.PYTHON.WHEEL_TOOL):
     """Downloads a Python wheel and extracts it.
 
     This is a lightweight pip-free alternative to pip_library which supports cross-compiling.
@@ -400,15 +401,13 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
 
         cmd += ['if [ "$FOUND" = true ]']
         cmd += ['then wget -O "$OUTS" "$DOWNLOAD"']
-        cmd += ['else URL=$($TOOL --package ' + package_name + ' --version ' + version + ')']
-        cmd += ['wget -q --method=HEAD "$URL" && wget -O "$OUTS" "$URL"; fi']
-        cmd = ';'.join(cmd)
+        cmd += ['else $TOOL --package ' + package_name + ' --version ' + version + '; fi']
 
         file_rule = build_rule(
             name = name,
             tag = 'download',
             outs = [name + '.whl'],
-            cmd = cmd,
+            cmd = '; '.join(cmd),
             tools = [tool],
             hashes = hashes if CONFIG.FF_PYTHON_WHEEL_HASHING else None,
             licences = licences if licences else None,

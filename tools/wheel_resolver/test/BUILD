@@ -1,0 +1,20 @@
+python_test(
+    name = "lib_test",
+    srcs = ["test.py"],
+    deps = ["//tools/wheel_resolver/src/wheel_tags:tags"],
+)
+
+python_test(
+    name = "cross_compile_test",
+    srcs = ["cross_compile_test.py"],
+    deps = ["//tools/wheel_resolver/src/wheel_tags:tags"],
+    labels = ["manual"],
+)
+
+gentest(
+    name = "e2e_test",
+    data = ["//tools/wheel_resolver"],
+    no_test_output = True,
+    test_cmd = "PKG=tensorflow; OUTS=$PKG.whl; export OUTS; $DATA --package \"$PKG\"; \
+                if [[ -f \"$PKG\".whl ]]; then exit 0; else exit 1; fi;",
+)

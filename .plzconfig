@@ -45,3 +45,8 @@ Optional = true
 [PluginConfig "wheel_name_scheme"]
 ConfigKey = WheelNameScheme
 Optional = true
+
+[PluginConfig "wheel_tool"]
+ConfigKey = WheelTool
+DefaultValue = @self//tools/wheel_resolver
+Optional = true
