@@ -3,7 +3,12 @@ import tools.wheel_resolver.src.wheel_tags.tags as tg
 
 
 class CrossCompileTest(unittest.TestCase):
-    """ Test cross compilation """
+    """
+    Test cross compilation. These are set to manual
+    for the moment because cross compilation isn't
+    working yet. Also would probably be better to make
+    these proper e2e tests.
+    """
 
     def test_darwin_tag(self):
         urls = tg.get_download_urls('tensorflow')
@@ -13,7 +18,7 @@ class CrossCompileTest(unittest.TestCase):
         self.assertIn('.whl', tg.get_basename(result))
         self.assertIn('tensorflow', tg.get_basename(result))
 
-    def test_freebsd_tag(self):
+    def test_manylinux_tag(self):
         package = 'six'
         urls = tg.get_download_urls(package)
         archs = ["manylinux"]
