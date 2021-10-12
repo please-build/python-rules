@@ -18,3 +18,20 @@ gentest(
     test_cmd = "PKG=tensorflow; OUTS=$PKG.whl; export OUTS; $DATA --package \"$PKG\"; \
                 if [[ -f \"$PKG\".whl ]]; then exit 0; else exit 1; fi;",
 )
+
+gentest(
+    name = "test_resolve_protobuf",
+    data = ["//tools/wheel_resolver"],
+    no_test_output = True,
+    test_cmd = "true",
+    srcs = [":protobuf"],
+)
+
+python_wheel(
+    name = "protobuf",
+    outs = ["google"],
+    version = "3.18.1",
+    deps = [
+        "//third_party/python:six",
+    ],
+)
