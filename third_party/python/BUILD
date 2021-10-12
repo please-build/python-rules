@@ -14,6 +14,49 @@ package(
 )
 
 python_wheel(
+    name = "tensorflow",
+    licences = ["Apache 2.0"],
+    version = "2.6.0",
+    test_only = True,
+    deps = [
+        ":absl",
+        ":google-pasta",
+        ":grpcio",
+        ":keras_applications",
+        ":keras_preprocessing",
+        ":numpy",
+        ":opt_einsum",
+        ":protobuf",
+        ":termcolor",
+        ":wrapt",
+        ":typing_extensions",
+        ":gast",
+        ":astunparse",
+        ":flatbuffers",
+    ],
+)
+
+python_wheel(
+    name = "flatbuffers",
+    version = "2.0",
+    test_only = True,
+)
+
+python_wheel(
+    name = "astunparse",
+    version = "1.6.3",
+    test_only = True,
+)
+
+python_wheel(
+    name = "typing_extensions",
+    outs = ["typing_extensions.py"],
+    package_name = "typing-extensions",
+    version = "3.10.0.2",
+    test_only = True,
+)
+
+python_wheel(
     name = "xmlrunner",
     package_name = "unittest_xml_reporting",
     hashes = ["4ba8380f99daf6fe951dea05f05977bc4129ca71da8303971b05e7e8ce917f97"],

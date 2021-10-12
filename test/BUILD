@@ -199,3 +199,13 @@ python_wheel(
     package_name = "cryptography",
     version = "35.0.0",
 )
+
+python_test(
+    name = "tensorflow_test",
+    srcs = ["tensorflow_test.py"],
+    labels = [
+        "py3",
+        "pip",
+    ],
+    deps = ["//third_party/python:tensorflow"],
+)
