@@ -190,8 +190,8 @@ python_test(
 gentest(
     name = "simple_wheel_resolver_test",
     srcs = [":cryptography"],
-    test_cmd = "true",
     no_test_output = True,
+    test_cmd = "true",
 )
 
 python_wheel(

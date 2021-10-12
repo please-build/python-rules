@@ -7,8 +7,8 @@ python_test(
 python_test(
     name = "cross_compile_test",
     srcs = ["cross_compile_test.py"],
-    deps = ["//tools/wheel_resolver/src/wheel_tags:tags"],
     labels = ["manual"],
+    deps = ["//tools/wheel_resolver/src/wheel_tags:tags"],
 )
 
 gentest(

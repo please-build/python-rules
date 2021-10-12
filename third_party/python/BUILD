@@ -10,16 +10,19 @@ package(
             "https://files.pythonhosted.org/packages/py3/{initial}/{package_name}/{package_name}-{version}-py3-none-any.whl",
             "https://files.pythonhosted.org/packages/py2.py3/{initial}/{package_name}/{package_name}-{version}-py2.py3-none-any.whl",
         ],
-    }
+    },
 )
 
 python_wheel(
     name = "tensorflow",
     licences = ["Apache 2.0"],
-    version = "2.6.0",
     test_only = True,
+    version = "2.6.0",
     deps = [
         ":absl",
+        ":astunparse",
+        ":flatbuffers",
+        ":gast",
         ":google-pasta",
         ":grpcio",
         ":keras_applications",
@@ -28,32 +31,29 @@ python_wheel(
         ":opt_einsum",
         ":protobuf",
         ":termcolor",
-        ":wrapt",
         ":typing_extensions",
-        ":gast",
-        ":astunparse",
-        ":flatbuffers",
+        ":wrapt",
     ],
 )
 
 python_wheel(
     name = "flatbuffers",
-    version = "2.0",
     test_only = True,
+    version = "2.0",
 )
 
 python_wheel(
     name = "astunparse",
-    version = "1.6.3",
     test_only = True,
+    version = "1.6.3",
 )
 
 python_wheel(
     name = "typing_extensions",
-    outs = ["typing_extensions.py"],
     package_name = "typing-extensions",
-    version = "3.10.0.2",
+    outs = ["typing_extensions.py"],
     test_only = True,
+    version = "3.10.0.2",
 )
 
 python_wheel(
@@ -337,7 +337,6 @@ pip_library(
     zip_safe = False,
 )
 
-
 pip_library(
     name = "keras_applications",
     test_only = True,
@@ -494,4 +493,3 @@ pip_library(
     name = "distlib",
     version = "0.3.2",
 )
-
