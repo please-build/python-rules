@@ -3,6 +3,7 @@ Version = >=16.10.1
 
 [Parse]
 PreloadBuildDefs = build_defs/python.build_defs
+PreloadBuildDefs = test/build_defs/test.build_defs
 
 [Go]
 ImportPath = github.com/please-build/python-rules
