@@ -2,6 +2,6 @@
 filegroup(
     name = "please_pex",
     srcs = ["@//_please:please_pex"],
+    labels = ["hlink:plz-out/package"],
     visibility = ["PUBLIC"],
-    labels = ["hlink:plz-out/package"]
 )

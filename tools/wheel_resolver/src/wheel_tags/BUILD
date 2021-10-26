@@ -3,7 +3,7 @@ python_library(
     srcs = ["tags.py"],
     visibility = ["PUBLIC"],
     deps = [
-        "//third_party/python:packaging",
         "//third_party/python:distlib",
+        "//third_party/python:packaging",
     ],
 )

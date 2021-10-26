@@ -203,8 +203,8 @@ python_test(
 gentest(
     name = "simple_wheel_resolver_test",
     srcs = [":cryptography"],
-    test_cmd = "true",
     no_test_output = True,
+    test_cmd = "true",
 )
 
 python_wheel(
@@ -227,4 +227,14 @@ plz_e2e_test(
     expected_output = "expected_labels_on_grpcio.txt",
     labels = ["py3"],
     deps = ["//third_party/python:grpcio"],
+)
+
+python_test(
+    name = "tensorflow_test",
+    srcs = ["tensorflow_test.py"],
+    labels = [
+        "py3",
+        "pip",
+    ],
+    deps = ["//third_party/python:tensorflow"],
 )
