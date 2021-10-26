@@ -506,7 +506,7 @@ def _handle_zip_safe(name):
         set_command(name, get_command(name).replace(' --zip_safe', ''))
 
 def _add_licences(name, output):
-    """Annotates a pip_library rule with detected licences after download."""
+    """Annotates a python_wheel rule with detected licences after download."""
     found = False
     for line in output:
         if line.startswith('License: '):
