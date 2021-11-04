@@ -190,12 +190,22 @@ python_test(
 gentest(
     name = "simple_wheel_resolver_test",
     srcs = [":cryptography"],
-    test_cmd = "true",
     no_test_output = True,
+    test_cmd = "true",
 )
 
 python_wheel(
     name = "cryptography",
     package_name = "cryptography",
     version = "35.0.0",
+)
+
+python_test(
+    name = "tensorflow_test",
+    srcs = ["tensorflow_test.py"],
+    labels = [
+        "py3",
+        "pip",
+    ],
+    deps = ["//third_party/python:tensorflow"],
 )

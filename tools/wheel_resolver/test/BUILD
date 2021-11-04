@@ -4,13 +4,6 @@ python_test(
     deps = ["//tools/wheel_resolver/src/wheel_tags:tags"],
 )
 
-python_test(
-    name = "cross_compile_test",
-    srcs = ["cross_compile_test.py"],
-    deps = ["//tools/wheel_resolver/src/wheel_tags:tags"],
-    labels = ["manual"],
-)
-
 gentest(
     name = "e2e_test",
     data = ["//tools/wheel_resolver"],
