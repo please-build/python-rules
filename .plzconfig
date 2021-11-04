@@ -1,5 +1,5 @@
 [Please]
-Version = >=16.12.1
+Version = >=16.10.1
 
 [Parse]
 PreloadBuildDefs = build_defs/python.build_defs
@@ -31,8 +31,7 @@ DefaultValue = unittest
 
 [PluginConfig "test_runner_bootstrap"]
 ConfigKey = TestRunnerBootstrap
-Default = @self//third_party/python:bootstrap
-
+Optional = true
 
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
