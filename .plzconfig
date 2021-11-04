@@ -50,3 +50,6 @@ Optional = true
 ConfigKey = WheelTool
 DefaultValue = @self//tools/wheel_resolver
 Optional = true
+
+[featureflags]
+PythonWheelHashing = true
