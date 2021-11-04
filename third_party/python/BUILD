@@ -59,7 +59,7 @@ python_wheel(
 python_wheel(
     name = "xmlrunner",
     package_name = "unittest_xml_reporting",
-    hashes = ["4ba8380f99daf6fe951dea05f05977bc4129ca71da8303971b05e7e8ce917f97"],
+    hashes = ["530e703bf8f90a867ce42a524fc4cc99c50c0a1522ce7bd010a783698bd4cac9"],
     version = "1.11.0",
     deps = [":six"],
 )
@@ -67,14 +67,14 @@ python_wheel(
 python_wheel(
     name = "six",
     outs = ["six.py"],
-    hashes = ["43a5af1176750c6100480a370863422642afdad3f2f3191298af951c4f4f6080"],
+    hashes = ["8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"],
     version = "1.14.0",
 )
 
 python_wheel(
     name = "requests",
     hashes = [
-        "7e6a997b42711956d686dee0d70147cf3b3642c15bcc92e92519eb127e3b7f7c",
+        "43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee",
     ],
     version = "2.23.0",
     deps = [
@@ -87,31 +87,31 @@ python_wheel(
 
 python_wheel(
     name = "certifi",
-    hashes = ["4b5b9b468d636e6377a274c1f38dcb1a83592604e903110f372a0df427937a20"],
+    hashes = ["017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3"],
     version = "2019.11.28",
 )
 
 python_wheel(
     name = "chardet",
-    hashes = ["ba7fb63d251415bb1734efebcfc455774a29a3dc14df0f6d034fb28d29bdae23"],
+    hashes = ["fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"],
     version = "3.0.4",
 )
 
 python_wheel(
     name = "idna",
-    hashes = ["59e58591cbcf013ada32c9b5a3ba4e685665c28c478e58daaca10a3ab099ce2b"],
+    hashes = ["a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"],
     version = "2.9",
 )
 
 python_wheel(
     name = "urllib3",
-    hashes = ["47a4b1a45db1de13ed07255fa450ef0fe1cb1e6fd44d4577f6e6ad13f4bf987a"],
+    hashes = ["2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc"],
     version = "1.25.8",
 )
 
 python_wheel(
     name = "colorlog",
-    hashes = ["bab0dcf03e070e892eb24b7f09dec4f7cbde01a210c64a9f87a51d61c0cc4795"],
+    hashes = ["732c191ebbe9a353ec160d043d02c64ddef9028de8caae4cfa8bd49b6afed53e"],
     version = "4.1.0",
 )
 
@@ -119,7 +119,7 @@ python_wheel(
     name = "dateutil",
     package_name = "python_dateutil",
     hashes = [
-        "94234e68e7cf65f3ab564cc4016451f6027feddc3a02bd922dfb5489569efcfc",
+        "5179fabb692e3ec5a6e994eb9a72a6f4498f19106774672fd7e664a7aa9f49c3",
     ],
     test_only = True,  # Not used by plz itself.
     version = "2.4.0",
@@ -169,13 +169,13 @@ python_multiversion_wheel(
 python_wheel(
     name = "attrs",
     outs = ["attr"],
-    hashes = ["ddca8fa00b22a7fd62d6c323eb02b18bd6f01f2b52b4ed50c142827767f510de"],
+    hashes = ["08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c"],
     version = "19.3.0",
 )
 
 python_wheel(
     name = "pluggy",
-    hashes = ["2314ad55aac0e64ef27539f7361210aa1ee8b4a601df531588667930f589e3e0"],
+    hashes = ["966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"],
     version = "0.13.1",
     deps = [":importlib_metadata"],
 )
@@ -186,7 +186,7 @@ python_wheel(
         "importlib_metadata",
         "importlib_metadata-1.5.0.dist-info",
     ],
-    hashes = ["1f82ea14a86b67b3e813967184170f34e5f6513ef1ecced1be9ceff504e9817e"],
+    hashes = ["b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"],
     patch = "importlib_metadata.patch",
     version = "1.5.0",
     deps = [":zipp"],
@@ -195,19 +195,19 @@ python_wheel(
 python_wheel(
     name = "zipp",
     outs = ["zipp.py"],
-    hashes = ["a3c5b6e577e84790c3fe4ac440b6d8acd3262bec76e89bdaa9e2ae6e80bdd586"],
+    hashes = ["aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"],
     version = "3.1.0",
 )
 
 python_wheel(
     name = "py",
-    hashes = ["d8293c54e3874bfd9ed890bb4d65dae6078b15553e458691b9e7bc1440b88043"],
+    hashes = ["c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"],
     version = "1.8.1",
 )
 
 python_wheel(
     name = "funcsigs",
-    hashes = ["83f5f538df41456b089a81b1abfe555610767e0d66bf713ecdfc407cdc21c961"],
+    hashes = ["330cc27ccbf7f1e992e69fef78261dc7c6569012cf397db8d3de0234e6c937ca"],
     version = "1.0.2",
 )
 
@@ -233,7 +233,7 @@ pip_library(
 
 python_wheel(
     name = "more_itertools",
-    hashes = ["d47a527c30c860b0dd5c50548214f4e4a9464bb576477980fb9b9a54b66a98b8"],
+    hashes = ["5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c"],
     version = "8.2.0",
 )
 
@@ -243,7 +243,7 @@ python_wheel(
         "_pytest",
         "pytest",
     ],
-    hashes = ["cb1b6342414fa7649bcb4596248f82fc34b0c1dcc709072c1d1456c9288654b9"],
+    hashes = ["5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"],
     version = "5.4.3",
     deps = [
         ":attrs",
@@ -262,7 +262,7 @@ python_wheel(
     outs = [
         "behave",
     ],
-    hashes = ["ba833cd2e30ec590f794d5ca39a4fb598ac623a0e566418f6d3245fb5c5dc527"],
+    hashes = ["ebda1a6c9e5bfe95c5f9f0a2794e01c7098b3dde86c10a95d8621c5907ff6f1c"],
     version = "1.2.6",
     deps = [
         ":colorama",
@@ -280,19 +280,19 @@ python_wheel(
     outs = [
         "parse.py",
     ],
-    hashes = ["846dc21590052bbc27a3d7fe16511cc0eac466fce711e46d543af23709b7bb8e"],
+    hashes = ["2bb9c56c65bf609abbbef372bdcdd7b9c163745e7daf5e8217dba50a55850510"],
     version = "1.15.0",
 )
 
 python_wheel(
     name = "parse_type",
-    hashes = ["78ac7bf899d97ed64c433e0bd919f8374fe8fee148fe240f61ceee596e1abe4b"],
+    hashes = ["089a471b06327103865dfec2dd844230c3c658a4a1b5b4c8b6c16c8f77577f9e"],
     version = "0.5.2",
 )
 
 python_wheel(
     name = "traceback2",
-    hashes = ["eeacf7e8ccd8ab8e150648613a305c87c1b9ae2e2d56b45b517db0ad4eef7464"],
+    hashes = ["8253cebec4b19094d67cc5ed5af99bf1dba1285292226e98a31929f87a5d6b23"],
     licences = ["PSF"],
     version = "1.4.0",
 )
@@ -300,33 +300,33 @@ python_wheel(
 python_wheel(
     name = "enum34",
     outs = ["enum"],
-    hashes = ["c6a6e303100059d0079c60a4cffdeac09eccfeb826e40507285d1ad5558b0395"],
+    hashes = ["708aabfb3d5898f99674c390d360d59efdd08547019763622365f19e84a7fef4"],
     version = "1.1.9",
 )
 
 python_wheel(
     name = "win_unicode_console",
-    hashes = ["6dae3f3f83ff396b3e603b29e9af364387c6c31e229864ff6eec5350d353432f"],
+    hashes = ["7a7fb8bf98bcacb328d1f607065c0f89107c7e8f4b02caf12e5f02fb462512a6"],
     version = "0.5",
 )
 
 python_wheel(
     name = "colorama",
-    hashes = ["4bce685ba74e3e8ee0f83b85e313d45c7408c29a523c0535809bb3f341c2494f"],
+    hashes = ["7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"],
     version = "0.4.3",
 )
 
 python_wheel(
     name = "absl",
     package_name = "absl_py",
-    hashes = ["75496a0389de88af171d43181aef60a4c0a240664630a072821a60eddd0a6768"],
+    hashes = ["c106f6ef0ae86c1273b0858b40ee15b99fad1c223838387b9d11446a033bbcb1"],
     version = "0.9.0",
     deps = [":six"],
 )
 
 python_wheel(
     name = "portalocker",
-    hashes = ["10cc527c840b49c4f0d2762da9077d15eb1f194de030471b09650a6814d0badc"],
+    hashes = ["874d6063c6ceb185fe4771da41b01872d2c56d292db746698f8ad7bf1833c905"],
     version = "1.7.0",
 )
 
