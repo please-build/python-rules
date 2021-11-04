@@ -12,8 +12,20 @@ jobs:
           python-version: '3.6.9'
       - name: Run tests
         run: ./pleasew test -e e2e
+      - name: Archive test log
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-log
+          path: |
+            plz-out/log/build.log
       - name: Run e2e test
         run: ./pleasew test -i e2e
+      - name: Archive e2e log
+        uses: actions/upload-artifact@v2
+        with:
+          name: e2e-log
+          path: |
+            plz-out/log/build.log
   release:
     needs: [test]
     runs-on: ubuntu-latest
