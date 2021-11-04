@@ -214,7 +214,6 @@ python_wheel(
 pip_library(
     name = "pkg_resources",
     package_name = "setuptools",
-    hashes = ["99066f1746e7488d9dfd2549ba8dadd13aecd78a207312adba600352d0678c0c"],
     version = "57.0.0",
 )
 
