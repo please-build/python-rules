@@ -249,17 +249,16 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     # If the specified test-runner is one of unittest, pytest, or behave, we will add the
     # required deps here. Otherwise, we'll check if the config specifies a
     # PYTHON_TEST_RUNNER_BOOTSTRAP target and add that as a dependency.
-    bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
+    # bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
 
     if test_runner == 'unittest':
-        deps += ["//third_party/python:xmlrunner", "//third_party/python:coverage"]
+        deps += ["@self//third_party/python:unittest_bootstrap"]
     elif test_runner == 'pytest':
-        deps += ["//third_party/python:pytest"]
+        deps += ["@self//third_party/python:pytest_bootstrap"]
     elif test_runner == 'behave':
         deps += ["//third_party/python:behave"]
     elif bootstrap:
         deps += [bootstrap] if bootstrap not in deps else []
-
 
     # Use the pex tool to compress the entry point & add all the bootstrap helpers etc.
     pex_rule = build_rule(

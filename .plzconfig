@@ -29,9 +29,10 @@ DefaultValue = ""
 ConfigKey = TestRunner
 DefaultValue = unittest
 
-[PluginConfig "test_runner_bootstrap"]
-ConfigKey = TestRunnerBootstrap
-Optional = true
+; [PluginConfig "test_runner_bootstrap"]
+; ConfigKey = TestRunnerBootstrap
+; DefaultValue = "@self//third_party/python:unittest"
+; Optional = false
 
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir

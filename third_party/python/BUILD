@@ -493,3 +493,19 @@ pip_library(
     name = "distlib",
     version = "0.3.2",
 )
+
+if CONFIG.PYTHON.TEST_RUNNER == "unittest":
+    filegroup(
+        name = "unittest_bootstrap",
+        srcs = [
+            "@self//third_party/python:xmlrunner",
+            "@self//third_party/python:coverage",
+        ],
+    )
+elif CONFIG.PYTHON.TEST_RUNNER == "pytest":
+    filegroup(
+        name = "pytest_bootstrap",
+        srcs = [
+            "@self//third_party/python:pytest",
+        ],
+    )
