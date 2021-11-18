@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite errors="1" failures="0" name="test.scipy_test.SciPyTest" tests="1" time="0.004">
+	<properties/>
+	<system-out>
+<![CDATA[]]>	</system-out>
+	<system-err>
+<![CDATA[]]>	</system-err>
+	<testcase classname="test.scipy_test.SciPyTest" name="test_can_import" time="0.004">
+		<error message="No module named 'numpy'" type="ModuleNotFoundError">
+<![CDATA[Traceback (most recent call last):
+  File "/home/swestmoreland/.cache/pex/pex-4cDXy6yKtHS0dNc1LOct2UjWlUk/test/scipy_test.py", line 8, in test_can_import
+    from third_party.python.scipy import stats
+  File "./plz-out/bin/test/scipy_test.pex/__main__.py", line 188, in load_module
+    module = import_module(fullname[len(self.prefix):])
+  File "/usr/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/home/swestmoreland/.cache/pex/pex-4cDXy6yKtHS0dNc1LOct2UjWlUk/third_party/python/scipy/__init__.py", line 61, in <module>
+    from numpy import show_config as show_numpy_config
+ModuleNotFoundError: No module named 'numpy'
+]]>		</error>
+	</testcase>
+</testsuite>

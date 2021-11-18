@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite errors="1" failures="0" name="test.data_dep_test.DataDepTest" tests="2" time="0.004">
+	<properties/>
+	<system-out>
+<![CDATA[]]>	</system-out>
+	<system-err>
+<![CDATA[]]>	</system-err>
+	<testcase classname="test.data_dep_test.DataDepTest" name="test_direct_dep" time="0.000"/>
+	<testcase classname="test.data_dep_test.DataDepTest" name="test_data_dep" time="0.004">
+		<error message="[Errno 2] No such file or directory: 'test/data_dep.pex': 'test/data_dep.pex'" type="FileNotFoundError">
+<![CDATA[Traceback (most recent call last):
+  File "test/data_dep_test.py", line 17, in test_data_dep
+    output = subprocess.check_output(['test/data_dep.pex'])
+  File "/usr/lib/python3.6/subprocess.py", line 356, in check_output
+    **kwargs).stdout
+  File "/usr/lib/python3.6/subprocess.py", line 423, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/usr/lib/python3.6/subprocess.py", line 729, in __init__
+    restore_signals, start_new_session)
+  File "/usr/lib/python3.6/subprocess.py", line 1364, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'test/data_dep.pex': 'test/data_dep.pex'
+]]>		</error>
+	</testcase>
+</testsuite>

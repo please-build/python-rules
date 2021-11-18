@@ -56,18 +56,18 @@ python_wheel(
     version = "3.10.0.2",
 )
 
-python_wheel(
+pip_library(
     name = "xmlrunner",
     package_name = "unittest_xml_reporting",
-    hashes = ["4ba8380f99daf6fe951dea05f05977bc4129ca71da8303971b05e7e8ce917f97"],
+    # hashes = ["4ba8380f99daf6fe951dea05f05977bc4129ca71da8303971b05e7e8ce917f97"],
     version = "1.11.0",
     deps = [":six"],
 )
 
-python_wheel(
+pip_library(
     name = "six",
-    outs = ["six.py"],
-    hashes = ["43a5af1176750c6100480a370863422642afdad3f2f3191298af951c4f4f6080"],
+    # outs = ["six.py"],
+    # hashes = ["43a5af1176750c6100480a370863422642afdad3f2f3191298af951c4f4f6080"],
     version = "1.14.0",
 )
 
@@ -166,48 +166,47 @@ python_multiversion_wheel(
     version = "5.5",
 )
 
-python_wheel(
+pip_library(
     name = "attrs",
-    outs = ["attr"],
-    hashes = ["ddca8fa00b22a7fd62d6c323eb02b18bd6f01f2b52b4ed50c142827767f510de"],
+    # hashes = ["ddca8fa00b22a7fd62d6c323eb02b18bd6f01f2b52b4ed50c142827767f510de"],
     version = "19.3.0",
 )
 
-python_wheel(
+pip_library(
     name = "pluggy",
-    hashes = ["2314ad55aac0e64ef27539f7361210aa1ee8b4a601df531588667930f589e3e0"],
+    # hashes = ["2314ad55aac0e64ef27539f7361210aa1ee8b4a601df531588667930f589e3e0"],
     version = "0.13.1",
     deps = [":importlib_metadata"],
 )
 
-python_wheel(
+pip_library(
     name = "importlib_metadata",
-    outs = [
-        "importlib_metadata",
-        "importlib_metadata-1.5.0.dist-info",
-    ],
-    hashes = ["1f82ea14a86b67b3e813967184170f34e5f6513ef1ecced1be9ceff504e9817e"],
-    patch = "importlib_metadata.patch",
+    # outs = [
+    #     "importlib_metadata",
+    #     "importlib_metadata-1.5.0.dist-info",
+    # ],
+    # hashes = ["1f82ea14a86b67b3e813967184170f34e5f6513ef1ecced1be9ceff504e9817e"],
+    # patch = "importlib_metadata.patch",
     version = "1.5.0",
     deps = [":zipp"],
 )
 
-python_wheel(
+pip_library(
     name = "zipp",
-    outs = ["zipp.py"],
-    hashes = ["a3c5b6e577e84790c3fe4ac440b6d8acd3262bec76e89bdaa9e2ae6e80bdd586"],
+    # outs = ["zipp.py"],
+    # hashes = ["a3c5b6e577e84790c3fe4ac440b6d8acd3262bec76e89bdaa9e2ae6e80bdd586"],
     version = "3.1.0",
 )
 
-python_wheel(
+pip_library(
     name = "py",
-    hashes = ["d8293c54e3874bfd9ed890bb4d65dae6078b15553e458691b9e7bc1440b88043"],
+    # hashes = ["d8293c54e3874bfd9ed890bb4d65dae6078b15553e458691b9e7bc1440b88043"],
     version = "1.8.1",
 )
 
-python_wheel(
+pip_library(
     name = "funcsigs",
-    hashes = ["83f5f538df41456b089a81b1abfe555610767e0d66bf713ecdfc407cdc21c961"],
+    # hashes = ["83f5f538df41456b089a81b1abfe555610767e0d66bf713ecdfc407cdc21c961"],
     version = "1.0.2",
 )
 
@@ -231,19 +230,19 @@ pip_library(
     version = "2.4.7",
 )
 
-python_wheel(
+pip_library(
     name = "more_itertools",
-    hashes = ["d47a527c30c860b0dd5c50548214f4e4a9464bb576477980fb9b9a54b66a98b8"],
+    # hashes = ["d47a527c30c860b0dd5c50548214f4e4a9464bb576477980fb9b9a54b66a98b8"],
     version = "8.2.0",
 )
 
-python_wheel(
+pip_library(
     name = "pytest",
-    outs = [
-        "_pytest",
-        "pytest",
-    ],
-    hashes = ["cb1b6342414fa7649bcb4596248f82fc34b0c1dcc709072c1d1456c9288654b9"],
+    # outs = [
+    #     "_pytest",
+    #     "pytest",
+    # ],
+    # hashes = ["cb1b6342414fa7649bcb4596248f82fc34b0c1dcc709072c1d1456c9288654b9"],
     version = "5.4.3",
     deps = [
         ":attrs",
@@ -257,12 +256,9 @@ python_wheel(
     ],
 )
 
-python_wheel(
+pip_library(
     name = "behave",
-    outs = [
-        "behave",
-    ],
-    hashes = ["ba833cd2e30ec590f794d5ca39a4fb598ac623a0e566418f6d3245fb5c5dc527"],
+    # hashes = ["ba833cd2e30ec590f794d5ca39a4fb598ac623a0e566418f6d3245fb5c5dc527"],
     version = "1.2.6",
     deps = [
         ":colorama",
@@ -275,44 +271,44 @@ python_wheel(
     ],
 )
 
-python_wheel(
+pip_library(
     name = "parse",
-    outs = [
-        "parse.py",
-    ],
-    hashes = ["846dc21590052bbc27a3d7fe16511cc0eac466fce711e46d543af23709b7bb8e"],
+    # outs = [
+    #     "parse.py",
+    # ],
+    # hashes = ["846dc21590052bbc27a3d7fe16511cc0eac466fce711e46d543af23709b7bb8e"],
     version = "1.15.0",
 )
 
-python_wheel(
+pip_library(
     name = "parse_type",
-    hashes = ["78ac7bf899d97ed64c433e0bd919f8374fe8fee148fe240f61ceee596e1abe4b"],
+    # hashes = ["78ac7bf899d97ed64c433e0bd919f8374fe8fee148fe240f61ceee596e1abe4b"],
     version = "0.5.2",
 )
 
-python_wheel(
+pip_library(
     name = "traceback2",
-    hashes = ["eeacf7e8ccd8ab8e150648613a305c87c1b9ae2e2d56b45b517db0ad4eef7464"],
+    # hashes = ["eeacf7e8ccd8ab8e150648613a305c87c1b9ae2e2d56b45b517db0ad4eef7464"],
     licences = ["PSF"],
     version = "1.4.0",
 )
 
-python_wheel(
+pip_library(
     name = "enum34",
-    outs = ["enum"],
-    hashes = ["c6a6e303100059d0079c60a4cffdeac09eccfeb826e40507285d1ad5558b0395"],
+    # outs = ["enum"],
+    # hashes = ["c6a6e303100059d0079c60a4cffdeac09eccfeb826e40507285d1ad5558b0395"],
     version = "1.1.9",
 )
 
-python_wheel(
+pip_library(
     name = "win_unicode_console",
-    hashes = ["6dae3f3f83ff396b3e603b29e9af364387c6c31e229864ff6eec5350d353432f"],
+    # hashes = ["6dae3f3f83ff396b3e603b29e9af364387c6c31e229864ff6eec5350d353432f"],
     version = "0.5",
 )
 
-python_wheel(
+pip_library(
     name = "colorama",
-    hashes = ["4bce685ba74e3e8ee0f83b85e313d45c7408c29a523c0535809bb3f341c2494f"],
+    # hashes = ["4bce685ba74e3e8ee0f83b85e313d45c7408c29a523c0535809bb3f341c2494f"],
     version = "0.4.3",
 )
 
@@ -324,9 +320,9 @@ python_wheel(
     deps = [":six"],
 )
 
-python_wheel(
+pip_library(
     name = "portalocker",
-    hashes = ["10cc527c840b49c4f0d2762da9077d15eb1f194de030471b09650a6814d0badc"],
+    # hashes = ["10cc527c840b49c4f0d2762da9077d15eb1f194de030471b09650a6814d0badc"],
     version = "1.7.0",
 )
 
@@ -494,12 +490,21 @@ pip_library(
     version = "0.3.2",
 )
 
+pip_library(
+    name = "debugpy",
+    # hashes = ["f058c204341fd7ff800ee0edafc106ca0fb1c9857e8a8895a6e04cca3ddcb7bf"],
+    licences = ["MIT"],
+    version = "1.5.0",
+)
+
 if CONFIG.PYTHON.TEST_RUNNER == "unittest":
     filegroup(
         name = "unittest_bootstrap",
         srcs = [
-            "@self//third_party/python:xmlrunner",
-            "@self//third_party/python:coverage",
+            ":xmlrunner",
+            ":coverage",
+            ":six",
+            ":portalocker",
         ],
     )
 elif CONFIG.PYTHON.TEST_RUNNER == "pytest":

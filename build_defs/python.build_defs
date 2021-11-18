@@ -45,8 +45,12 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
     """
     if not zip_safe:
         labels += ['py:zip-unsafe']
-    if srcs or resources:
-        cmd = '$TOOLS_JARCAT z -d -o ${OUTS} -i .'
+    if srcs or resources or deps:
+        cmd = f'$TOOLS_JARCAT z -d -o ${OUTS} -i .'
+
+        # For some reason jarcat isn't unflattening .whl files so do it manually here for now
+        unzip_cmd = f'for i in $(find . -name \'*.whl\'); do mv $i .; unzip $(basename "$i"); done'
+
         interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
         if srcs:
             # This is a bit of a hack, but rather annoying. We want to put bytecode in its 'legacy' location
@@ -54,10 +58,12 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
             # in python2 so we have to guess whether we should apply it or not.
             bytecode_flag = '-b' if 'python3' in interpreter or 'pypy3' in interpreter else ''
             compile_cmd = f'$TOOLS_INT -S -m compileall {bytecode_flag} -f $SRCS_SRCS'
+            # compile_cmd = f'filename=$(ls test/*_main.py); mv $filename __main__.py && $TOOLS_INT -S -m compileall {bytecode_flag} -f $SRCS_SRCS'
             if strip:
-                cmd = ' && '.join([compile_cmd, 'rm -f $SRCS_SRCS', cmd])
+                cmd = ' && '.join([unzip_cmd, compile_cmd, 'rm -f $SRCS_SRCS', cmd])
             else:
-                cmd = ' && '.join([compile_cmd, cmd])
+                cmd = ' && '.join([unzip_cmd, compile_cmd, cmd])
+
         # Pre-zip the files for later collection by python_binary.
         zip_rule = build_rule(
             name=name,
@@ -65,13 +71,14 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
             srcs={
                 'SRCS': srcs,
                 'RES': resources,
+                'DEPS': deps,
             },
             outs=[f'.{name}.pex.zip'],
             cmd=cmd,
             building_description='Compressing...',
             requires=['py'],
             test_only=test_only,
-            output_is_complete=True,
+            output_is_complete=False,
             tools={
                 'int': [interpreter],
                 'jarcat': [CONFIG.JARCAT_TOOL],
@@ -131,10 +138,13 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     """
     shebang = shebang or interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
-    cmd = '$TOOLS_PEX -s "%s" -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        shebang, CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
+    module_dir = CONFIG.PYTHON.MODULE_DIR
+    interpreter_options = CONFIG.PYTHON.INTERPRETER_OPTIONS
+    cmd = f'$TOOLS_PEX -s {shebang} -m {module_dir} {zipsafe_flag} --interpreter_options={interpreter_options} --stamp="$RULE_HASH"'
     if site:
         cmd += ' -S'
+
+    cmd += f'; mv __main__.py {name}_main.py'
 
     assert main not in srcs, "main file should not be included in srcs"
 
@@ -153,7 +163,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         name = name,
         tag = 'pex',
         srcs=[main],
-        outs=[f'.{name}_main.pex.zip'],  # just call it .zip so everything has the same extension
+        outs=[f'{name}_main.py'],  # just call it .zip so everything has the same extension
         cmd=cmd,
         requires=['py', 'pex'],
         pre_build=_handle_zip_safe if zip_safe is None else None,
@@ -167,9 +177,12 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         test_only=test_only,
     )
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
-    cmd = '$TOOL z -i . -s .pex.zip -s .whl --preamble_from="$SRC" --include_other --add_init_py --strict'
+    shebang = '#!/bin/sh\nexec /usr/bin/env python3 -S \\\\$0 \\\"\\\\$@\\\"\n\n'
+    cmd = f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict'
     if strip:
         cmd += ' --strip_py'
+
+    # cmd += f' && echo -e "{shebang}\n$(cat {name}.pex)" > {name}.pex'
     return build_rule(
         name=name,
         srcs=[pex_rule],
@@ -239,33 +252,21 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     """
     interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
     test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
+    module_dir = CONFIG.PYTHON.MODULE_DIR
+    interpreter_options = CONFIG.PYTHON.INTERPRETER_OPTIONS
     # TODO: Remove add_test_runner_deps flag from pex tool as the deps are now added here
-    cmd = '$TOOLS_PEX -t -s "%s" -m "%s" -r "%s" --zip_safe --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        interpreter, CONFIG.PYTHON.MODULE_DIR, test_runner,
-        CONFIG.PYTHON.INTERPRETER_OPTIONS)
+    cmd = f'$TOOLS_PEX -t -s {interpreter} -m {module_dir} -r {test_runner} --zip_safe --interpreter_options={interpreter_options} --stamp="$RULE_HASH"'
     if site:
         cmd += ' -S'
 
-    # If the specified test-runner is one of unittest, pytest, or behave, we will add the
-    # required deps here. Otherwise, we'll check if the config specifies a
-    # PYTHON_TEST_RUNNER_BOOTSTRAP target and add that as a dependency.
-    # bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
-
-    if test_runner == 'unittest':
-        deps += ["@self//third_party/python:unittest_bootstrap"]
-    elif test_runner == 'pytest':
-        deps += ["@self//third_party/python:pytest_bootstrap"]
-    elif test_runner == 'behave':
-        deps += ["//third_party/python:behave"]
-    elif bootstrap:
-        deps += [bootstrap] if bootstrap not in deps else []
+    cmd += f'; mv __main__.py {name}_main.py'
 
     # Use the pex tool to compress the entry point & add all the bootstrap helpers etc.
     pex_rule = build_rule(
         name = name,
         tag = 'pex',
         srcs=srcs,
-        outs=[f'.{name}_main.pex.zip'],  # just call it .zip so everything has the same extension
+        outs=[f'{name}_main.py'],  # just call it .zip so everything has the same extension
         cmd=cmd,
         requires=['py'],
         test_only=True,
@@ -281,9 +282,23 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     )
 
     # If there are resources specified, they have to get built into the pex.
-    deps = [pex_rule]
+    # If the specified test-runner is one of unittest, pytest, or behave, we will add the
+    # required deps here. Otherwise, we'll check if the config specifies a
+    # PYTHON_TEST_RUNNER_BOOTSTRAP target and add that as a dependency.
+    # bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
+
+    if test_runner == 'unittest':
+        deps += ["@self//third_party/python:unittest_bootstrap"]
+    elif test_runner == 'pytest':
+        deps += ["@self//third_party/python:pytest_bootstrap"]
+    elif test_runner == 'behave':
+        deps += ["//third_party/python:behave"]
+    elif bootstrap:
+        deps += [bootstrap] if bootstrap not in deps else []
+
+    deps += [pex_rule]
     lib_rule = python_library(
-        name='_%s#lib' % name,
+        name=f'_{name}#lib',
         srcs=srcs,
         resources=resources,
         interpreter=interpreter,
@@ -294,6 +309,8 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     )
 
     deps = [pex_rule, lib_rule]
+
+    shebang = '\"#!/bin/sh\\nexec /usr/bin/env python3 -S \\\\$0 \\\"\\\\$@\\\"\n\n\"'
 
     test_cmd = f'$TEST {flags}'
     if worker:
@@ -309,7 +326,13 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         data=data | {'_srcs': srcs} if isinstance(data, dict) else data + srcs,
         outs=[f'{name}.pex'],
         labels=labels + ['test_results_dir'],
-        cmd='$TOOL z -i . -s .pex.zip -s .whl --preamble_from="$SRC" --include_other --add_init_py --strict',
+
+        cmd="mv $SRC __main__.py && $TOOL z -i . -s .pex.zip --preamble=\"#!/bin/sh\nexec /usr/bin/env python3 -S \\\\$0 \\\"\\\\$@\\\"\n\" --include_other --add_init_py --strict",
+        # cmd="mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble=\"#!/bin/sh\nexec /usr/bin/env python3 -S \\\\$0 \\\"\\\\$@\\\"\n\" --include_other --add_init_py --strict".format(shebang),
+        # cmd=f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble_from="__main__.py" --include_other --add_init_py --strict',
+        # cmd=f'$TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict && echo -e "{shebang}\"$(cat {name}.pex)\"" > {name}.pex',
+        # cmd=f'$TOOL z -i . -s .pex.zip -s .whl --preamble_from="$SRC" --include_other --add_init_py --strict',
+
         test_cmd=test_cmd,
         needs_transitive_deps=True,
         output_is_complete=True,

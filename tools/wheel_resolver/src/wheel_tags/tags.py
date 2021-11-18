@@ -4,9 +4,9 @@ Some methods for wheel fetching and selection
 
 import logging
 import os
-from third_party.python.packaging.utils import parse_wheel_filename
-import third_party.python.packaging.tags as tags
-import third_party.python.distlib.locators as locators
+from packaging.utils import parse_wheel_filename
+import packaging.tags as tags
+import distlib.locators as locators
 
 
 def is_compatible(wheel, archs):

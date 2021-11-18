@@ -6,7 +6,7 @@ python_test(
 
 gentest(
     name = "e2e_test",
-    data = ["//tools/wheel_resolver"],
+    data = ["//tools/wheel_resolver/src:resolve"],
     no_test_output = True,
     test_cmd = "PKG=tensorflow; OUTS=$PKG.whl; export OUTS; $DATA --package \"$PKG\"; \
                 if [[ -f \"$PKG\".whl ]]; then exit 0; else exit 1; fi;",
