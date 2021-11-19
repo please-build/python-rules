@@ -4,8 +4,8 @@ Some methods for wheel fetching and selection
 
 import logging
 import os
-from packaging.utils import parse_wheel_filename
-import packaging.tags as tags
+from wheel_filename import parse_wheel_filename
+from packaging import tags
 import distlib.locators as locators
 
 
@@ -15,16 +15,25 @@ def is_compatible(wheel, archs):
     current platform and python interpreter.
     Compatibility is based on https://www.python.org/dev/peps/pep-0425/
     """
+
     # Get the tag from the wheel we're checking
-    _, _, _, tag = parse_wheel_filename(wheel)
+    w = parse_wheel_filename(wheel)
 
     # taglist is a list of tags that we've got either from the user
     # or we've auto-generated them for this system
     taglist = generate_tags_from_all_archs(archs)
+    # TODO: Could probably cache these? ^^
+
+    if taglist is None:
+        logging.critical("No tags generated")
+    # else:
+    #     len_taglist = sum(1 for _ in taglist)
+    #     logging.critical('Generated %s tags', len_taglist)
 
     for system_tag in taglist:
-        if system_tag in tag:
-            return True
+        for tag in w.tag_triples():
+            if system_tag in tags.parse_tag(tag):
+                return True
     return False
 
 

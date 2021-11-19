@@ -219,10 +219,15 @@ pip_library(
 
 pip_library(
     name = "packaging",
-    version = "21.0",
+    version = "21.3",
     deps = [
         ":pyparsing",
     ],
+)
+
+pip_library(
+    name = "wheel_filename",
+    version = "1.3.0",
 )
 
 pip_library(

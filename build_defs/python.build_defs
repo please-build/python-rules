@@ -71,7 +71,6 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
             srcs={
                 'SRCS': srcs,
                 'RES': resources,
-                'DEPS': deps,
             },
             outs=[f'.{name}.pex.zip'],
             cmd=cmd,
@@ -209,6 +208,21 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     )
 
 
+def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
+    # Assume the path to the interpreter is relative
+    # Do we need to trim space here?
+    shebang = f'/usr/bin/env {interpreter}'
+    if not site:
+        if ' ' in shebang:
+            shebang = f'#!/bin/sh\nexec {shebang} -S \\\\$0 \\\"\\\\$@\\\"'
+        else:
+            shebang += ' -S'
+    if not shebang.startswith('#!'):
+        shebang = '#!' + shebang
+
+    return shebang + '\n'
+
+
 def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:list=[], worker:str='',
                 labels:list&features&tags=[], size:str=None, flags:str='', visibility:list=None,
                 sandbox:bool=None, timeout:int=0, flaky:bool|int=0,
@@ -261,7 +275,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 
     cmd += f'; mv __main__.py {name}_main.py'
 
-    # Use the pex tool to compress the entry point & add all the bootstrap helpers etc.
+    # Use the pex tool to template the entry point
     pex_rule = build_rule(
         name = name,
         tag = 'pex',
@@ -310,12 +324,13 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 
     deps = [pex_rule, lib_rule]
 
-    shebang = '\"#!/bin/sh\\nexec /usr/bin/env python3 -S \\\\$0 \\\"\\\\$@\\\"\n\n\"'
+    shebang = _set_shebang(interpreter, interpreter_options, site)
 
     test_cmd = f'$TEST {flags}'
     if worker:
         test_cmd = f'$(worker {worker}) && {test_cmd} '
         deps += [worker]
+
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
     return build_rule(
         name=name,
@@ -326,13 +341,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         data=data | {'_srcs': srcs} if isinstance(data, dict) else data + srcs,
         outs=[f'{name}.pex'],
         labels=labels + ['test_results_dir'],
-
-        cmd="mv $SRC __main__.py && $TOOL z -i . -s .pex.zip --preamble=\"#!/bin/sh\nexec /usr/bin/env python3 -S \\\\$0 \\\"\\\\$@\\\"\n\" --include_other --add_init_py --strict",
-        # cmd="mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble=\"#!/bin/sh\nexec /usr/bin/env python3 -S \\\\$0 \\\"\\\\$@\\\"\n\" --include_other --add_init_py --strict".format(shebang),
-        # cmd=f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble_from="__main__.py" --include_other --add_init_py --strict',
-        # cmd=f'$TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict && echo -e "{shebang}\"$(cat {name}.pex)\"" > {name}.pex',
-        # cmd=f'$TOOL z -i . -s .pex.zip -s .whl --preamble_from="$SRC" --include_other --add_init_py --strict',
-
+        cmd=f"mv $SRC __main__.py && for i in $(find . -name \'*.whl\'); do mv $i .; unzip $(basename \"$i\"); done && $TOOL z -i . -s .pex.zip --preamble=\"{shebang}\" --include_other --add_init_py --strict",
         test_cmd=test_cmd,
         needs_transitive_deps=True,
         output_is_complete=True,
