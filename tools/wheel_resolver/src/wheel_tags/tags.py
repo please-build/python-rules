@@ -69,13 +69,17 @@ def get_url(urls, archs):
     From the list of urls we got from the wheel index, return the first
     one that is compatible (either with our system or a provided one)
     """
+    if urls is None:
+        logging.critical("Empty url list passed to get_url()")
+
     # Loop through all the urls fetched from index and check them against
-    # out system tags
+    # our system tags
     for url in urls:
         if is_wheel_file(url) and is_compatible(get_basename(url), archs):
             return url
 
-    logging.critical("Reached end of get_url() without finding anything")
+    logging.fatal("""Could not find any urls
+                     compatible with the provided system info""")
 
 
 def get_download_urls(package, version=None):
