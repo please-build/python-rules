@@ -77,7 +77,7 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
             building_description='Compressing...',
             requires=['py'],
             test_only=test_only,
-            output_is_complete=False,
+            output_is_complete=True,
             tools={
                 'int': [interpreter],
                 'jarcat': [CONFIG.JARCAT_TOOL],
@@ -295,6 +295,21 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         labels = labels,
     )
 
+    deps += [pex_rule]
+    lib_rule = python_library(
+        name=f'_{name}#lib',
+        srcs=srcs,
+        resources=resources,
+        interpreter=interpreter,
+        deps=deps,
+        test_only=True,
+        visibility=visibility,
+        labels = labels,
+    )
+
+    deps = [pex_rule, lib_rule]
+    shebang = _set_shebang(interpreter, interpreter_options, site)
+
     # If there are resources specified, they have to get built into the pex.
     # If the specified test-runner is one of unittest, pytest, or behave, we will add the
     # required deps here. Otherwise, we'll check if the config specifies a
@@ -310,21 +325,6 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     elif bootstrap:
         deps += [bootstrap] if bootstrap not in deps else []
 
-    deps += [pex_rule]
-    lib_rule = python_library(
-        name=f'_{name}#lib',
-        srcs=srcs,
-        resources=resources,
-        interpreter=interpreter,
-        deps=deps,
-        test_only=True,
-        visibility=visibility,
-        labels = labels,
-    )
-
-    deps = [pex_rule, lib_rule]
-
-    shebang = _set_shebang(interpreter, interpreter_options, site)
 
     test_cmd = f'$TEST {flags}'
     if worker:
