@@ -4,7 +4,7 @@ go_binary(
     deps = [
         "//third_party/go:cli-init",
         "//third_party/go:go-logging.v1",
-        "//tools/chicken_pex/pex",
+        "//tools/please_pex/pex",
     ],
 )
 
@@ -42,7 +42,7 @@ genrule(
     cmd = [
         # Have to make sure these exist.
         "touch third_party/__init__.py third_party/python/__init__.py",
-        "touch tools/__init__.py tools/chicken_pex/__init__.py",
+        "touch tools/__init__.py tools/please_pex/__init__.py",
         "mv third_party/python .bootstrap",
         # A little cleanup.
         "rm -rf third_party .bootstrap/xmlrunner/extra .bootstrap/coverage/htmlfiles .bootstrap/.*.pex.zip",

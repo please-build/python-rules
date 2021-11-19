@@ -5,7 +5,7 @@ import (
 	"gopkg.in/op/go-logging.v1"
 
 	cli "github.com/peterebden/go-cli-init/v5/flags"
-	"github.com/please-build/python-rules/tools/chicken_pex/pex"
+	"github.com/please-build/python-rules/tools/please_pex/pex"
 )
 
 var log = logging.MustGetLogger("please_pex")
@@ -37,7 +37,7 @@ dependent code as a self-contained self-executable environment.
 }
 
 func main() {
-	cli.ParseFlagsOrDie("chicken_pex", &opts, nil)
+	cli.ParseFlagsOrDie("please_pex", &opts, nil)
 	w := pex.NewWriter(
 		opts.EntryPoint, opts.Interpreter, opts.InterpreterOptions, opts.Stamp,
 		opts.ZipSafe, !opts.Site)
