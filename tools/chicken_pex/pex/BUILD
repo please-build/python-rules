@@ -3,7 +3,7 @@ go_library(
     srcs = ["pex.go"],
     resources = glob(["**/*.py"]),
     # visibility = ["//tools/pleeeease_pex:all"],
-    visibility = ["PUBLIC"],
+    visibility = ["//tools/chicken_pex:all"],
     deps = [
         #"//tools/jarcat/zip",
     ],
