@@ -19,7 +19,7 @@ DefaultValue = python3
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
-DefaultValue = @self//tools/chicken_pex:please_pex
+DefaultValue = @self//tools/please_pex:please_pex
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
