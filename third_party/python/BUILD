@@ -505,10 +505,10 @@ if CONFIG.PYTHON.TEST_RUNNER == "unittest":
     filegroup(
         name = "unittest_bootstrap",
         srcs = [
-            ":xmlrunner",
             ":coverage",
-            ":six",
             ":portalocker",
+            ":six",
+            ":xmlrunner",
         ],
     )
 elif CONFIG.PYTHON.TEST_RUNNER == "pytest":

@@ -11,13 +11,13 @@ go_module(
     install = ["..."],
     module = "github.com/peterebden/go-cli-init/v5",
     version = "v5.1.0",
+    visibility = ["PUBLIC"],
     deps = [
         ":go-flags",
-        ":humanize",
         ":go-logging.v1",
+        ":humanize",
         ":xcrypto",
     ],
-    visibility = ["PUBLIC"],
 )
 
 go_module(
@@ -44,6 +44,7 @@ go_module(
     version = "v1.0.0",
     visibility = ["PUBLIC"],
 )
+
 go_module(
     name = "levenshtein",
     install = ["levenshtein"],
@@ -52,6 +53,7 @@ go_module(
     version = "v1.0.1",
     visibility = ["PUBLIC"],
 )
+
 go_module(
     name = "promptui",
     install = [
@@ -64,6 +66,7 @@ go_module(
         ":readline",
     ],
 )
+
 go_module(
     name = "semver",
     install = ["semver"],
@@ -72,6 +75,7 @@ go_module(
     version = "v0.3.0",
     visibility = ["PUBLIC"],
 )
+
 go_module(
     name = "xcrypto",
     install = [
@@ -87,6 +91,7 @@ go_module(
     visibility = ["PUBLIC"],
     deps = [":xterm"],
 )
+
 go_module(
     name = "xterm",
     licences = ["BSD-3-Clause"],
@@ -95,6 +100,7 @@ go_module(
     visibility = ["PUBLIC"],
     deps = [":xsys"],
 )
+
 go_module(
     name = "ansiterm",
     install = [
@@ -108,12 +114,14 @@ go_module(
         ":vtclean",
     ],
 )
+
 go_module(
     name = "xsys",
     install = ["..."],
     module = "golang.org/x/sys",
     version = "v0.0.0-20210823070655-63515b42dcdf",
 )
+
 go_module(
     name = "readline",
     licences = ["MIT"],
@@ -121,6 +129,7 @@ go_module(
     version = "v0.0.0-20180603132655-2972be24d48e",
     visibility = ["PUBLIC"],
 )
+
 go_module(
     name = "colorable",
     licences = ["MIT"],
@@ -129,6 +138,7 @@ go_module(
     visibility = ["PUBLIC"],
     deps = [":go-isatty"],
 )
+
 go_module(
     name = "go-isatty",
     licences = ["MIT"],
@@ -137,6 +147,7 @@ go_module(
     visibility = ["PUBLIC"],
     deps = [":xsys"],
 )
+
 go_module(
     name = "vtclean",
     licences = ["MIT"],
@@ -144,6 +155,7 @@ go_module(
     version = "v1.0.0",
     visibility = ["PUBLIC"],
 )
+
 go_module(
     name = "testify",
     install = [
@@ -160,6 +172,7 @@ go_module(
         ":yaml",
     ],
 )
+
 go_module(
     name = "difflib",
     install = ["difflib"],
@@ -168,6 +181,7 @@ go_module(
     version = "v1.0.0",
     visibility = ["PUBLIC"],
 )
+
 go_module(
     name = "spew",
     install = ["spew"],
@@ -177,6 +191,7 @@ go_module(
     version = "v1.1.1",
     visibility = ["PUBLIC"],
 )
+
 go_module(
     name = "yaml",
     licences = ["MIT"],
