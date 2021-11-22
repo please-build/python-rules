@@ -6,6 +6,8 @@ PreloadBuildDefs = build_defs/python.build_defs
 
 [Go]
 ImportPath = github.com/please-build/python-rules
+embedtool = //tools/please_go_embed
+gotool = //third_party/go:toolchain|go
 
 [proto]
 protoctool = //third_party/proto:protoc
