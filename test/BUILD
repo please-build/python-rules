@@ -149,9 +149,7 @@ python_test(
         "py3",
         "pip",
     ],
-    deps = [
-        "//third_party/python:scipy",
-    ],
+    deps = ["//third_party/python:scipy"],
 )
 
 python_test(

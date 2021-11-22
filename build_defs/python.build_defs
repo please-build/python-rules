@@ -278,7 +278,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         name = name,
         tag = 'pex',
         srcs=srcs,
-        outs=[f'{name}_main.py'],  # just call it .zip so everything has the same extension
+        outs=[f'{name}_main.py'],
         cmd=cmd,
         requires=['py'],
         test_only=True,
@@ -295,7 +295,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 
     deps += [pex_rule]
     lib_rule = python_library(
-        name=f'_{name}#lib',
+        name=f'_%s#lib' % name,
         srcs=srcs,
         resources=resources,
         interpreter=interpreter,
