@@ -13,7 +13,6 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-	// "github.com/thought-machine/please/tools/jarcat/zip"
 )
 
 const testRunnersDir = "test_runners"

@@ -46,7 +46,7 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
     if not zip_safe:
         labels += ['py:zip-unsafe']
     if srcs or resources:
-        cmd = f'$TOOLS_JARCAT z -d -o ${OUTS} -i .'
+        cmd = '$TOOLS_JARCAT z -d -o ${OUTS} -i .'
 
         # For some reason jarcat isn't unflattening .whl files so do it manually here till I figure out why
         unzip_cmd = f'for i in $(find . -name \'*.whl\'); do mv $i .; unzip $(basename "$i"); done'
@@ -207,8 +207,8 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
 
 
 def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
+    """Returns a shebang to pass to jarcat to inject at the top of a pex"""
     # Assume the path to the interpreter is relative
-    # Do we need to trim space here?
     shebang = f'/usr/bin/env {interpreter}'
     if not site:
         if ' ' in shebang:
@@ -313,7 +313,6 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     # required deps here. Otherwise, we'll check if the config specifies a
     # PYTHON_TEST_RUNNER_BOOTSTRAP target and add that as a dependency.
     # bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
-
     if test_runner == 'unittest':
         deps += ["@self//third_party/python:unittest_bootstrap"]
     elif test_runner == 'pytest':
@@ -322,7 +321,6 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         deps += ["//third_party/python:behave"]
     elif bootstrap:
         deps += [bootstrap] if bootstrap not in deps else []
-
 
     test_cmd = f'$TEST {flags}'
     if worker:
