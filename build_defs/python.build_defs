@@ -134,10 +134,11 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
                      determine something appropriate for the given interpreter.
       labels (list): Labels to apply to this rule.
     """
-    shebang = shebang or interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
+    interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
+    shebang = shebang or _set_shebang(interpreter, CONFIG.PYTHON.INTERPRETER_OPTIONS, site)
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
     cmd = '$TOOLS_PEX -s "%s" -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-            shebang, CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
+        shebang, CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
     if site:
         cmd += ' -S'
 
@@ -160,7 +161,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         name = name,
         tag = 'pex',
         srcs=[main],
-        outs=[f'{name}_main.py'],  # just call it .zip so everything has the same extension
+        outs=[f'{name}_main.py'],
         cmd=cmd,
         requires=['py', 'pex'],
         pre_build=_handle_zip_safe if zip_safe is None else None,
@@ -168,13 +169,12 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         needs_transitive_deps=True,  # Needed so we can find anything with zip_safe=False on it.
         output_is_complete=True,
         tools={
-            'interpreter': [interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER],
+            'interpreter': [interpreter],
             'pex': [CONFIG.PYTHON.PEX_TOOL],
         },
         test_only=test_only,
     )
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
-    shebang = '#!/bin/sh\nexec /usr/bin/env python3 -S \\\\$0 \\\"\\\\$@\\\"\n\n'
     cmd = f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict'
     if strip:
         cmd += ' --strip_py'
