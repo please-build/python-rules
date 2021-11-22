@@ -174,12 +174,12 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         },
         test_only=test_only,
     )
+
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
     cmd = f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict'
     if strip:
         cmd += ' --strip_py'
 
-    # cmd += f' && echo -e "{shebang}\n$(cat {name}.pex)" > {name}.pex'
     return build_rule(
         name=name,
         srcs=[pex_rule],
