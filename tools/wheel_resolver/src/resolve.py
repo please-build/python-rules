@@ -50,11 +50,10 @@ def main():
 
     result = tg.get_url(urls, args.arch)
 
-    if result is None:
+    if result is not None:
+        download(result)
+    else:
         logging.critical('Found %s urls but none are compatible with the specified architecture', len(urls))
-        sys.exit(1)
-
-    download(result)
 
 
 main()

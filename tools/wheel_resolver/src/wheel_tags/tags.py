@@ -78,8 +78,8 @@ def get_url(urls, archs):
         if is_wheel_file(url) and is_compatible(get_basename(url), archs):
             return url
 
-    logging.fatal("""Could not find any urls
-                     compatible with the provided system info""")
+    logging.critical("Could not find any urls compatible with the provided system info")
+    return None
 
 
 def get_download_urls(package, version=None):
