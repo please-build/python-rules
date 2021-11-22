@@ -271,6 +271,10 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     if site:
         cmd += ' -S'
 
+    # We can do the templating of __main__.py here to avoid the pex tool
+    # needing knowledge of which testrunner we're using
+    # cmd += 'sed -i \'s/__TEST_RUNNER__/
+
     cmd += f'; mv __main__.py {name}_main.py'
 
     # Use the pex tool to template the entry point

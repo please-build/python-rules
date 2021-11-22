@@ -25,7 +25,6 @@ var opts = struct {
 	Debug              pex.Debugger `short:"d" long:"debug" optional:"true" optional-value:"pdb" choice:"pdb" choice:"debugpy" description:"Debugger to generate a debugging pex"`
 	Site               bool         `short:"S" long:"site" description:"Allow the pex to import site at startup"`
 	ZipSafe            bool         `long:"zip_safe" description:"Marks this pex as zip-safe"`
-	AddTestRunnerDeps  bool         `long:"add_test_runner_deps" description:"True if test-runner dependencies should be baked into test binaries"`
 }{
 	Usage: `
 please_pex is a tool to create .pex files for Python.
@@ -45,7 +44,7 @@ func main() {
 		w.SetShebang(opts.Shebang, opts.InterpreterOptions)
 	}
 	if opts.Test {
-		w.SetTest(opts.TestSrcs, opts.TestRunner, opts.AddTestRunnerDeps)
+		w.SetTest(opts.TestSrcs, opts.TestRunner)
 	}
 	if len(opts.Debug) > 0 {
 		w.SetDebugger(opts.Debug)

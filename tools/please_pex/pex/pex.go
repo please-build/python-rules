@@ -79,46 +79,16 @@ func (pw *Writer) SetShebang(shebang string, options string) {
 
 // SetTest sets this Writer to write tests using the given sources.
 // This overrides the entry point given earlier.
-func (pw *Writer) SetTest(srcs []string, testRunner string, addTestRunnerDeps bool) {
+func (pw *Writer) SetTest(srcs []string, testRunner string) {
 	pw.realEntryPoint = "pex_test_main"
 	pw.testSrcs = srcs
 
-	testRunnerDeps := []string{
-		".bootstrap/coverage",
-		".bootstrap/__init__.py",
-		".bootstrap/six.py",
-	}
-
 	switch testRunner {
 	case "pytest":
-		// We only need xmlrunner for unittest, the equivalent is builtin to pytest.
-		testRunnerDeps = append(testRunnerDeps,
-			".bootstrap/pytest.py",
-			".bootstrap/_pytest",
-			".bootstrap/py",
-			".bootstrap/pluggy",
-			".bootstrap/attr",
-			".bootstrap/funcsigs",
-			".bootstrap/more_itertools",
-			".bootstrap/packaging",
-			".bootstrap/pkg_resources",
-			".bootstrap/importlib_metadata",
-			".bootstrap/zipp",
-		)
 		pw.testRunner = filepath.Join(testRunnersDir, "pytest.py")
 	case "behave":
-		testRunnerDeps = append(testRunnerDeps,
-			".bootstrap/behave",
-			".bootstrap/parse.py",
-			".bootstrap/parse_type",
-			".bootstrap/traceback2",
-			".bootstrap/enum",
-			".bootstrap/win_unicode_console",
-			".bootstrap/colorama",
-		)
 		pw.testRunner = filepath.Join(testRunnersDir, "behave.py")
 	case "unittest":
-		testRunnerDeps = append(testRunnerDeps, ".bootstrap/xmlrunner")
 		pw.testRunner = filepath.Join(testRunnersDir, "unittest.py")
 	default:
 		if !strings.ContainsRune(testRunner, '.') {
@@ -126,10 +96,6 @@ func (pw *Writer) SetTest(srcs []string, testRunner string, addTestRunnerDeps bo
 		}
 		pw.testRunner = filepath.Join(testRunnersDir, "custom.py")
 		pw.customTestRunner = testRunner
-	}
-
-	if addTestRunnerDeps {
-		pw.includeLibs = append(pw.includeLibs, testRunnerDeps...)
 	}
 }
 
@@ -167,15 +133,7 @@ func (pw *Writer) Write(out, moduleDir string) error {
 	if err != nil {
 		panic(err)
 	}
-
 	defer f.Close()
-
-	// If this is just going to be a .py file, you can't have a shebang at the top of it
-	// Write preamble
-	// shebang := []byte(pw.shebang)
-	// if _, err := f.Write(shebang); err != nil {
-	// 	panic(err)
-	// }
 
 	// Write pex_main.py with some templating.
 	b := mustRead("pex_main.py")
