@@ -19,7 +19,7 @@ DefaultValue = python3
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
-DefaultValue = @self//tools/please_pex:please_pex
+DefaultValue = @self//tools/please_pex
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
@@ -28,11 +28,6 @@ DefaultValue = ""
 [PluginConfig "test_runner"]
 ConfigKey = TestRunner
 DefaultValue = unittest
-
-; [PluginConfig "test_runner_bootstrap"]
-; ConfigKey = TestRunnerBootstrap
-; DefaultValue = "@self//third_party/python:unittest"
-; Optional = false
 
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir

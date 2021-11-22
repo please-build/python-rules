@@ -45,10 +45,10 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
     """
     if not zip_safe:
         labels += ['py:zip-unsafe']
-    if srcs or resources or deps:
+    if srcs or resources:
         cmd = f'$TOOLS_JARCAT z -d -o ${OUTS} -i .'
 
-        # For some reason jarcat isn't unflattening .whl files so do it manually here for now
+        # For some reason jarcat isn't unflattening .whl files so do it manually here till I figure out why
         unzip_cmd = f'for i in $(find . -name \'*.whl\'); do mv $i .; unzip $(basename "$i"); done'
 
         interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
@@ -58,7 +58,6 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
             # in python2 so we have to guess whether we should apply it or not.
             bytecode_flag = '-b' if 'python3' in interpreter or 'pypy3' in interpreter else ''
             compile_cmd = f'$TOOLS_INT -S -m compileall {bytecode_flag} -f $SRCS_SRCS'
-            # compile_cmd = f'filename=$(ls test/*_main.py); mv $filename __main__.py && $TOOLS_INT -S -m compileall {bytecode_flag} -f $SRCS_SRCS'
             if strip:
                 cmd = ' && '.join([unzip_cmd, compile_cmd, 'rm -f $SRCS_SRCS', cmd])
             else:
@@ -137,9 +136,8 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     """
     shebang = shebang or interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
-    module_dir = CONFIG.PYTHON.MODULE_DIR
-    interpreter_options = CONFIG.PYTHON.INTERPRETER_OPTIONS
-    cmd = f'$TOOLS_PEX -s {shebang} -m {module_dir} {zipsafe_flag} --interpreter_options={interpreter_options} --stamp="$RULE_HASH"'
+    cmd = '$TOOLS_PEX -s "%s" -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
+            shebang, CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
     if site:
         cmd += ' -S'
 
