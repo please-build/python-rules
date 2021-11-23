@@ -467,27 +467,39 @@ pip_library(
     version = "1.5.0",
 )
 
-if CONFIG.PYTHON.TEST_RUNNER == "unittest":
-    filegroup(
-        name = "testrunner_bootstrap",
+filegroup(
+    name = "unittest_bootstrap",
+    srcs = [
+        ":coverage",
+        ":portalocker",
+        ":six",
+        ":xmlrunner",
+    ],
+)
+
+filegroup(
+        name = "pytest_bootstrap",
         srcs = [
-            ":coverage",
-            ":portalocker",
+            ":pytest",
+            ":attrs",
+            ":funcsigs",
+            ":more_itertools",
+            ":packaging",
+            ":pkg_resources",
+            ":pluggy",
+            ":py",
             ":six",
-            ":xmlrunner",
+            ":importlib_metadata",
+            ":zipp",
         ],
     )
-elif CONFIG.PYTHON.TEST_RUNNER == "pytest":
-    filegroup(
-        name = "testrunner_bootstrap",
-        srcs = [
-            "@self//third_party/python:pytest",
-        ],
-    )
-elif CONFIG.PYTHON.TEST_RUNNER == "behave":
-    filegroup(
-        name = "testrunner_bootstrap",
-        srcs = [
-            "@self//third_party/behave:behave",
-        ],
-    )
+
+filegroup(
+    name = "behave_bootstrap",
+    srcs = [
+        ":behave",
+        ":parse",
+        ":six",
+        ":parse_type",
+    ],
+)

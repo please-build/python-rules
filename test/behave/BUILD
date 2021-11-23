@@ -1,6 +1,7 @@
 package(
     python = {
-        "TEST_RUNNER": "behave"
+        "TEST_RUNNER": "behave",
+        "TESTRUNNER_DEPS": "@self//third_party/python:behave_bootstrap",
     },
 )
 

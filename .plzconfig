@@ -31,6 +31,10 @@ DefaultValue = ""
 ConfigKey = TestRunner
 DefaultValue = unittest
 
+[PluginConfig "testrunner_deps"]
+ConfigKey = TestrunnerDeps
+DefaultValue = @self//third_party/python:unittest_bootstrap
+
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
 DefaultValue = third_party.python
@@ -48,10 +52,6 @@ Optional = true
 ConfigKey = WheelTool
 DefaultValue = @self//tools/wheel_resolver
 Optional = true
-
-[PluginConfig "testrunner_deps"]
-ConfigKey = TestrunnerDeps
-DefaultValue = @self//third_party/python:unittest_bootstrap
 
 [featureflags]
 PythonWheelHashing = true

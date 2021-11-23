@@ -1,6 +1,7 @@
 package(
     python = {
-        "TEST_RUNNER": "pytest"
+        "TEST_RUNNER": "pytest",
+        "TESTRUNNER_DEPS": "@self//third_party/python:pytest_bootstrap",
     },
 )
 
