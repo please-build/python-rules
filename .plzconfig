@@ -48,3 +48,7 @@ Optional = true
 ConfigKey = WheelTool
 DefaultValue = @self//tools/wheel_resolver
 Optional = true
+
+[PluginConfig "testrunner_deps"]
+ConfigKey = TestrunnerDeps
+DefaultValue = @self//third_party/python:unittest_bootstrap

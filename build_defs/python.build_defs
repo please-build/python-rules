@@ -317,14 +317,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     # required deps here. Otherwise, we'll check if the config specifies a
     # PYTHON_TEST_RUNNER_BOOTSTRAP target and add that as a dependency.
     # bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
-    if test_runner == 'unittest':
-        deps += ["///self//third_party/python:unittest_bootstrap"]
-    elif test_runner == 'pytest':
-        deps += ["@self//third_party/python:pytest_bootstrap"]
-    elif test_runner == 'behave':
-        deps += ["@self//third_party/python:behave"]
-    elif bootstrap:
-        deps += [bootstrap] if bootstrap not in deps else []
+    deps += [CONFIG.PYTHON.TESTRUNNER_DEPS]
 
     test_cmd = f'$TEST {flags}'
     if worker:
