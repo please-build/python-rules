@@ -469,7 +469,7 @@ pip_library(
 
 if CONFIG.PYTHON.TEST_RUNNER == "unittest":
     filegroup(
-        name = "unittest_bootstrap",
+        name = "testrunner_bootstrap",
         srcs = [
             ":coverage",
             ":portalocker",
@@ -479,8 +479,15 @@ if CONFIG.PYTHON.TEST_RUNNER == "unittest":
     )
 elif CONFIG.PYTHON.TEST_RUNNER == "pytest":
     filegroup(
-        name = "pytest_bootstrap",
+        name = "testrunner_bootstrap",
         srcs = [
             "@self//third_party/python:pytest",
+        ],
+    )
+elif CONFIG.PYTHON.TEST_RUNNER == "behave":
+    filegroup(
+        name = "testrunner_bootstrap",
+        srcs = [
+            "@self//third_party/behave:behave",
         ],
     )
