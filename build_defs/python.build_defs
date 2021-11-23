@@ -266,14 +266,12 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
     module_dir = CONFIG.PYTHON.MODULE_DIR
     interpreter_options = CONFIG.PYTHON.INTERPRETER_OPTIONS
-    # TODO: Remove add_test_runner_deps flag from pex tool as the deps are now added here
     cmd = f'$TOOLS_PEX -t -s {interpreter} -m {module_dir} -r {test_runner} --zip_safe --interpreter_options={interpreter_options} --stamp="$RULE_HASH"'
     if site:
         cmd += ' -S'
 
-    # We can do the templating of __main__.py here to avoid the pex tool
-    # needing knowledge of which testrunner we're using
-    # cmd += 'sed -i \'s/__TEST_RUNNER__/
+    #TODO(swestmoreland): the testrunner's run_tests() is still dealt with in the pex tool. Would
+    # ideally like to have that here.
 
     cmd += f'; mv __main__.py {name}_main.py'
 
