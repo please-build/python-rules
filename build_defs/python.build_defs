@@ -270,7 +270,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     if site:
         cmd += ' -S'
 
-    #TODO(swestmoreland): the testrunner's run_tests() is still dealt with in the pex tool. Would
+    # TODO: The testrunner's run_tests() is still dealt with in the pex tool. Would
     # ideally like to have that here.
 
     cmd += f'; mv __main__.py {name}_main.py'
