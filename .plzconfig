@@ -52,3 +52,6 @@ Optional = true
 [PluginConfig "testrunner_deps"]
 ConfigKey = TestrunnerDeps
 DefaultValue = @self//third_party/python:unittest_bootstrap
+
+[featureflags]
+PythonWheelHashing = true

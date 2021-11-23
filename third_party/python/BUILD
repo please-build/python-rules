@@ -71,7 +71,7 @@ pip_library(
 python_wheel(
     name = "requests",
     hashes = [
-        "7e6a997b42711956d686dee0d70147cf3b3642c15bcc92e92519eb127e3b7f7c",
+        "43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee",
     ],
     version = "2.23.0",
     deps = [
@@ -84,31 +84,31 @@ python_wheel(
 
 python_wheel(
     name = "certifi",
-    hashes = ["4b5b9b468d636e6377a274c1f38dcb1a83592604e903110f372a0df427937a20"],
+    hashes = ["017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3"],
     version = "2019.11.28",
 )
 
 python_wheel(
     name = "chardet",
-    hashes = ["ba7fb63d251415bb1734efebcfc455774a29a3dc14df0f6d034fb28d29bdae23"],
+    hashes = ["fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"],
     version = "3.0.4",
 )
 
 python_wheel(
     name = "idna",
-    hashes = ["59e58591cbcf013ada32c9b5a3ba4e685665c28c478e58daaca10a3ab099ce2b"],
+    hashes = ["a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"],
     version = "2.9",
 )
 
 python_wheel(
     name = "urllib3",
-    hashes = ["47a4b1a45db1de13ed07255fa450ef0fe1cb1e6fd44d4577f6e6ad13f4bf987a"],
+    hashes = ["2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc"],
     version = "1.25.8",
 )
 
 python_wheel(
     name = "colorlog",
-    hashes = ["bab0dcf03e070e892eb24b7f09dec4f7cbde01a210c64a9f87a51d61c0cc4795"],
+    hashes = ["732c191ebbe9a353ec160d043d02c64ddef9028de8caae4cfa8bd49b6afed53e"],
     version = "4.1.0",
 )
 
@@ -116,7 +116,7 @@ python_wheel(
     name = "dateutil",
     package_name = "python_dateutil",
     hashes = [
-        "94234e68e7cf65f3ab564cc4016451f6027feddc3a02bd922dfb5489569efcfc",
+        "5179fabb692e3ec5a6e994eb9a72a6f4498f19106774672fd7e664a7aa9f49c3",
     ],
     test_only = True,  # Not used by plz itself.
     version = "2.4.0",
@@ -287,7 +287,7 @@ pip_library(
 python_wheel(
     name = "absl",
     package_name = "absl_py",
-    hashes = ["75496a0389de88af171d43181aef60a4c0a240664630a072821a60eddd0a6768"],
+    hashes = ["c106f6ef0ae86c1273b0858b40ee15b99fad1c223838387b9d11446a033bbcb1"],
     version = "0.9.0",
     deps = [":six"],
 )
