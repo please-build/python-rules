@@ -1,4 +1,7 @@
-subinclude("//build_defs:multiversion_wheel")
+subinclude(
+                "//build_defs:multiversion_wheel",
+                "//build_defs:python",
+                )
 
 package(
     default_visibility = ["PUBLIC"],
@@ -115,9 +118,7 @@ python_wheel(
 python_wheel(
     name = "dateutil",
     package_name = "python_dateutil",
-    hashes = [
-        "5179fabb692e3ec5a6e994eb9a72a6f4498f19106774672fd7e664a7aa9f49c3",
-    ],
+    hashes = ["97d99339c1237d8ec22c86a2705d9782492203c8"],
     test_only = True,  # Not used by plz itself.
     version = "2.4.0",
     deps = [":six"],
