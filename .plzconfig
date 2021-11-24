@@ -38,6 +38,21 @@ ConfigKey = ModuleDir
 DefaultValue = third_party.python
 Optional = true
 
+[PluginConfig "pip_tool"]
+ConfigKey = PipTool
+DefaultValue = ""
+Optional = true
+
+[PluginConfig "default_pip_repo"]
+ConfigKey = DefaultPipRepo
+DefaultValue = ""
+Optional = true
+
+[PluginConfig "disable_vendor_flags"]
+ConfigKey = DisableVendorFlags
+DefaultValue = false
+Optional = true
+
 [PluginConfig "wheel_repo"]
 ConfigKey = WheelRepo
 Optional = true
