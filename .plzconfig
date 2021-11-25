@@ -48,6 +48,16 @@ ConfigKey = DefaultPipRepo
 DefaultValue = ""
 Optional = true
 
+[PluginConfig "use_pypi"]
+ConfigKey = UsePypi
+DefaultValue = true
+Optional = true
+
+[PluginConfig "pip_flags"]
+ConfigKey = PipFlags
+DefaultValue = ""
+Optional = true
+
 [PluginConfig "disable_vendor_flags"]
 ConfigKey = DisableVendorFlags
 DefaultValue = false
