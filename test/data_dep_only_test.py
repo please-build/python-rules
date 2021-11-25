@@ -15,7 +15,7 @@ class DataDepTest(unittest.TestCase):
             with self.assertRaises(KeyError):
                 zf.getinfo('test/data_dep.pex')
             with self.assertRaises(KeyError):
-                zf.getinfo('test/data_dep.py')
+                zf.getinfo('test/dsata_dep.py')
 
     def test_can_run_data_dep(self):
         """Test that we can also invoke the .pex directly as a data dependency."""
