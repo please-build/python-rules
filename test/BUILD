@@ -43,6 +43,19 @@ python_binary(
     main = ":rule_main",
 )
 
+# Test that we don't generate coverage on running a test normally (because it's slower)
+python_test(
+    name = "_no_coverage_output_test",
+    srcs = ["coverage_output_test.py"],
+)
+
+plz_e2e_test(
+    name = "no_coverage_output_test",
+    cmd = "plz test //test:_no_coverage_output_test",
+    expect_file_doesnt_exist = "../../../bin/test/.test_coverage__no_coverage_output_test*",
+    labels = ["python3"],
+)
+
 sh_test(
     name = "rule_main_test",
     src = "rule_main_test.sh",
@@ -198,6 +211,22 @@ python_wheel(
     name = "cryptography",
     package_name = "cryptography",
     version = "35.0.0",
+)
+
+plz_e2e_test(
+    name = "correct_labels_on_pip_libary_non_zip_safe",
+    cmd = "plz query print -f labels //third_party/python:numpy",
+    expected_output = "expected_labels_on_numpy.txt",
+    labels = ["py3"],
+    deps = ["//third_party/python:numpy"],
+)
+
+plz_e2e_test(
+    name = "correct_labels_on_pip_libary_zip_safe",
+    cmd = "plz query print -f labels //third_party/python:grpcio",
+    expected_output = "expected_labels_on_grpcio.txt",
+    labels = ["py3"],
+    deps = ["//third_party/python:grpcio"],
 )
 
 python_test(
