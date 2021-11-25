@@ -2,7 +2,7 @@
 
 This repo is a plugin that provides python rules for the [Please](https://please.build) build system.
 
-# Basic usage
+## Basic usage
 
 ```python
 # BUILD
@@ -48,7 +48,7 @@ PreloadSubincludes = @python_rules//build_defs:python
 
 Alternatively, if you are not using python everywhere, you can simply `subinclude("@python_rules//build_defs:python")` to individual BUILD files as needed.
 
-# Configuration
+## Configuration
 
 Plugins are configured under a Plugin heading like so:
 ```
