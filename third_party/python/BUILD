@@ -1,7 +1,7 @@
 subinclude(
-                "//build_defs:multiversion_wheel",
-                "//build_defs:python",
-                )
+    "//build_defs:multiversion_wheel",
+    "//build_defs:python",
+)
 
 package(
     default_visibility = ["PUBLIC"],
@@ -479,28 +479,28 @@ filegroup(
 )
 
 filegroup(
-        name = "pytest_bootstrap",
-        srcs = [
-            ":pytest",
-            ":attrs",
-            ":funcsigs",
-            ":more_itertools",
-            ":packaging",
-            ":pkg_resources",
-            ":pluggy",
-            ":py",
-            ":six",
-            ":importlib_metadata",
-            ":zipp",
-        ],
-    )
+    name = "pytest_bootstrap",
+    srcs = [
+        ":attrs",
+        ":funcsigs",
+        ":importlib_metadata",
+        ":more_itertools",
+        ":packaging",
+        ":pkg_resources",
+        ":pluggy",
+        ":py",
+        ":pytest",
+        ":six",
+        ":zipp",
+    ],
+)
 
 filegroup(
     name = "behave_bootstrap",
     srcs = [
         ":behave",
         ":parse",
-        ":six",
         ":parse_type",
+        ":six",
     ],
 )
