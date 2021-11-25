@@ -322,6 +322,132 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         tools=[CONFIG.JARCAT_TOOL],
     )
 
+def pip_library(name:str, version:str, hashes:list=None, package_name:str=None,
+                test_only:bool&testonly=False, deps:list=[], post_install_commands:list=None,
+                install_subdirectory:str=None, repo:str=None, use_pypi:bool=None, patch:str|list=None,
+                visibility:list=None, zip_safe:bool=True, licences:list=None, pip_flags:str=None,
+                strip:list=[]):
+    """Provides a build rule for third-party dependencies to be installed by pip.
+
+    Args:
+      name (str): Name of the build rule.
+      version (str): Specific version of the package to install.
+      hashes (list): List of acceptable hashes for this target.
+      package_name (str): Name of the pip package to install. Defaults to the same as 'name'.
+      outs (list): List of output files / directories. Defaults to [name]. If subdirectory is used outs[0] is used as the prefix.
+      test_only (bool): If True, can only be used by test rules or other test_only libraries.
+      deps (list): List of rules this library depends on.
+      post_install_commands (list): Commands run after pip install has completed.
+      install_subdirectory (bool): Forces the package to install into a subdirectory with this name.
+      repo (str): Allows specifying a custom repo to fetch from.
+      use_pypi (bool): If True, will check PyPI as well for packages.
+      patch (str | list): A patch file or files to be applied after install.
+      visibility (list): Visibility declaration for this rule.
+      zip_safe (bool): Flag to indicate whether a pex including this rule will be zip-safe.
+      licences (list): Licences this rule is subject to. Default attempts to detect from package metadata.
+      pip_flags (str): List of additional flags to pass to pip.
+      strip (list): Files to strip after install. Note that these are done at any level.
+    """
+    pip_target_dir = "pip_install"
+
+    package_name = package_name or name
+    package_name = f'{package_name}=={version}'
+    post_install_commands = post_install_commands or []
+    use_pypi = CONFIG.PYTHON.USE_PYPI if use_pypi is None else use_pypi
+    index_flag = '' if use_pypi else '--no-index'
+    pip_flags = pip_flags or CONFIG.PYTHON.PIP_FLAGS
+
+    repo_flag = ''
+    repo = repo or CONFIG.PYTHON.DEFAULT_PIP_REPO
+    if repo:
+        if repo.startswith('//') or repo.startswith(':'):  # Looks like a build label, not a URL.
+            repo_flag = f'-f %(location {repo})'
+            deps += [repo]
+        else:
+            repo_flag = '-f ' + repo
+
+    target = f"{pip_target_dir}/{name}"
+    if install_subdirectory:
+        target += '/' + install_subdirectory
+
+    pip_tool = "$TOOLS_PIP" if CONFIG.PYTHON.PIP_TOOL else '$TOOLS_PYTHON -m pip'
+
+    # Unset these compiler and linker flags as macOS doesn't have all these options.
+    pip_compile_flags = 'CFLAGS=" -Wl,--build-id=none -g0 " LDFLAGS=" -Wl,--build-id=none"' if CONFIG.HOSTOS != 'darwin' else 'CFLAGS=" -g0"'
+
+    pip_cmd = (
+        f'mkdir {pip_target_dir} && '
+        f'PIP_CONFIG_FILE=/dev/null {pip_compile_flags} {pip_tool} install --isolated --no-deps --prefix= --no-compile '
+        f'--no-cache-dir --default-timeout=60 --target={target}'
+    )
+
+    # TODO(jpoole): This is a total mess on pip's side with --user flag. https://github.com/pypa/pip/issues/1668
+    # It seems like most things have been resolved (Oct 2019ish) however a lot of python installs are probably not
+    # updated yet. Essentially the "user" default will be turned off when --target is passed. Right now, it complains
+    # that --prefix (and therefore --target) are incompatible with --user. See https://github.com/pypa/pip/pull/7002
+    if CONFIG.HOSTOS == 'darwin' and CONFIG.PYTHON.DISABLE_VENDOR_FLAGS == "false":
+        # Fix for Homebrew which fails with a superficially similar issue.
+        # https://github.com/Homebrew/brew/blob/master/docs/Homebrew-and-Python.md suggests fixing with --install-option
+        # but that prevents downloading binary wheels. This is more fiddly but seems to work.
+        # Unfortunately it does *not* work similarly on the Debian problem :(
+        pip_cmd = 'echo "[install]\nprefix=" > setup.cfg; ' + pip_cmd
+    if CONFIG.OS == 'linux' and CONFIG.PYTHON.DISABLE_VENDOR_FLAGS == "false":
+        # Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=830892
+        # tl;dr: Debian has broken --target with a custom patch, the only way to fix is to pass --system
+        # which is itself Debian-specific, so we need to find if we're running on Debian. AAAAARGGGHHHH...
+        pip_cmd = f'[ -f /etc/debian_version ] && SYS_FLAG="--system" || SYS_FLAG=""; {pip_cmd} $SYS_FLAG'
+
+    pip_cmd += f' {repo_flag} {index_flag} {pip_flags} {package_name}'
+
+    if strip:
+        pip_cmd += ' && find . %s | xargs rm -rf' % ' -or '.join(['-name "%s"' % s for s in strip])
+
+    if install_subdirectory:
+        pip_cmd += f' && touch {target}/__init__.py && rm -rf {target}/*.egg-info {target}/*.dist-info'
+
+    if patch:
+        patches, c = _patch_cmd(patch)
+        pip_cmd += ' && ' + ' && '.join(c)
+
+    if post_install_commands:
+        pip_cmd = ' && '.join([pip_cmd] + post_install_commands)
+
+    tools = {'pip': [CONFIG.PYTHON.PIP_TOOL]} if CONFIG.PYTHON.PIP_TOOL else {'python': [CONFIG.PYTHON.DEFAULT_INTERPRETER]}
+    srcs = build_rule(
+        name = name,
+        tag = "srcs",
+        cmd = pip_cmd,
+        test_only = test_only,
+        output_dirs = [pip_target_dir],
+        srcs = patches if patch else [],
+        building_description = 'Fetching...',
+        tools = tools,
+        sandbox = False,
+    )
+
+    # Don't include the dependency whl's into our whl. They are later picked up by py_binary anyway.
+    cmd = f'$TOOLS_JARCAT z --suffix="" --exclude_suffix=whl --include_other -i . -r $PKG/{name}:$PKG'
+    if not licences:
+        cmd += ' && find . -name METADATA -or -name PKG-INFO | grep -v "^./build/" | xargs grep -E "License ?:" | grep -v UNKNOWN | cat || true'
+
+    return build_rule(
+        name = name,
+        cmd = cmd,
+        outs = [name + '.whl'],
+        srcs = [srcs],
+        deps = [] + deps,
+        building_description = 'Collecting...',
+        hashes = hashes,
+        test_only = test_only,
+        licences = licences,
+        tools = {
+            'jarcat': [CONFIG.JARCAT_TOOL],
+        },
+        post_build = None if licences else _add_licences,
+        labels = ['py', 'pip:' + package_name] + (['py:zip-unsafe'] if not zip_safe else []),
+        visibility = visibility,
+    )
+
 def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None, outs:list=None,
                  post_install_commands:list=None, patch:str|list=None, licences:list=None,
                  test_only:bool&testonly=False, repo:str=None, zip_safe:bool=True, visibility:list=None,
