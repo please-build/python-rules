@@ -47,10 +47,6 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
         labels += ['py:zip-unsafe']
     if srcs or resources:
         cmd = '$TOOLS_JARCAT z -d -o ${OUTS} -i .'
-
-        # For some reason jarcat isn't unflattening .whl files so do it manually here till I figure out why
-        unzip_cmd = f'for i in $(find . -name \'*.whl\'); do mv $i .; unzip $(basename "$i"); done'
-
         interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
         if srcs:
             # This is a bit of a hack, but rather annoying. We want to put bytecode in its 'legacy' location
@@ -59,9 +55,9 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
             bytecode_flag = '-b' if 'python3' in interpreter or 'pypy3' in interpreter else ''
             compile_cmd = f'$TOOLS_INT -S -m compileall {bytecode_flag} -f $SRCS_SRCS'
             if strip:
-                cmd = ' && '.join([unzip_cmd, compile_cmd, 'rm -f $SRCS_SRCS', cmd])
+                cmd = ' && '.join([compile_cmd, 'rm -f $SRCS_SRCS', cmd])
             else:
-                cmd = ' && '.join([unzip_cmd, compile_cmd, cmd])
+                cmd = ' && '.join([compile_cmd, cmd])
 
         # Pre-zip the files for later collection by python_binary.
         zip_rule = build_rule(
