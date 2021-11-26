@@ -46,7 +46,7 @@ Add the following to your `.plzconfig`
 PreloadSubincludes = @python_rules//build_defs:python
 ```
 
-Alternatively, if you are not using python everywhere, you can simply `subinclude("@python_rules//build_defs:python")` to individual BUILD files as needed.
+Alternatively, if you are not using python everywhere, you can simply put `subinclude("@python_rules//build_defs:python")` at the top of individual BUILD files as needed.
 
 ## Configuration
 
@@ -54,45 +54,22 @@ Plugins are configured under a Plugin heading like so:
 ```
 [Plugin "python"]
 DefaultInterpreter = python3
+```
+
+The available configuration options are:
 
 [Plugin "python"]
 InterpreterOptions = -b -s
-
-[PluginConfig "default_interpreter"]
-ConfigKey = DefaultInterpreter
-DefaultValue = python3
-
-[PluginConfig "pex_tool"]
-ConfigKey = PexTool
-DefaultValue = @self//tools/please_pex
-
-[PluginConfig "interpreter_options"]
-ConfigKey = InterpreterOptions
-DefaultValue = ""
-
-[PluginConfig "test_runner"]
-ConfigKey = TestRunner
-DefaultValue = unittest
-
-[PluginConfig "test_runner_bootstrap"]
-ConfigKey = TestRunnerBootstrap
-Optional = true
-
-[PluginConfig "module_dir"]
-ConfigKey = ModuleDir
-DefaultValue = third_party.python
-Optional = true
-
-[PluginConfig "wheel_repo"]
-ConfigKey = WheelRepo
-Optional = true
-
-[PluginConfig "wheel_name_scheme"]
-ConfigKey = WheelNameScheme
-Optional = true
-
-[PluginConfig "wheel_tool"]
-ConfigKey = WheelTool
-DefaultValue = @self//tools/wheel_resolver
-Optional = true
-```
+DefaultInterpreter = python3
+PexTool = @self//tools/please_pex
+TestRunner = unittest
+ModuleDir = third_party.python
+WheelRepo = https://pypi.org/pypi
+WheelNameScheme = None
+WheelTool = @self//tools/wheel_resolver
+TestRunnerDeps = @self//third_party/python:unittest_bootstrap
+PipTool = 
+DefaultPipRepo
+UsePypi
+PipFlags
+DisableVendorFlags
