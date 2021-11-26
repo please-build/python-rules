@@ -3,6 +3,7 @@ Version = >=16.10.1
 
 [Parse]
 PreloadBuildDefs = build_defs/python.build_defs
+PreloadBuildDefs = test/build_defs/test.build_defs
 
 [Go]
 ImportPath = github.com/please-build/python-rules
@@ -36,6 +37,31 @@ Optional = true
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
 DefaultValue = third_party.python
+Optional = true
+
+[PluginConfig "pip_tool"]
+ConfigKey = PipTool
+DefaultValue = ""
+Optional = true
+
+[PluginConfig "default_pip_repo"]
+ConfigKey = DefaultPipRepo
+DefaultValue = ""
+Optional = true
+
+[PluginConfig "use_pypi"]
+ConfigKey = UsePypi
+DefaultValue = true
+Optional = true
+
+[PluginConfig "pip_flags"]
+ConfigKey = PipFlags
+DefaultValue = ""
+Optional = true
+
+[PluginConfig "disable_vendor_flags"]
+ConfigKey = DisableVendorFlags
+DefaultValue = false
 Optional = true
 
 [PluginConfig "wheel_repo"]
