@@ -57,7 +57,7 @@ DefaultInterpreter = python3
 ```
 
 The available configuration options are:
-
+```
 [Plugin "python"]
 InterpreterOptions = -b -s
 DefaultInterpreter = python3
@@ -73,3 +73,4 @@ DefaultPipRepo
 UsePypi
 PipFlags
 DisableVendorFlags
+```
