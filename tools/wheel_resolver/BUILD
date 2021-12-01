@@ -1,3 +1,5 @@
+subinclude("//build_defs:python")
+
 python_binary(
     name = "wheel_resolver",
     main = "//tools/wheel_resolver/src:resolve",
