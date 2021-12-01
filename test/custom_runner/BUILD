@@ -1,3 +1,5 @@
+subinclude("//build_defs:python")
+
 python_library(
     name = "runner",
     srcs = ["runner.py"],

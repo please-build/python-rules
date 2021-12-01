@@ -1,4 +1,4 @@
-subinclude("//build_defs:multiversion_wheel")
+subinclude("//build_defs:multiversion_wheel", "//build_defs:python")
 
 package(
     default_visibility = ["PUBLIC"],
