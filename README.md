@@ -68,9 +68,9 @@ WheelRepo = https://pypi.org/pypi
 WheelNameScheme = None
 WheelTool = @self//tools/wheel_resolver
 TestRunnerDeps = @self//third_party/python:unittest_bootstrap
-PipTool = 
-DefaultPipRepo
-UsePypi
-PipFlags
-DisableVendorFlags
+PipTool = ""
+DefaultPipRepo = ""
+UsePypi = True
+PipFlags = ""
+DisableVendorFlags = False
 ```
