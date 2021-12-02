@@ -41,7 +41,8 @@ python_binary(
 ```
 
 Add the following to your `.plzconfig`
-```
+
+```ini
 [Parse]
 PreloadSubincludes = @python_rules//build_defs:python
 ```
@@ -51,13 +52,15 @@ Alternatively, if you are not using python everywhere, you can simply put `subin
 ## Configuration
 
 Plugins are configured under a Plugin heading like so:
-```
+
+```ini
 [Plugin "python"]
 DefaultInterpreter = python3
 ```
 
 The available configuration options are:
-```
+
+```ini
 [Plugin "python"]
 InterpreterOptions = -b -s
 DefaultInterpreter = python3
