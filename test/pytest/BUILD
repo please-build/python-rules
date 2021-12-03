@@ -1,3 +1,5 @@
+subinclude("//build_defs:python")
+
 package(
     python = {
         "TEST_RUNNER": "pytest",

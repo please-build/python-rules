@@ -1,3 +1,5 @@
+subinclude("//build_defs:python")
+
 python_test(
     name = "local_lib_import_test",
     srcs = ["local_lib_import_test.py"],

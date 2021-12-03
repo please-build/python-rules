@@ -1,3 +1,5 @@
+subinclude("//build_defs:python")
+
 python_test(
     name = "isolated_custom_runner_test",
     srcs = ["custom_runner_test.py"],

@@ -1,3 +1,5 @@
+subinclude("//build_defs:python")
+
 python_library(
     name = "tags",
     srcs = ["tags.py"],
