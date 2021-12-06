@@ -6,8 +6,11 @@ PreloadBuildDefs = test/build_defs/test.build_defs
 
 [Go]
 ImportPath = github.com/please-build/python-rules
-embedtool = @self//tools/please_go_embed
+; embedtool = @self//tools/please_go_embed
 gotool = @self//third_party/go:toolchain|go
+
+[Java]
+JarCatTool = @self//tools/arcat
 
 [PluginDefinition]
 name = python
