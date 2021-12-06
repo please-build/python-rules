@@ -22,7 +22,7 @@ genrule(
     cmd = [
         '"$TOOL" z -d -i . -o "$OUTS" --preamble_file $(location :pex_main)',
     ],
-    tools = ["//tools/arcat"],
+    tools = ["//tools:arcat"],
     visibility = ["PUBLIC"],
 )
 

@@ -10,7 +10,7 @@ ImportPath = github.com/please-build/python-rules
 gotool = @self//third_party/go:toolchain|go
 
 [Java]
-JarCatTool = @self//tools/arcat
+JarCatTool = @self//tools:arcat
 
 [PluginDefinition]
 name = python
