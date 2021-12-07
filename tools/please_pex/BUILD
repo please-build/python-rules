@@ -10,8 +10,6 @@ go_binary(
     ],
 )
 
-# Combine all the Python dependencies into one zipfile and concatenate them
-# onto the binary.
 genrule(
     name = "please_pex",
     srcs = [

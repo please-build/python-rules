@@ -1,7 +1,7 @@
 subinclude("//build_defs:python")
 
 python_binary(
-    name = "resolve",
+    name = "wheel_resolver",
     main = "resolve.py",
     visibility = ["PUBLIC"],
     deps = [
