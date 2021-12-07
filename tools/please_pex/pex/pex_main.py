@@ -127,8 +127,6 @@ class SoImport(object):
             for name in zf.namelist():
                 path, _ = self.splitext(name)
                 if path:
-                    if path.startswith('.bootstrap/'):
-                        path = path[len('.bootstrap/'):]
                     importpath = path.replace('/', '.')
                     self.modules.setdefault(importpath, name)
                     if path.startswith(MODULE_DIR):

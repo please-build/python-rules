@@ -38,7 +38,6 @@ type Writer struct {
 	realEntryPoint   string
 	pexStamp         string
 	testSrcs         []string
-	includeLibs      []string
 	testRunner       string
 	customTestRunner string
 	debugger         string
@@ -107,7 +106,6 @@ func (pw *Writer) SetDebugger(debugger Debugger) {
 		pw.debugger = filepath.Join(debuggersDir, "pdb.py")
 	case "debugpy":
 		pw.debugger = filepath.Join(debuggersDir, "debugpy.py")
-		pw.includeLibs = append(pw.includeLibs, ".bootstrap/debugpy")
 	default:
 		log.Fatalf("Unknown debugger: %s", debugger)
 	}

@@ -59,7 +59,7 @@ python_wheel(
     version = "3.10.0.2",
 )
 
-pip_library(
+python_wheel(
     name = "xmlrunner",
     package_name = "unittest_xml_reporting",
     version = "1.11.0",

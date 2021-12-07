@@ -203,7 +203,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
 
 
 def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
-    """Returns a shebang to pass to jarcat to inject at the top of a pex"""
+    """Returns a shebang to pass to arcat to inject at the top of a pex"""
     # Assume the path to the interpreter is relative
     shebang = f'/usr/bin/env {interpreter}'
     if not site:
@@ -307,10 +307,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     shebang = _set_shebang(interpreter, interpreter_options, site)
 
     # If there are resources specified, they have to get built into the pex.
-    # If the specified test-runner is one of unittest, pytest, or behave, we will add the
-    # required deps here. Otherwise, we'll check if the config specifies a
-    # PYTHON_TEST_RUNNER_BOOTSTRAP target and add that as a dependency.
-    # bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
+    # Also add the the value of CONFIG.PYTHON.TESTRUNNER_BOOTSTRAP as a dependency.
     deps += [CONFIG.PYTHON.TESTRUNNER_DEPS]
 
     test_cmd = f'$TEST {flags}'
@@ -328,7 +325,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         data=data | {'_srcs': srcs} if isinstance(data, dict) else data + srcs,
         outs=[f'{name}.pex'],
         labels=labels + ['test_results_dir'],
-        cmd=f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble=\"{shebang}\" --include_other --add_init_py --strict',
+        cmd=f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict',
         test_cmd=test_cmd,
         needs_transitive_deps=True,
         output_is_complete=True,

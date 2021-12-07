@@ -1,28 +1,14 @@
 subinclude("//build_defs:python")
 
 go_binary(
-    name = "pex_main",
+    name = "please_pex",
     srcs = ["pex_main.go"],
     deps = [
         "//third_party/go:cli-init",
         "//third_party/go:go-logging.v1",
         "//tools/please_pex/pex",
     ],
-)
-
-genrule(
-    name = "please_pex",
-    srcs = [
-        ":pex_main",
-    ],
-    outs = ["please_pex"],
-    binary = True,
-    cmd = [
-        '"$TOOL" z -d -i . -o "$OUTS" --preamble_file $(location :pex_main)',
-    ],
-    tools = ["//tools:arcat"],
     visibility = ["PUBLIC"],
-    labels = ["hlink:plz-out/package"],
 )
 
 python_test(

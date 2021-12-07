@@ -31,8 +31,6 @@ def initialise_coverage():
 def main():
     """Runs the tests. Returns an appropriate exit code."""
     args = [arg for arg in sys.argv[1:]]
-    # Add .bootstrap dir to path, after the initial pex entry
-    sys.path = sys.path[:1] + [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
     if os.getenv('COVERAGE'):
         # It's important that we run coverage while we load the tests otherwise
         # we get no coverage for import statements etc.
@@ -42,7 +40,7 @@ def main():
         cov.start()
         result = run_tests(args)
         cov.stop()
-        omissions = ['*/third_party/*', '*/.bootstrap/*']
+        omissions = ['*/third_party/*']
         # Exclude test code from coverage itself.
         omissions.extend('*/%s.py' % module.replace('.', '/') for module in args)
         import coverage
