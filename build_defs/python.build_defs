@@ -138,7 +138,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     if site:
         cmd += ' -S'
 
-    cmd += f'; mv __main__.py {name}_main.py'
+    cmd += f'; mv __main__.py $OUT'
 
     assert main not in srcs, "main file should not be included in srcs"
 
