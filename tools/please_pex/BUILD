@@ -24,6 +24,7 @@ genrule(
     ],
     tools = ["//tools:arcat"],
     visibility = ["PUBLIC"],
+    labels = ["hlink:plz-out/package"],
 )
 
 python_test(
@@ -38,12 +39,4 @@ python_test(
         "//third_party/python:dateutil",
         "//third_party/python:requests",
     ],
-)
-
-filegroup(
-    name = "release_files",
-    srcs = [
-        ":please_pex"
-    ],
-    labels = ["hlink:plz-out/package"],
 )
