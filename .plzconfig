@@ -31,6 +31,10 @@ DefaultValue = unittest
 ConfigKey = TestRunnerBootstrap
 Optional = true
 
+[PluginConfig "debugger"]
+ConfigKey = Debugger
+DefaultValue = pdb
+
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
 DefaultValue = third_party.python
