@@ -18,32 +18,26 @@ name = python
 [PluginConfig "default_interpreter"]
 ConfigKey = DefaultInterpreter
 DefaultValue = python3
-Optional = true
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
 DefaultValue = @self//tools/please_pex
-Optional = true
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
 DefaultValue = ""
-Optional = true
 
 [PluginConfig "test_runner"]
 ConfigKey = TestRunner
 DefaultValue = unittest
-Optional = true
 
 [PluginConfig "testrunner_deps"]
 ConfigKey = TestrunnerDeps
 DefaultValue = @self//third_party/python:unittest_bootstrap
-Optional = true
 
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
 DefaultValue = third_party.python
-Optional = true
 
 [PluginConfig "pip_tool"]
 ConfigKey = PipTool
@@ -58,7 +52,6 @@ Optional = true
 [PluginConfig "use_pypi"]
 ConfigKey = UsePypi
 DefaultValue = true
-Optional = true
 
 [PluginConfig "pip_flags"]
 ConfigKey = PipFlags
@@ -68,7 +61,6 @@ Optional = true
 [PluginConfig "disable_vendor_flags"]
 ConfigKey = DisableVendorFlags
 DefaultValue = false
-Optional = true
 
 [PluginConfig "wheel_repo"]
 ConfigKey = WheelRepo
@@ -81,7 +73,6 @@ Optional = true
 [PluginConfig "wheel_tool"]
 ConfigKey = WheelTool
 DefaultValue = @self//tools/wheel_resolver
-Optional = true
 
 [featureflags]
 PythonWheelHashing = true

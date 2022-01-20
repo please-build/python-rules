@@ -207,10 +207,7 @@ def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
     # Assume the path to the interpreter is relative
     shebang = f'/usr/bin/env {interpreter}'
     if not site:
-        if ' ' in shebang:
-            shebang = f'#!/bin/sh\nexec {shebang} -S \\\\$0 \\\"\\\\$@\\\"'
-        else:
-            shebang += ' -S'
+        shebang = f'#!/bin/sh\nexec {shebang} -S \\\\$0 \\\"\\\\$@\\\"'
     if not shebang.startswith('#!'):
         shebang = '#!' + shebang
 
