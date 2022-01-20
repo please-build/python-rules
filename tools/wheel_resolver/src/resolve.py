@@ -53,7 +53,7 @@ def main():
     if result is not None:
         download(result)
     else:
-        logging.critical('Found %s urls but none are compatible with the specified architecture', len(urls))
+        logging.critical('Found %s urls but none are compatible', len(urls))
 
 
 main()
