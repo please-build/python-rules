@@ -66,6 +66,7 @@ InterpreterOptions = -b -s
 DefaultInterpreter = python3
 PexTool = @self//tools/please_pex
 TestRunner = unittest
+Debugger = pdb
 ModuleDir = third_party.python
 WheelRepo = https://pypi.org/pypi
 WheelNameScheme = None
