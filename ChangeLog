@@ -1,3 +1,10 @@
+Version 0.2.0
+-------------
+    * Add `python_wheel` rule #14
+    * Add wheel resolver tool #15
+    * Add `README.md` file including usage and configuration #33
+    * Add debugging functionality to `python_binary` and `python_test` #34
+
 Version 0.1.1
 -------------
     * Release tools
