@@ -18,12 +18,10 @@ var opts = struct {
 	TestSrcs           []string     `long:"test_srcs" env:"SRCS" env-delim:" " description:"Test source files"`
 	Interpreter        string       `short:"i" long:"interpreter" env:"TOOLS_INTERPRETER" description:"Python interpreter to use"`
 	TestRunner         string       `short:"r" long:"test_runner" default:"unittest" description:"Test runner to use"`
-	Shebang            string       `short:"s" long:"shebang" description:"Explicitly set shebang to this"`
 	Stamp              string       `long:"stamp" description:"Unique value used to derive cache directory for pex"`
 	InterpreterOptions string       `long:"interpreter_options" description:"Options-string to pass to the python interpreter"`
 	Test               bool         `short:"t" long:"test" description:"True if we're to build a test"`
 	Debug              pex.Debugger `short:"d" long:"debug" optional:"true" optional-value:"pdb" choice:"pdb" choice:"debugpy" description:"Debugger to generate a debugging pex"`
-	Site               bool         `short:"S" long:"site" description:"Allow the pex to import site at startup"`
 	ZipSafe            bool         `long:"zip_safe" description:"Marks this pex as zip-safe"`
 }{
 	Usage: `
@@ -39,10 +37,7 @@ func main() {
 	cli.ParseFlagsOrDie("please_pex", &opts, nil)
 	w := pex.NewWriter(
 		opts.EntryPoint, opts.Interpreter, opts.InterpreterOptions, opts.Stamp,
-		opts.ZipSafe, !opts.Site)
-	if opts.Shebang != "" {
-		w.SetShebang(opts.Shebang, opts.InterpreterOptions)
-	}
+		opts.ZipSafe)
 	if opts.Test {
 		w.SetTest(opts.TestSrcs, opts.TestRunner)
 	}

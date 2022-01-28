@@ -26,9 +26,6 @@ def is_compatible(wheel, archs):
 
     if taglist is None:
         logging.critical("No tags generated")
-    # else:
-    #     len_taglist = sum(1 for _ in taglist)
-    #     logging.critical('Generated %s tags', len_taglist)
 
     for system_tag in taglist:
         for tag in w.tag_triples():
