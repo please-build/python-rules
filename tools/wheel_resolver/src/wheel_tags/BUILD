@@ -7,5 +7,6 @@ python_library(
     deps = [
         "//third_party/python:distlib",
         "//third_party/python:packaging",
+        "//third_party/python:wheel_filename",
     ],
 )

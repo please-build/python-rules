@@ -58,6 +58,7 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
                 cmd = ' && '.join([compile_cmd, 'rm -f $SRCS_SRCS', cmd])
             else:
                 cmd = ' && '.join([compile_cmd, cmd])
+
         # Pre-zip the files for later collection by python_binary.
         zip_rule = build_rule(
             name=name,
@@ -129,12 +130,13 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
                      determine something appropriate for the given interpreter.
       labels (list): Labels to apply to this rule.
     """
-    shebang = shebang or interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
+    interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
+    shebang = shebang or _set_shebang(interpreter, CONFIG.PYTHON.INTERPRETER_OPTIONS, site)
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
-    cmd = '$TOOLS_PEX -s "%s" -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        shebang, CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
-    if site:
-        cmd += ' -S'
+    cmd = '$TOOLS_PEX -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
+        CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
+
+    cmd += f'; mv __main__.py $OUT'
 
     if CONFIG.BUILD_CONFIG == 'dbg':
         # Both `pdb` and `debugpy` require the pex to be exploded to get debugging to work.
@@ -158,7 +160,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         name = name,
         tag = 'pex',
         srcs=[main],
-        outs=[f'.{name}_main.pex.zip'],  # just call it .zip so everything has the same extension
+        outs=[f'{name}_main.py'],
         cmd=cmd,
         requires=['py', 'pex'],
         pre_build=_handle_zip_safe if zip_safe is None else None,
@@ -166,13 +168,14 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         needs_transitive_deps=True,  # Needed so we can find anything with zip_safe=False on it.
         output_is_complete=True,
         tools={
-            'interpreter': [interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER],
+            'interpreter': [interpreter],
             'pex': [CONFIG.PYTHON.PEX_TOOL],
         },
         test_only=test_only,
     )
+
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
-    cmd = '$TOOL z -i . -s .pex.zip -s .whl --preamble_from="$SRC" --include_other --add_init_py --strict'
+    cmd = f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict'
     if strip:
         cmd += ' --strip_py'
 
@@ -203,6 +206,16 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         labels=labels,
         test_only=test_only,
     )
+
+
+def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
+    """Returns a shebang to pass to arcat to inject at the top of a pex"""
+    # Assume the path to the interpreter is relative
+    shebang = f'/usr/bin/env {interpreter}'
+    if not site:
+        return f'#!/bin/sh\nexec {shebang} -S \\\\$0 \\\"\\\\$@\\\"\n'
+
+    return f'#!{shebang}\n'
 
 
 def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:list=[], worker:str='',
@@ -248,33 +261,25 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     """
     interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
     test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
-    cmd = '$TOOLS_PEX -t -s "%s" -m "%s" -r "%s" --zip_safe --add_test_runner_deps --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        interpreter, CONFIG.PYTHON.MODULE_DIR, test_runner,
-        CONFIG.PYTHON.INTERPRETER_OPTIONS)
-    if site:
-        cmd += ' -S'
+    module_dir = CONFIG.PYTHON.MODULE_DIR
+    interpreter_options = CONFIG.PYTHON.INTERPRETER_OPTIONS
+    cmd = f'$TOOLS_PEX -t -m {module_dir} -r {test_runner} --zip_safe --interpreter_options={interpreter_options} --stamp="$RULE_HASH"'
 
     if CONFIG.BUILD_CONFIG == 'dbg':
         # Both `pdb` and `debugpy` require the pex to be exploded to get debugging to work.
         cmd = (f'{cmd} -d=' + CONFIG.PYTHON.DEBUGGER).replace(' --zip_safe', '')
 
-    # If the config specifies a PYTHON_TEST_RUNNER_BOOTSTRAP target, then this ought to contain
-    # the test-runner library (e.g. pytest), and its transitive dependencies. In this case, we just
-    # add the specified target as a dependency.
-    #
-    # If no bootstrap target is provided, then plz will provide a pinned set of dependencies to
-    # support the specified test-runner framework.
-    bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
-    if bootstrap:
-        deps += [bootstrap] if bootstrap not in deps else []
-        cmd = cmd.replace(' --add_test_runner_deps', '')
+    # TODO: The testrunner's run_tests() is still dealt with in the pex tool. Would
+    # ideally like to have that here.
 
-    # Use the pex tool to compress the entry point & add all the bootstrap helpers etc.
+    cmd += f'; mv __main__.py {name}_main.py'
+
+    # Use the pex tool to template the entry point
     pex_rule = build_rule(
         name = name,
         tag = 'pex',
         srcs=srcs,
-        outs=[f'.{name}_main.pex.zip'],  # just call it .zip so everything has the same extension
+        outs=[f'{name}_main.py'],
         cmd=cmd,
         requires=['py'],
         test_only=True,
@@ -289,8 +294,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         labels = labels,
     )
 
-    # If there are resources specified, they have to get built into the pex.
-    deps = [pex_rule]
+    deps += [pex_rule]
     lib_rule = python_library(
         name='_%s#lib' % name,
         srcs=srcs,
@@ -303,6 +307,11 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     )
 
     deps = [pex_rule, lib_rule]
+    shebang = _set_shebang(interpreter, interpreter_options, site)
+
+    # If there are resources specified, they have to get built into the pex.
+    # Also add the the value of CONFIG.PYTHON.TESTRUNNER_BOOTSTRAP as a dependency.
+    deps += [CONFIG.PYTHON.TESTRUNNER_DEPS]
 
     test_cmd = f'$TEST {flags}'
     worker_cmd = f'$(worker {worker})' if worker else ""
@@ -326,7 +335,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         data=data | {'_srcs': srcs} if isinstance(data, dict) else data + srcs,
         outs=[f'{name}.pex'],
         labels=labels + ['test_results_dir'],
-        cmd='$TOOL z -i . -s .pex.zip -s .whl --preamble_from="$SRC" --include_other --add_init_py --strict',
+        cmd=f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict',
         test_cmd=test_cmd,
         debug_cmd=debug_cmd,
         needs_transitive_deps=True,

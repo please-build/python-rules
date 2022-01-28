@@ -4,8 +4,8 @@ Some methods for wheel fetching and selection
 
 import logging
 import os
-from third_party.python.packaging.utils import parse_wheel_filename
-import third_party.python.packaging.tags as tags
+from third_party.python.wheel_filename import parse_wheel_filename
+from third_party.python.packaging import tags
 import third_party.python.distlib.locators as locators
 
 
@@ -15,16 +15,22 @@ def is_compatible(wheel, archs):
     current platform and python interpreter.
     Compatibility is based on https://www.python.org/dev/peps/pep-0425/
     """
+
     # Get the tag from the wheel we're checking
-    _, _, _, tag = parse_wheel_filename(wheel)
+    w = parse_wheel_filename(wheel)
 
     # taglist is a list of tags that we've got either from the user
     # or we've auto-generated them for this system
     taglist = generate_tags_from_all_archs(archs)
+    # TODO: Could probably cache these? ^^
+
+    if taglist is None:
+        logging.critical("No tags generated")
 
     for system_tag in taglist:
-        if system_tag in tag:
-            return True
+        for tag in w.tag_triples():
+            if system_tag in tags.parse_tag(tag):
+                return True
     return False
 
 
@@ -60,13 +66,17 @@ def get_url(urls, archs):
     From the list of urls we got from the wheel index, return the first
     one that is compatible (either with our system or a provided one)
     """
+    if urls is None:
+        logging.critical("Empty url list passed to get_url()")
+
     # Loop through all the urls fetched from index and check them against
-    # out system tags
+    # our system tags
     for url in urls:
         if is_wheel_file(url) and is_compatible(get_basename(url), archs):
             return url
 
-    logging.critical("Reached end of get_url() without finding anything")
+    logging.critical("Could not find any urls compatible with the provided system info")
+    return None
 
 
 def get_download_urls(package, version=None):

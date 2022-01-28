@@ -6,7 +6,11 @@ PreloadBuildDefs = test/build_defs/test.build_defs
 
 [Go]
 ImportPath = github.com/please-build/python-rules
+; embedtool = @self//tools/please_go_embed
+gotool = @self//third_party/go:toolchain|go
 
+[Java]
+JarCatTool = @self//tools:arcat
 
 [PluginDefinition]
 name = python
@@ -27,9 +31,9 @@ DefaultValue = ""
 ConfigKey = TestRunner
 DefaultValue = unittest
 
-[PluginConfig "test_runner_bootstrap"]
-ConfigKey = TestRunnerBootstrap
-Optional = true
+[PluginConfig "testrunner_deps"]
+ConfigKey = TestrunnerDeps
+DefaultValue = @self//third_party/python:unittest_bootstrap
 
 [PluginConfig "debugger"]
 ConfigKey = Debugger
@@ -38,7 +42,6 @@ DefaultValue = pdb
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
 DefaultValue = third_party.python
-Optional = true
 
 [PluginConfig "pip_tool"]
 ConfigKey = PipTool
@@ -53,7 +56,6 @@ Optional = true
 [PluginConfig "use_pypi"]
 ConfigKey = UsePypi
 DefaultValue = true
-Optional = true
 
 [PluginConfig "pip_flags"]
 ConfigKey = PipFlags
@@ -63,7 +65,6 @@ Optional = true
 [PluginConfig "disable_vendor_flags"]
 ConfigKey = DisableVendorFlags
 DefaultValue = false
-Optional = true
 
 [PluginConfig "wheel_repo"]
 ConfigKey = WheelRepo

@@ -1,11 +1,8 @@
 subinclude("//build_defs:python")
 
-python_binary(
+filegroup(
     name = "wheel_resolver",
-    main = "//tools/wheel_resolver/src:resolve",
+    srcs = ["//tools/wheel_resolver/src:wheel_resolver"],
     visibility = ["PUBLIC"],
-    deps = [
-        "//third_party/python:argparse",
-        "//tools/wheel_resolver/src/wheel_tags:tags",
-    ],
+    labels = ["hlink:plz-out/package"],
 )
