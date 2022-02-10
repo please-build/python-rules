@@ -64,14 +64,14 @@ The available configuration options are:
 [Plugin "python"]
 InterpreterOptions = -b -s
 DefaultInterpreter = python3
-PexTool = @self//tools/please_pex
+PexTool = //tools/please_pex
 TestRunner = unittest
 Debugger = pdb
 ModuleDir = third_party.python
 WheelRepo = https://pypi.org/pypi
 WheelNameScheme = None
-WheelTool = @self//tools/wheel_resolver
-TestRunnerDeps = @self//third_party/python:unittest_bootstrap
+WheelTool = //tools/wheel_resolver
+TestRunnerDeps = //third_party/python:unittest_bootstrap
 PipTool = ""
 DefaultPipRepo = ""
 UsePypi = True

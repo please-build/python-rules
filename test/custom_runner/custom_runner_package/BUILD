@@ -3,7 +3,7 @@ subinclude("//build_defs:python")
 package(
     python = {
         "TEST_RUNNER": "test.custom_runner.runner.run",
-        "TESTRUNNER_DEPS": "@self//test/custom_runner:runner",
+        "TESTRUNNER_DEPS": "//test/custom_runner:runner",
     },
 )
 

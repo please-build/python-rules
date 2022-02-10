@@ -6,11 +6,11 @@ PreloadBuildDefs = test/build_defs/test.build_defs
 
 [Go]
 ImportPath = github.com/please-build/python-rules
-; embedtool = @self//tools/please_go_embed
-gotool = @self//third_party/go:toolchain|go
+; embedtool = //tools/please_go_embed
+gotool = //third_party/go:toolchain|go
 
 [Java]
-JarCatTool = @self//tools:arcat
+JarCatTool = //tools:arcat
 
 [PluginDefinition]
 name = python
@@ -21,7 +21,7 @@ DefaultValue = python3
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
-DefaultValue = @self//tools/please_pex
+DefaultValue = //tools/please_pex
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
@@ -33,7 +33,7 @@ DefaultValue = unittest
 
 [PluginConfig "testrunner_deps"]
 ConfigKey = TestrunnerDeps
-DefaultValue = @self//third_party/python:unittest_bootstrap
+DefaultValue = //third_party/python:unittest_bootstrap
 
 [PluginConfig "debugger"]
 ConfigKey = Debugger
@@ -76,7 +76,7 @@ Optional = true
 
 [PluginConfig "wheel_tool"]
 ConfigKey = WheelTool
-DefaultValue = @self//tools/wheel_resolver
+DefaultValue = //tools/wheel_resolver
 Optional = true
 
 [featureflags]
