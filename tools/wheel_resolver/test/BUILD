@@ -19,14 +19,5 @@ gentest(
     data = ["//tools/wheel_resolver"],
     no_test_output = True,
     test_cmd = "true",
-    srcs = [":protobuf"],
-)
-
-python_wheel(
-    name = "protobuf",
-    outs = ["google"],
-    version = "3.19.4",
-    deps = [
-        "//third_party/python:six",
-    ],
+    srcs = ["//third_party/python:protobuf"],
 )
