@@ -1,3 +1,7 @@
+Version 0.3.0
+-------------
+    * Remove @self target prefixes since targets are now relatively resolved since Please v16.19.0
+
 Version 0.2.0
 -------------
     * Add `python_wheel` rule #14
