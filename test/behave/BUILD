@@ -3,7 +3,7 @@ subinclude("//build_defs:python")
 package(
     python = {
         "TEST_RUNNER": "behave",
-        "TESTRUNNER_DEPS": "@self//third_party/python:behave_bootstrap",
+        "TESTRUNNER_DEPS": "//third_party/python:behave_bootstrap",
     },
 )
 
