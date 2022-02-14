@@ -4,6 +4,7 @@ Some methods for wheel fetching and selection
 
 import logging
 import os
+import sys
 from third_party.python.wheel_filename import parse_wheel_filename
 from third_party.python.packaging import tags
 import third_party.python.distlib.locators as locators
@@ -75,8 +76,7 @@ def get_url(urls, archs):
         if is_wheel_file(url) and is_compatible(get_basename(url), archs):
             return url
 
-    logging.critical("Could not find any urls compatible with the provided system info")
-    return None
+    sys.exit("No urls compatible with the provided system info")
 
 
 def get_download_urls(package, version=None):

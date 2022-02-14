@@ -7,6 +7,7 @@ import urllib.request
 import os
 import tools.wheel_resolver.src.wheel_tags.tags as tg
 import argparse as argparse
+import sys
 
 
 def download(url):
@@ -46,14 +47,14 @@ def main():
     # Fetch all available wheel urls from index
     urls = tg.get_download_urls(args.package, args.version)
     if urls is None:
-        logging.critical("Couldn't find any matching urls in the index")
+        sys.exit("No matching urls found in index")
 
     result = tg.get_url(urls, args.arch)
 
     if result is not None:
         download(result)
     else:
-        logging.critical('Found %s urls but none are compatible', len(urls))
+        sys.exit('Found %s urls but none are compatible', len(urls))
 
 
 main()
