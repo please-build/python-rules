@@ -14,6 +14,7 @@ def download(url):
     output = os.environ.get("OUTS")
     if output is None:
         logging.critical("No output directory found")
+        sys.exit(1)
 
     urllib.request.urlretrieve(url, output)
 
@@ -47,14 +48,16 @@ def main():
     # Fetch all available wheel urls from index
     urls = tg.get_download_urls(args.package, args.version)
     if urls is None:
-        sys.exit("No matching urls found in index")
+        logging.critical("No matching urls found in index")
+        sys.exit(1)
 
     result = tg.get_url(urls, args.arch)
 
     if result is not None:
         download(result)
     else:
-        sys.exit('Found %s urls but none are compatible', len(urls))
+        logging.critical("Found %s urls but none are compatible", len(urls))
+        sys.exit(1)
 
 
 main()
