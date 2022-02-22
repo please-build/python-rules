@@ -73,6 +73,7 @@ Optional = true
 [PluginConfig "wheel_name_scheme"]
 ConfigKey = WheelNameScheme
 Optional = true
+Repeatable = true
 
 [PluginConfig "wheel_tool"]
 ConfigKey = WheelTool
