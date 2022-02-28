@@ -1,3 +1,9 @@
+Version 0.4.0
+-------------
+    * Add please_pex tool to releases page
+    * Improve error logging in wheel_resolver tool #39
+    * Make `WheelNameScheme` repeatable field #41
+
 Version 0.3.0
 -------------
     * Remove @self target prefixes since targets are now relatively resolved since Please v16.19.0
