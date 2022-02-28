@@ -9,6 +9,7 @@ go_binary(
         "//tools/please_pex/pex",
     ],
     visibility = ["PUBLIC"],
+    labels = ["hlink:plz-out/package"],
 )
 
 python_test(
