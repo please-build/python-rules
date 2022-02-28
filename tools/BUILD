@@ -1,9 +1,11 @@
-# Once pex tool is on the plugin releases page we can download the binary with a remote_file here. Same with the whele_resolver
-
-# remote_file(
-#     name = "please_pex",
-#     url = "https://www.github.com/please-build/python_rules/...",
-# )
+remote_file(
+    name = "please_pex",
+    url = "https://github.com/please-build/python-rules/releases/download/v0.4.0/please_pex",
+    extract = False,
+    binary = True,
+    visibility = ["PUBLIC"],
+    out = "please_pex_tool",
+)
 
 # remote_file(
 #     name = "wheel_resolver",

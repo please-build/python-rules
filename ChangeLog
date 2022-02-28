@@ -1,3 +1,7 @@
+Version 0.4.1
+-------------
+    * Pull please_pex from release page as remote_file
+
 Version 0.4.0
 -------------
     * Add please_pex tool to releases page
