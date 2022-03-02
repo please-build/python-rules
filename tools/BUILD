@@ -1,5 +1,8 @@
 subinclude("//:version")
 
+# This target is meant to be used as the default pex tool for this plugin. It relies on the released artifact which might
+# not exist yet and as such, the hash sums won't be available too. To solve this a test will be run to guarantee that the
+# hashes below will match the ones of the artifact once released.
 remote_file(
     name = "please_pex",
     url = f"https://github.com/please-build/python-rules/releases/download/v{VERSION}/please_pex-{VERSION}-{CONFIG.HOSTOS}_{CONFIG.HOSTARCH}",
