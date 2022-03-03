@@ -1,5 +1,7 @@
 subinclude("//build_defs:version")
 
+version(name = "version")
+
 filegroup(
     name = "pleasew",
     srcs = ["pleasew"],
@@ -8,5 +10,4 @@ filegroup(
     visibility = ["PUBLIC"],
 )
 
-version(name = "version")
 
