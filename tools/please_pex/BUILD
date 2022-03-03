@@ -8,7 +8,7 @@ go_binary(
         "//third_party/go:go-logging.v1",
         "//tools/please_pex/pex",
     ],
-    visibility = ["//package/..."],
+    visibility = ["PUBLIC"],
 )
 
 python_test(

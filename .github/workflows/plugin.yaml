@@ -28,8 +28,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Test
-        run: ./pleasew test //test/release_remote_files:please_pex_remote_hashes
       - name: Build
         run: ./pleasew build //package:release_files
       - name: Release

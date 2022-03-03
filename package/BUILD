@@ -1,16 +1,22 @@
-export_file(
-    name = "files",
-    src = "files.build_defs",
-    visibility = ["PUBLIC"],
-)
+subinclude("//:version", "//build_defs:archs")
 
-subinclude(":files", "//build_defs:release_file", "//build_defs:archs")
+release_files = {
+    "please_pex": "//tools/please_pex:pex_main",
+}
+
+def release_file(name:str, file_target:str, arch:str):
+    return genrule(
+        name = f"{name}_{arch}",
+        srcs = [f"///{arch}" + canonicalise(file_target)],
+        outs = [f"{name}-{VERSION}-{arch}"],
+        cmd = "mv $SRC $OUT",
+    )
 
 filegroup(
     name = "release_files",
     srcs = [
         release_file(name, target, arch)
-        for name, target in RELEASE_FILES.items()
+        for name, target in release_files.items()
         for arch in SUPPORTED_ARCHS
     ],
     labels = ["hlink:plz-out/package"],

@@ -24,8 +24,7 @@ DefaultValue = python3
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
-; Release artifact of //tools/please_pex:pex_main.
-DefaultValue = //tools:please_pex
+DefaultValue = //tools/please_pex:pex_main
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
