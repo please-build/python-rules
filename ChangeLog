@@ -1,3 +1,7 @@
+Version 0.5.0
+-------------
+    * Release please_pex for all supported architectures #44
+
 Version 0.4.1
 -------------
     * Pull please_pex from release page as remote_file
@@ -22,7 +26,6 @@ Version 0.2.0
 Version 0.1.1
 -------------
     * Release tools
-
 
 Version 0.1.0
 -------------
