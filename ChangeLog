@@ -1,3 +1,9 @@
+Version 0.5.1
+-------------
+    * Fix issue where the default pex tool value pointing to the released artifact was breaking
+    our workflows. It nows reverts to point to the internal pex tool code, but the released
+    artifact can be used and set explicitly on the host repo if needed.
+
 Version 0.5.0
 -------------
     * Release please_pex for all supported architectures #44
