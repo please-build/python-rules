@@ -1,5 +1,8 @@
 [Please]
-Version = >=16.17.0
+Version = >=16.19.0
+
+[Build]
+hashcheckers = sha256
 
 [Parse]
 PreloadBuildDefs = test/build_defs/test.build_defs
@@ -21,6 +24,7 @@ DefaultValue = python3
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
+; Release artifact of //tools/please_pex:pex_main.
 DefaultValue = //tools:please_pex
 
 [PluginConfig "interpreter_options"]
@@ -83,3 +87,4 @@ Optional = true
 [featureflags]
 PythonWheelHashing = true
 ExcludePythonRules = true
+SingleSHA1Hash = true

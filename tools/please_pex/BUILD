@@ -1,12 +1,5 @@
 subinclude("//build_defs:python")
 
-filegroup(
-    name = "please_pex",
-    srcs = [":pex_main"],
-    visibility = ["PUBLIC"],
-    labels = ["hlink:plz-out/package"],
-)
-
 go_binary(
     name = "pex_main",
     srcs = ["pex_main.go"],
@@ -15,6 +8,7 @@ go_binary(
         "//third_party/go:go-logging.v1",
         "//tools/please_pex/pex",
     ],
+    visibility = ["//package/..."],
 )
 
 python_test(

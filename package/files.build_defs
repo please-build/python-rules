@@ -1,0 +1,4 @@
+RELEASE_FILES = {
+    "please_pex": "//tools/please_pex:pex_main",
+}
+

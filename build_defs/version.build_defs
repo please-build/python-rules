@@ -1,0 +1,9 @@
+def version(name:str, version_file:str="VERSION", visibility:list=["PUBLIC"]):
+    return genrule(
+    name = name,
+    srcs = [version_file],
+    outs = [f"{name}.build_defs"],
+    cmd = "echo VERSION = \\\"$(cat $SRCS)\\\" > $OUT",
+    visibility = visibility,
+)
+

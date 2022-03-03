@@ -1,6 +1,18 @@
 filegroup(
+    name = "archs",
+    srcs = ["archs.build_defs"],
+    visibility = ["PUBLIC"],
+)
+
+filegroup(
     name = "python",
     srcs = ["python.build_defs"],
+    visibility = ["PUBLIC"],
+)
+
+filegroup(
+    name = "version",
+    srcs = ["version.build_defs"],
     visibility = ["PUBLIC"],
 )
 
@@ -9,3 +21,10 @@ filegroup(
     srcs = ["multiversion_wheel.build_defs"],
     visibility = ["//third_party/..."],
 )
+
+filegroup(
+    name = "release_file",
+    srcs = ["release_file.build_defs"],
+    visibility = ["//package/..."],
+)
+
