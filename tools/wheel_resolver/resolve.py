@@ -5,7 +5,7 @@ Tool to resolve a wheel file from an index given a package name
 import logging
 import urllib.request
 import os
-import tools.wheel_resolver.src.wheel_tags.tags as tg
+import tools.wheel_resolver.wheel_tags.tags as tg
 import argparse as argparse
 import sys
 

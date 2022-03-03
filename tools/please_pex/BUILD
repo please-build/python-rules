@@ -1,7 +1,7 @@
 subinclude("//build_defs:python")
 
 go_binary(
-    name = "pex_main",
+    name = "please_pex",
     srcs = ["pex_main.go"],
     deps = [
         "//third_party/go:cli-init",
