@@ -16,7 +16,7 @@ filegroup(
     name = "release_files",
     srcs = [
         release_file(name, target, arch)
-        for name, target in RELEASE_FILES.items()
+        for name, target in release_files.items()
         for arch in SUPPORTED_ARCHS
     ],
     labels = ["hlink:plz-out/package"],
