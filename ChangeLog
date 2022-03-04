@@ -1,3 +1,7 @@
+Version 0.5.2
+-------------
+    * Restore the release of the wheel resolver tool #48
+
 Version 0.5.1
 -------------
     * Fix issue where the default pex tool value pointing to the released artifact was breaking
