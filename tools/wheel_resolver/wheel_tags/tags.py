@@ -85,10 +85,10 @@ def get_download_urls(package, version=None, index=None):
     Return all downloadable urls from wheel index that match
     the provided package name and version requirement
     """
-    if not package:
+    if package is None:
         return None
 
-    if not index:
+    if index is None:
         index = 'https://pypi.org/pypi'
 
     mylocator = locators.PyPIJSONLocator(index)
