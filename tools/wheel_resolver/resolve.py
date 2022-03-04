@@ -42,11 +42,16 @@ def main():
             type=str,
             default=[],
             help='specify architecture')
+    parser.add_argument(
+            '--index',
+            type=str,
+            default=None,
+            help='the index to fetch URLs from')
 
     args = parser.parse_args()
 
     # Fetch all available wheel urls from index
-    urls = tg.get_download_urls(args.package, args.version)
+    urls = tg.get_download_urls(args.package, args.version, args.index)
     if urls is None:
         logging.critical("No matching urls found in index")
         sys.exit(1)

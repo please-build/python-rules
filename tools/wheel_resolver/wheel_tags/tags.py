@@ -80,15 +80,18 @@ def get_url(urls, archs):
     sys.exit(1)
 
 
-def get_download_urls(package, version=None):
+def get_download_urls(package, version=None, index=None):
     """
     Return all downloadable urls from wheel index that match
     the provided package name and version requirement
     """
-    if package is None:
+    if not package:
         return None
 
-    mylocator = locators.PyPIJSONLocator('https://pypi.org/pypi')
+    if not index:
+        index = 'https://pypi.org/pypi'
+
+    mylocator = locators.PyPIJSONLocator(index)
     # Populate requirement
     requirement = None
     if version is not None:
