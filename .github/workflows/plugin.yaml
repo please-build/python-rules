@@ -12,7 +12,7 @@ jobs:
           python-version: '3.6.9'
       - name: Run tests
         run: ./pleasew test --log_file plz-out/log/test.log -e e2e
-      - name: Run e2e test
+      - name: Run e2e tests
         run: ./pleasew test --log_file plz-out/log/e2e.log -i e2e
       - name: Archive logs
         if: always()
@@ -28,8 +28,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Test
-        run: ./pleasew test //test:please_pex_remote_hashes
       - name: Build
         run: ./pleasew build //package:release_files
       - name: Release
