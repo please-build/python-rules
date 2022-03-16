@@ -21,3 +21,9 @@ filegroup(
     srcs = ["multiversion_wheel.build_defs"],
     visibility = ["//third_party/..."],
 )
+
+filegroup(
+    name = "release_file",
+    srcs = ["release_file.build_defs"],
+    visibility = ["//package/..."],
+)

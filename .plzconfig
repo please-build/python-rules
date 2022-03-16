@@ -15,6 +15,10 @@ gotool = //third_party/go:toolchain|go
 [Java]
 JarCatTool = //tools:arcat
 
+[Plugin "python"]
+; Local code
+PexTool = //tools/please_pex
+
 [PluginDefinition]
 name = python
 
@@ -24,7 +28,8 @@ DefaultValue = python3
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
-DefaultValue = //tools/please_pex
+; Released tool
+DefaultValue = //tools:please_pex
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions

@@ -1,4 +1,4 @@
-subinclude("//build_defs:python")
+subinclude("//build_defs:python", "//test/build_defs:release_remote_file")
 
 python_binary(
     name = "strip_source",
@@ -220,4 +220,10 @@ python_test(
         "pip",
     ],
     deps = ["//third_party/python:tensorflow"],
+)
+
+release_remote_file_hash_test(
+    name = "please_pex_remote_hashes",
+    release_file = "please_pex",
+    remote_file_label = "//tools:please_pex",
 )

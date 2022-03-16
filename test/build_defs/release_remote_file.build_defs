@@ -1,0 +1,40 @@
+def release_remote_file_hash_test(name:str, release_file:str, remote_file_label:str):
+    """
+    Tests whether a `remote_file` target downloading a release file within this repo has matching hashes.
+    """
+
+    test_cmd = " && ".join([
+        # Build release file.
+        f"plz -i release-file:{release_file} build //package/... >/dev/null 2>&1",
+        # Get sha256 hashes for release file for all supported architectures.
+        "REPO_ROOT=$(plz query reporoot)",
+        "plz -i release-file:%s query outputs //package/... | xargs -L1 -I{} sha256sum $REPO_ROOT/{} | cut -f1 -d' ' | sort > new_hashes" % release_file,
+        # Get current hashes for `remote_file` that downloads this release file.
+        f"plz query print {remote_file_label} --field=hashes | sort > old_hashes",
+
+        # Check if `remote_file` hashes need updating.
+        f"if [ \"$(cat new_hashes)\" != \"$(cat old_hashes)\" ]; then "
+            f"echo \"You need to update the hashes of {remote_file_label} with:\"; "
+            "cat new_hashes; "
+            "exit 1; "
+        "fi"
+    ])
+
+    def _test_cmd(cmd):
+        return cmd.replace('plz ', f'$TOOLS $PLZ_ARGS -o cache.dirclean:false --log_file plz-out/log/{name}.log ')
+
+    return gentest(
+        name = name,
+        test_cmd = {
+            'opt': _test_cmd(test_cmd),
+            'dbg': _test_cmd(test_cmd.replace('plz ', 'plz -c dbg ')),
+            'cover': _test_cmd(test_cmd.replace('plz ', 'plz -c cover ')),
+        },
+        test_tools = ["//:pleasew"],
+        labels = ["manual"],
+        no_test_output = True,
+        sandbox = False,
+        local = True,
+        pass_env = ["PLZ_ARGS"],
+        exit_on_error = True,
+    )
