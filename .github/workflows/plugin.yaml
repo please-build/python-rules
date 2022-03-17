@@ -14,7 +14,7 @@ jobs:
         run: ./pleasew test --log_file plz-out/log/test.log -e e2e
       - name: Run e2e tests
         run: ./pleasew test --log_file plz-out/log/e2e.log -i e2e
-      - name: Run remote hashes tests
+      - name: Run remote hash tests
         run: ./pleasew test --log_file plz-out/log/remote-hashes.log //test:please_pex_remote_hashes
       - name: Archive logs
         if: always()
