@@ -31,7 +31,7 @@ def release_remote_file_hash_test(name:str, release_file:str, remote_file_label:
             'cover': _test_cmd(test_cmd.replace('plz ', 'plz -c cover ')),
         },
         test_tools = ["//:pleasew"],
-        labels = ['e2e'],
+        labels = ['manual'],
         no_test_output = True,
         sandbox = False,
         local = True,
