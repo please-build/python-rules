@@ -548,10 +548,11 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
 
     file_rule = None
     if tool:
-        # Try the urls generated using the default wheel name schemes. If those fail, try
+        # Try the URLs generated using the wheel name schemes. If those fail, try
         # generating a url with the wheel_resolver tool and download that if successful.
         cmd = f'$TOOL --package {package_name} --version {version} '
-        cmd += '--url ' + ' '.join(['%s' % url for url in urls])
+        if urls:
+            cmd += '--url ' + ' '.join(['%s' % url for url in urls])
 
         file_rule = build_rule(
             name = name,
