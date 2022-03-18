@@ -64,7 +64,6 @@ def main():
     if args.urls:
         for url in args.urls:
             if try_download(url):
-                print("successful download")
                 return
 
     # Fetch all available wheel urls from index
