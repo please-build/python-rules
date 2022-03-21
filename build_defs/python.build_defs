@@ -563,6 +563,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
             hashes = hashes if CONFIG.FF_PYTHON_WHEEL_HASHING else None,
             licences = licences if licences else None,
             building_description = 'Extracting...',
+            sandbox = False,
         )
 
     elif urls:
