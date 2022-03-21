@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # If PEX_INTERPRETER is set, then it starts an interactive console.
     if os.environ.get('PEX_INTERPRETER', '0') != '0':
         import code
-        resutl = code.interact()
+        result = code.interact()
     # If PEX_PROFILE_FILENAME is set, then it collects profile information into the filename.
     elif os.environ.get('PEX_PROFILE_FILENAME'):
         with profile(os.environ['PEX_PROFILE_FILENAME'])():
