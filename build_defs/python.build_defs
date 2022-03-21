@@ -134,7 +134,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     shebang = shebang or _set_shebang(interpreter, CONFIG.PYTHON.INTERPRETER_OPTIONS, site)
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
     cmd = '$TOOLS_PEX -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
+        CONFIG.PYTHON.MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
 
     cmd += f'; mv __main__.py $OUT'
 
