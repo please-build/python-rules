@@ -78,7 +78,7 @@ def main():
         if try_download(result):
             return
 
-    logging.critical("Found %s urls but none are compatible", len(urls))
+    logging.critical("Found %s URLs but none are compatible", len(urls))
     sys.exit(1)
 
 
