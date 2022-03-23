@@ -426,8 +426,6 @@ def pip_library(name:str, version:str, hashes:list=None, package_name:str=None,
         # Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=830892
         # tl;dr: Debian has broken --target with a custom patch, the only way to fix is to pass --system
         # which is itself Debian-specific, so we need to find if we're running on Debian. AAAAARGGGHHHH...
-        foo = CONFIG.PYTHON.DISABLE_VENDOR_FLAGS
-        fail(f"config.os={CONFIG.OS}, disable_vendor_flags={foo}")
         pip_cmd = f'[ -f /etc/debian_version ] && SYS_FLAG="--system" || SYS_FLAG=""; {pip_cmd} $SYS_FLAG'
 
     pip_cmd += f' {repo_flag} {index_flag} {pip_flags} {package_name}'
