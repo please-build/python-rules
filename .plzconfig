@@ -72,6 +72,7 @@ Optional = true
 [PluginConfig "disable_vendor_flags"]
 ConfigKey = DisableVendorFlags
 DefaultValue = false
+Inherit = true
 
 [PluginConfig "wheel_repo"]
 ConfigKey = WheelRepo
