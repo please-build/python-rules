@@ -533,18 +533,18 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
             # Populate urls using a reasonable set of possible wheel naming schemes.
             # Look for an arch-specific wheel first; in some cases there can be both (e.g. protobuf
             # has optional arch-specific bits) and we prefer the one with the cool stuff.
-            urls += ['{url_base}/{package_name}-{version}-${{OS}}-${{ARCH}}.whl'.format(url_base=url_base,
-                                                                                        package_name=package_name,
-                                                                                        initial=initial,
-                                                                                        version=version),
-                     '{url_base}/{package_name}-{version}-${{OS}}_${{ARCH}}.whl'.format(url_base=url_base,
-                                                                                        package_name=package_name,
-                                                                                        initial=initial,
-                                                                                        version=version),
-                     '{url_base}/{package_name}-{version}.whl'.format(url_base=url_base,
-                                                                      package_name=package_name,
-                                                                      initial=initial,
-                                                                      version=version)]
+            #urls += ['{url_base}/{package_name}-{version}-${{OS}}-${{ARCH}}.whl'.format(url_base=url_base,
+            #                                                                            package_name=package_name,
+            #                                                                            initial=initial,
+            #                                                                            version=version),
+            #         '{url_base}/{package_name}-{version}-${{OS}}_${{ARCH}}.whl'.format(url_base=url_base,
+            #                                                                            package_name=package_name,
+            #                                                                            initial=initial,
+            #                                                                            version=version),
+            #         '{url_base}/{package_name}-{version}.whl'.format(url_base=url_base,
+            #                                                          package_name=package_name,
+            #                                                          initial=initial,
+            #                                                          version=version)]
 
     file_rule = None
     if tool:
