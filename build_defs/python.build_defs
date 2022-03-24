@@ -548,23 +548,17 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
 
     file_rule = None
     if tool:
-        # Try the urls generated using the default wheel name schemes. If those fail, try
+        # Try the URLs generated using the wheel name schemes. If those fail, try
         # generating a url with the wheel_resolver tool and download that if successful.
-        cmd = ['FOUND=false; DOWNLOAD=""']
-        cmd += ['for URL in ' + ' '.join(urls)]
-        cmd += ['do if wget -q --method=HEAD $URL']
-        cmd += ['then FOUND=true; DOWNLOAD="$URL"']
-        cmd += ['break; fi; done']
-
-        cmd += ['if [ "$FOUND" = true ]']
-        cmd += ['then wget -O "$OUTS" "$DOWNLOAD"']
-        cmd += ['else $TOOL --package ' + package_name + ' --version ' + version + '; fi']
+        cmd = f'$TOOL --package {package_name} --version {version}'
+        if urls:
+            cmd += ' --urls ' + ' '.join(['%s' % url for url in urls])
 
         file_rule = build_rule(
             name = name,
             tag = 'download',
             outs = [name + '.whl'],
-            cmd = '; '.join(cmd),
+            cmd = cmd,
             tools = [tool],
             hashes = hashes if CONFIG.FF_PYTHON_WHEEL_HASHING else None,
             licences = licences if licences else None,

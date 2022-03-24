@@ -10,13 +10,22 @@ import argparse as argparse
 import sys
 
 
-def download(url):
+def try_download(url):
+    """
+    Try to download url to $OUTS. Returns false if
+    it failed.
+    """
     output = os.environ.get("OUTS")
     if output is None:
         logging.critical("No output directory found")
         sys.exit(1)
 
-    urllib.request.urlretrieve(url, output)
+    try:
+        urllib.request.urlretrieve(url, output)
+    except urllib.error.HTTPError:
+        return False
+
+    return True
 
 
 def main():
@@ -42,8 +51,20 @@ def main():
             type=str,
             default=[],
             help='specify architecture')
+    parser.add_argument(
+            '--urls',
+            nargs="*",
+            type=str,
+            default=[],
+            help='URLs to try before looking in wheel index')
 
     args = parser.parse_args()
+
+    # If any URLs were passed, try them first before looking in the wheel index
+    if args.urls:
+        for url in args.urls:
+            if try_download(url):
+                return
 
     # Fetch all available wheel urls from index
     urls = tg.get_download_urls(args.package, args.version)
@@ -54,10 +75,11 @@ def main():
     result = tg.get_url(urls, args.arch)
 
     if result is not None:
-        download(result)
-    else:
-        logging.critical("Found %s urls but none are compatible", len(urls))
-        sys.exit(1)
+        if try_download(result):
+            return
+
+    logging.critical("Found %s URLs but none are compatible", len(urls))
+    sys.exit(1)
 
 
 main()
