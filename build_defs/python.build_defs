@@ -552,7 +552,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
         # generating a url with the wheel_resolver tool and download that if successful.
         cmd = f'$TOOL --package {package_name} --version {version}'
         if urls:
-            cmd += ' --url ' + ' '.join(['%s' % url for url in urls])
+            cmd += ' --urls ' + ' '.join(['%s' % url for url in urls])
 
         file_rule = build_rule(
             name = name,
