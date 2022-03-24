@@ -21,10 +21,12 @@ name = python
 [PluginConfig "default_interpreter"]
 ConfigKey = DefaultInterpreter
 DefaultValue = python3
+Inherit = true
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
 DefaultValue = //tools/please_pex
+Inherit = true
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
@@ -41,6 +43,7 @@ DefaultValue = //third_party/python:unittest_bootstrap
 [PluginConfig "debugger"]
 ConfigKey = Debugger
 DefaultValue = pdb
+Inherit = true
 
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
@@ -50,6 +53,7 @@ DefaultValue = third_party.python
 ConfigKey = PipTool
 DefaultValue = ""
 Optional = true
+Inherit = true
 
 [PluginConfig "default_pip_repo"]
 ConfigKey = DefaultPipRepo
@@ -68,6 +72,7 @@ Optional = true
 [PluginConfig "disable_vendor_flags"]
 ConfigKey = DisableVendorFlags
 DefaultValue = false
+Inherit = true
 
 [PluginConfig "wheel_repo"]
 ConfigKey = WheelRepo
@@ -82,6 +87,7 @@ Repeatable = true
 ConfigKey = WheelTool
 DefaultValue = //tools/wheel_resolver
 Optional = true
+Inherit = true
 
 [featureflags]
 PythonWheelHashing = true
