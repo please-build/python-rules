@@ -31,7 +31,6 @@ Inherit = true
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
 DefaultValue = ""
-Inherit = true
 
 [PluginConfig "test_runner"]
 ConfigKey = TestRunner
@@ -44,6 +43,7 @@ DefaultValue = //third_party/python:unittest_bootstrap
 [PluginConfig "debugger"]
 ConfigKey = Debugger
 DefaultValue = pdb
+Inherit = true
 
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
@@ -53,12 +53,12 @@ DefaultValue = third_party.python
 ConfigKey = PipTool
 DefaultValue = ""
 Optional = true
+Inherit = true
 
 [PluginConfig "default_pip_repo"]
 ConfigKey = DefaultPipRepo
 DefaultValue = ""
 Optional = true
-Inherit = true
 
 [PluginConfig "use_pypi"]
 ConfigKey = UsePypi
