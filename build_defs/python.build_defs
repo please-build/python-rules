@@ -550,9 +550,9 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
     if tool:
         # Try the URLs generated using the wheel name schemes. If those fail, try
         # generating a url with the wheel_resolver tool and download that if successful.
-        cmd = f'$TOOL --package {package_name} --version {version} '
+        cmd = f'$TOOL --package {package_name} --version {version}'
         if urls:
-            cmd += '--url ' + ' '.join(['%s' % url for url in urls])
+            cmd += ' --url ' + ' '.join(['%s' % url for url in urls])
 
         file_rule = build_rule(
             name = name,
