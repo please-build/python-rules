@@ -74,6 +74,11 @@ ConfigKey = DisableVendorFlags
 DefaultValue = false
 Inherit = true
 
+[PluginConfig "pip_compile_flags"]
+ConfigKey = PipCompileFlags
+Optional = true
+Inherit = true
+
 [PluginConfig "wheel_repo"]
 ConfigKey = WheelRepo
 Optional = true
