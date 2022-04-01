@@ -218,6 +218,10 @@ def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
     return f'#!{shebang}\n'
 
 
+def _resolve_interpreter(interpreter:str):
+    return f'$(out {interpreter})' if interpreter.startswith('//') or interpreter.startswith(':') else interpreter
+
+
 def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:list=[], worker:str='',
                 labels:list&features&tags=[], size:str=None, flags:str='', visibility:list=None,
                 sandbox:bool=None, timeout:int=0, flaky:bool|int=0,
@@ -259,7 +263,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
       test_runner (str): Specify which Python test runner to use for these tests. One of
                          `unittest`, `pytest`, or a custom test runner entry point.
     """
-    interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
+    interpreter = _resolve_interpreter(interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER)
     test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
     module_dir = CONFIG.PYTHON.MODULE_DIR
     interpreter_options = CONFIG.PYTHON.INTERPRETER_OPTIONS
@@ -308,6 +312,8 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 
     deps = [pex_rule, lib_rule]
     shebang = _set_shebang(interpreter, interpreter_options, site)
+
+
 
     # If there are resources specified, they have to get built into the pex.
     # Also add the the value of CONFIG.PYTHON.TESTRUNNER_BOOTSTRAP as a dependency.
