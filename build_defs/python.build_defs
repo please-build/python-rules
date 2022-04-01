@@ -210,7 +210,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
 
 def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
     """Returns a shebang to pass to arcat to inject at the top of a pex"""
-    # Assume the path to the interpreter is relative
+    interpreter = _interpreter_cmd(interpreter)
     shebang = f'/usr/bin/env {interpreter}'
     if not site:
         return f'#!/bin/sh\nexec {shebang} -S \\\\$0 \\\"\\\\$@\\\"\n'
@@ -218,7 +218,7 @@ def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
     return f'#!{shebang}\n'
 
 
-def _resolve_interpreter(interpreter:str):
+def _interpreter_cmd(interpreter:str):
     return f'$(out {interpreter})' if interpreter.startswith('//') or interpreter.startswith(':') else interpreter
 
 
