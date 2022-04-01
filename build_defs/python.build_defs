@@ -263,7 +263,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
       test_runner (str): Specify which Python test runner to use for these tests. One of
                          `unittest`, `pytest`, or a custom test runner entry point.
     """
-    interpreter = _interpreter_cmd(interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER)
+    interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
     test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
     module_dir = CONFIG.PYTHON.MODULE_DIR
     interpreter_options = CONFIG.PYTHON.INTERPRETER_OPTIONS
