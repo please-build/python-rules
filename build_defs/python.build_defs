@@ -213,7 +213,7 @@ def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
     # interpreter=///python/python39/python39//:interpreter
     interpreter = _interpreter_cmd(interpreter)
     # interpreter=$(out ///python/python39/python39//:interpreter)
-    shebang = f'/usr/bin/env "{interpreter}"'
+    shebang = f'/usr/bin/env \\\"{interpreter}\\\"'
     # shebang=/usr/bin/env $(out ///python/python39/python39//:interpreter)
     if not site:
         return f'#!/bin/sh\nexec {shebang} -S \\\\$0 \\\"\\\\$@\\\"\n'
