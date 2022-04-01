@@ -325,17 +325,24 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         pre_cmd = worker_cmd,
     )
 
+    cmd = ['mv $SRCS_MAIN __main__.py',
+           'mkdir .bootstrap && mv $SRCS_TESTRUNNERDEPS .bootstrap',
+            f'$TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict']
+
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
     return build_rule(
         name=name,
-        srcs=[pex_rule],
+        srcs={
+            "main": pex_rule,
+            "testrunnerdeps" : CONFIG.PYTHON.TESTRUNNER_DEPS
+        },
         deps=deps,
         # N.B. the actual test sources are passed as data files as well. This is needed for pytest but
         #      is faster for unittest as well (because we don't need to rebuild the pex if they change).
         data=data | {'_srcs': srcs} if isinstance(data, dict) else data + srcs,
         outs=[f'{name}.pex'],
         labels=labels + ['test_results_dir'],
-        cmd=f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict',
+        cmd=' && '.join(cmd),
         test_cmd=test_cmd,
         debug_cmd=debug_cmd,
         needs_transitive_deps=True,
