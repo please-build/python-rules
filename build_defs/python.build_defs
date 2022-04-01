@@ -212,8 +212,9 @@ def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
     """Returns a shebang to pass to arcat to inject at the top of a pex"""
     # interpreter=///python/python39/python39//:interpreter
     interpreter = _interpreter_cmd(interpreter)
-    fail(f"in _set_shebang. interpreter={interpreter}")
+    # interpreter=$(out ///python/python39/python39//:interpreter)
     shebang = f'/usr/bin/env {interpreter}'
+    fail(f"in _set_shebang. shebang={interpreter}")
     if not site:
         return f'#!/bin/sh\nexec {shebang} -S \\\\$0 \\\"\\\\$@\\\"\n'
 
