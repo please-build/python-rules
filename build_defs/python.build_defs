@@ -216,13 +216,13 @@ def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
     shebang = f'/usr/bin/env {interpreter}'
     # shebang=/usr/bin/env $(out ///python/python39/python39//:interpreter)
     if not site:
-        return f'#!/bin/sh\nexec \"{shebang}\" -S \\\\$0 \\\"\\\\$@\\\"\n'
+        return f'#!/bin/sh\nexec {shebang} -S \\\\$0 \\\"\\\\$@\\\"\n'
 
     return f'#!{shebang}\n'
 
 
 def _interpreter_cmd(interpreter:str):
-    return f'$(out {interpreter})' if interpreter.startswith('//') or interpreter.startswith(':') else interpreter
+    return f'\"$(out {interpreter})\"' if interpreter.startswith('//') or interpreter.startswith(':') else interpreter
 
 
 def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:list=[], worker:str='',
