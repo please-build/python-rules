@@ -220,7 +220,7 @@ def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
 
 def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:list=[], worker:str='',
                 labels:list&features&tags=[], size:str=None, flags:str='', visibility:list=None,
-                sandbox:bool=None, timeout:int=0, flaky:bool|int=0,
+                sandbox:bool=None, timeout:int=0, flaky:bool|int=0, shebang:str=None,
                 test_outputs:list=None, zip_safe:bool=None, interpreter:str=None, site:bool=False,
                 test_runner:str=None):
     """Generates a Python test target.
