@@ -94,6 +94,12 @@ DefaultValue = //tools/wheel_resolver
 Optional = true
 Inherit = true
 
+[PluginConfig "pex_shebang"]
+ConfigKey = PexShebang
+DefaultValue = "#!/usr/bin/python3"
+Optional = true
+Inherit = true
+
 [featureflags]
 PythonWheelHashing = true
 ExcludePythonRules = true
