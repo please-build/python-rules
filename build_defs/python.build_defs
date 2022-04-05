@@ -131,7 +131,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
       labels (list): Labels to apply to this rule.
     """
     interpreter = interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER
-    shebang = shebang or _set_shebang(interpreter, CONFIG.PYTHON.INTERPRETER_OPTIONS, site)
+    shebang = shebang or CONFIG.PYTHON.PEX_SHEBANG
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
     cmd = '$TOOLS_PEX -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
         CONFIG.PYTHON.MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
@@ -307,7 +307,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     )
 
     deps = [pex_rule, lib_rule]
-    shebang = _set_shebang(interpreter, interpreter_options, site)
+    shebang = shebang or CONFIG.PYTHON.PEX_SHEBANG
 
     # If there are resources specified, they have to get built into the pex.
     # Also add the the value of CONFIG.PYTHON.TESTRUNNER_BOOTSTRAP as a dependency.
