@@ -288,7 +288,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         pre_build=_handle_zip_safe,
         deps=deps,
         tools={
-            'interpreter': [interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER],
+            'interpreter': [interpreter],
             'pex': [CONFIG.PYTHON.PEX_TOOL],
         },
         labels = labels,
@@ -309,11 +309,14 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     deps = [pex_rule, lib_rule]
     shebang = shebang or CONFIG.PYTHON.PEX_SHEBANG
 
+    if not site:
+        interpreter_options = f'{interpreter_options} -S'
+
     # If there are resources specified, they have to get built into the pex.
     # Also add the the value of CONFIG.PYTHON.TESTRUNNER_BOOTSTRAP as a dependency.
     deps += [CONFIG.PYTHON.TESTRUNNER_DEPS]
 
-    test_cmd = f'$TEST {flags}'
+    test_cmd = f'$TOOL {interpreter_options} $TEST {flags}'
     worker_cmd = f'$(worker {worker})' if worker else ""
     if worker_cmd:
         test_cmd = f'{worker_cmd} && {test_cmd} '
@@ -351,6 +354,8 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         test_outputs=test_outputs,
         requires=['py', 'test', interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER],
         tools=[CONFIG.JARCAT_TOOL],
+        test_tools=[CONFIG.PYTHON.DEFAULT_INTERPRETER],
+            
     )
 
 def pip_library(name:str, version:str, hashes:list=None, package_name:str=None,

@@ -96,7 +96,7 @@ Inherit = true
 
 [PluginConfig "pex_shebang"]
 ConfigKey = PexShebang
-DefaultValue = python3
+DefaultValue = "#!/usr/bin/python3"
 Optional = true
 Inherit = true
 
