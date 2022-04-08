@@ -5,6 +5,7 @@ from zipfile import ZipFile, ZipInfo, is_zipfile
 import os
 import runpy
 import sys
+import traceback
 
 
 PY_VERSION = sys.version_info
@@ -113,6 +114,8 @@ class SoImport(object):
     """So import. Much binary. Such dynamic. Wow."""
 
     def __init__(self):
+        print("Calling SoImport __init__()")
+        traceback.print_stack(limit=10)
 
         if PY_VERSION.major < 3:
             self.suffixes = {x[0]: x for x in imp.get_suffixes() if x[2] == imp.C_EXTENSION}
@@ -127,6 +130,8 @@ class SoImport(object):
             for name in zf.namelist():
                 path, _ = self.splitext(name)
                 if path:
+                    if path.startswith('.bootstrap/'):
+                        path = path[len('.bootstrap/'):]
                     importpath = path.replace('/', '.')
                     self.modules.setdefault(importpath, name)
                     if path.startswith(MODULE_DIR):
@@ -174,20 +179,29 @@ class ModuleDirImport(object):
     """
 
     def __init__(self, module_dir=MODULE_DIR):
+        print("Calling ModuleDirImport __init__()", module_dir)
         self.prefix = module_dir.replace('/', '.') + '.'
+        print("Added prefix", self.prefix)
 
     def find_module(self, fullname, path=None):
+        print("Calling ModuleDirImport.find_module() on", fullname, "with path", path)
+        print("checking against", self.prefix)
+        #traceback.print_stack(limit=10)
         """Attempt to locate module. Returns self if found, None if not."""
         if fullname.startswith(self.prefix):
+            print("found!")
             return self
+        print("not found")
 
     def load_module(self, fullname):
+        print("Calling load_module()")
         """Actually load a module that we said we'd handle in find_module."""
         module = import_module(fullname[len(self.prefix):])
         sys.modules[fullname] = module
         return module
 
     def find_distributions(self, context):
+        print("Calling find_distributions()")
         """Return an iterable of all Distribution instances capable of
         loading the metadata for packages for the indicated ``context``.
         """
@@ -203,6 +217,7 @@ class ModuleDirImport(object):
                 template = r"{path}(-.*)?\.(dist|egg)-info/{filename}"
 
                 def __init__(self, name, prefix=MODULE_DIR):
+                    print("PexDistribution __init__()")
                     """Construct a distribution for a pex file to the metadata directory.
 
                     :param name: A module name
@@ -243,11 +258,16 @@ class ModuleDirImport(object):
                     yield distribution
 
     def get_code(self, fullname):
+        print("get_code()")
         module = self.load_module(fullname)
         return module.__loader__.get_code(fullname)
 
 
 def add_module_dir_to_sys_path(dirname):
+    print("Calling add_module_dir_to_sys_path with dirname", dirname)
+    print("called from")
+    #traceback.print_stack(limit=10)
+
     """Adds the given dirname to sys.path if it's nonempty."""
     if dirname:
         sys.path = sys.path[:1] + [os.path.join(sys.path[0], dirname)] + sys.path[1:]
@@ -255,6 +275,7 @@ def add_module_dir_to_sys_path(dirname):
 
 
 def pex_basepath(temp=False):
+    print("Calling pex_basepath()")
     if temp:
         import tempfile
         return tempfile.mkdtemp(dir=os.environ.get('TEMP_DIR'), prefix='pex_')
@@ -267,6 +288,7 @@ def pex_uniquedir():
 
 
 def pex_paths():
+    print("Calling pex_paths()")
     no_cache = os.environ.get('PEX_NOCACHE')
     no_cache = no_cache and no_cache.lower() == 'true'
     basepath, uniquedir = pex_basepath(no_cache), pex_uniquedir()
@@ -280,6 +302,7 @@ def explode_zip():
     This is primarily used for binary extensions which can't be imported directly from
     inside a zipfile.
     """
+    print("Calling explode_zip()")
     # Temporarily add bootstrap to sys path
     ### THIS SHOULD MAYBE COME FROM CONFIG FILE?
     sys.path = [os.path.join(sys.path[0], 'third_party/python')] + sys.path[1:]
@@ -360,6 +383,8 @@ def main():
 
     N.B. This gets redefined by pex_test_main to run tests instead.
     """
+    sys.path = sys.path[:1] + [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
+    print("sys.path =", sys.path)
     # Starts a debugging session, if defined, before running the entry point.
     start_debugger()
     # Must run this as __main__ so it executes its own __name__ == '__main__' block.

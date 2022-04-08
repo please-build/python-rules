@@ -328,9 +328,10 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         pre_cmd = worker_cmd,
     )
 
+    #'cp -r $SRCS_TESTRUNNERDEPS .',
     cmd = ['mv $SRCS_MAIN __main__.py',
            'mkdir .bootstrap && mv $SRCS_TESTRUNNERDEPS .bootstrap',
-            f'$TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict']
+           f'$TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict']
 
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
     return build_rule(

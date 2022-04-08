@@ -5,3 +5,17 @@ remote_file(
     binary = True,
     visibility = ["PUBLIC"],
 )
+
+filegroup(
+    name = "wheel_resolver",
+    system_srcs = ["/home/swestmoreland/wheel_tool.pex",],
+    binary = True,
+    visibility = ["PUBLIC"],
+)
+
+filegroup(
+    name = "arcat_local",
+    system_srcs = ["/home/swestmoreland/git/arcat/plz-out/bin/arcat"],
+    binary = True,
+    visibility = ["PUBLIC"],
+)
