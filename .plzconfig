@@ -13,7 +13,7 @@ ImportPath = github.com/please-build/python-rules
 gotool = //third_party/go:toolchain|go
 
 [Java]
-JarCatTool = //tools:arcat_local
+JarCatTool = //tools:arcat
 
 [PluginDefinition]
 name = python
@@ -90,7 +90,7 @@ Repeatable = true
 
 [PluginConfig "wheel_tool"]
 ConfigKey = WheelTool
-DefaultValue = //tools:wheel_resolver
+DefaultValue = //tools/wheel_resolver
 Optional = true
 Inherit = true
 
