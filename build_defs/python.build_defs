@@ -363,7 +363,6 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         requires=['py', 'test', interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER],
         tools=[CONFIG.JARCAT_TOOL],
         test_tools=[CONFIG.PYTHON.DEFAULT_INTERPRETER],
-            
     )
 
 def pip_library(name:str, version:str, hashes:list=None, package_name:str=None,

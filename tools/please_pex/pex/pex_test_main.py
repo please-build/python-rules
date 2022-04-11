@@ -32,7 +32,6 @@ def main():
     """Runs the tests. Returns an appropriate exit code."""
     args = [arg for arg in sys.argv[1:]]
     sys.path = sys.path[:1] + [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
-    print("sys.path =", sys.path)
     if os.getenv('COVERAGE'):
         # It's important that we run coverage while we load the tests otherwise
         # we get no coverage for import statements etc.

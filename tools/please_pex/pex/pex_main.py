@@ -178,7 +178,6 @@ class ModuleDirImport(object):
         self.prefix = module_dir.replace('/', '.') + '.'
 
     def find_module(self, fullname, path=None):
-        #traceback.print_stack(limit=10)
         """Attempt to locate module. Returns self if found, None if not."""
         if fullname.startswith(self.prefix):
             return self
