@@ -475,13 +475,13 @@ genrule(
         "ls -d $PKG_DIR/* | grep -v \.whl | xargs -I{} mv {} .bootstrap",
         "ls -d $PKG_DIR/* | xargs -I{} -n1 $TOOLS x {} -o {}.unzip",
         "for dir in $PKG_DIR/*.unzip; do mv $dir/$PKG_DIR/* .bootstrap; done",
-        "$TOOLS z -i .bootstrap/ -o .bootstrap.zip  --include_other",
+        "$TOOLS z -i .bootstrap/ -o .unittest_bootstrap.zip  --include_other",
     ],
     srcs = [
         ":unittest_deps"
     ],
     outs = [
-        ".bootstrap.zip",
+        ".unittest_bootstrap.zip",
     ],
     tools = [CONFIG.JARCAT_TOOL],
 )
@@ -496,8 +496,26 @@ filegroup(
     ],
 )
 
-filegroup(
+genrule(
     name = "pytest_bootstrap",
+    cmd = [
+        "mkdir .bootstrap",
+        "ls -d $PKG_DIR/* | grep -v \.whl | xargs -I{} mv {} .bootstrap;"
+        "ls -d $PKG_DIR/* | xargs -I{} -n1 $TOOLS x {} -o {}.unzip;"
+        "for dir in $PKG_DIR/*.unzip; do mv $dir/$PKG_DIR/* .bootstrap; done",
+        "$TOOLS z -i .bootstrap/ -o .pytest_bootstrap.zip  --include_other",
+    ],
+    srcs = [
+        ":pytest_deps"
+    ],
+    outs = [
+        ".pytest_bootstrap.zip",
+    ],
+    tools = [CONFIG.JARCAT_TOOL],
+)
+
+filegroup(
+    name = "pytest_deps",
     srcs = [
         ":attrs",
         ":funcsigs",
