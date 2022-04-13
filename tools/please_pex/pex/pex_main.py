@@ -282,8 +282,7 @@ def explode_zip():
     inside a zipfile.
     """
     # Temporarily add bootstrap to sys path
-    ### THIS SHOULD MAYBE COME FROM CONFIG FILE?
-    sys.path = [os.path.join(sys.path[0], 'third_party/python')] + sys.path[1:]
+    sys.path = [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
     import contextlib, portalocker
     sys.path = sys.path[1:]
 
@@ -361,6 +360,7 @@ def main():
 
     N.B. This gets redefined by pex_test_main to run tests instead.
     """
+    # Add .bootstrap dir to path, after the initial pex entry
     sys.path = sys.path[:1] + [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
     # Starts a debugging session, if defined, before running the entry point.
     start_debugger()

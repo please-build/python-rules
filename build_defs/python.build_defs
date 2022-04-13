@@ -330,8 +330,8 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 
     #'cp -r $SRCS_TESTRUNNERDEPS .',
     cmd = ['mv $SRCS_MAIN __main__.py',
-           'mkdir .bootstrap && mv $SRCS_TESTRUNNERDEPS .bootstrap',
-           f'$TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict']
+           'mv $SRCS_TESTRUNNERDEPS .',
+           f'$TOOL z -i . -s .pex.zip -s .zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict']
 
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
     return build_rule(
@@ -470,7 +470,7 @@ def pip_library(name:str, version:str, hashes:list=None, package_name:str=None,
     )
 
     # Don't include the dependency whl's into our whl. They are later picked up by py_binary anyway.
-    cmd = f'cd $SRCS && $TOOLS_JARCAT z --suffix="" --exclude_suffix=whl --include_other -i .'
+    cmd = f'$TOOLS_JARCAT z --suffix="" --exclude_suffix=whl --include_other -i . -r $PKG/{name}:$PKG'
     if not licences:
         cmd += ' && find . -name METADATA -or -name PKG-INFO | grep -v "^./build/" | xargs grep -E "License ?:" | grep -v UNKNOWN | cat || true'
 

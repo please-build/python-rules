@@ -468,8 +468,26 @@ pip_library(
     version = "1.5.0",
 )
 
-filegroup(
+genrule(
     name = "unittest_bootstrap",
+    cmd = [
+        "mkdir .bootstrap",
+        "ls -d $PKG_DIR/* | grep -v \.whl | xargs -I{} mv {} .bootstrap",
+        "ls -d $PKG_DIR/* | xargs -I{} -n1 $TOOLS x {} -o {}.unzip",
+        "for dir in $PKG_DIR/*.unzip; do mv $dir/$PKG_DIR/* .bootstrap; done",
+        "$TOOLS z -i .bootstrap/ -o .bootstrap.zip  --include_other",
+    ],
+    srcs = [
+        ":unittest_deps"
+    ],
+    outs = [
+        ".bootstrap.zip",
+    ],
+    tools = [CONFIG.JARCAT_TOOL],
+)
+
+filegroup(
+    name = "unittest_deps",
     srcs = [
         ":coverage",
         ":portalocker",
