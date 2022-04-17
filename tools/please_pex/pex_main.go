@@ -4,8 +4,9 @@ package main
 import (
 	"gopkg.in/op/go-logging.v1"
 
+	"tools/please_pex/pex"
+
 	cli "github.com/peterebden/go-cli-init/v5/flags"
-	"github.com/please-build/python-rules/tools/please_pex/pex"
 )
 
 var log = logging.MustGetLogger("please_pex")
