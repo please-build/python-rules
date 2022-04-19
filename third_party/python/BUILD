@@ -172,6 +172,7 @@ pip_library(
 pip_library(
     name = "pluggy",
     version = "0.13.1",
+    licences = ["MIT"],
     deps = [":importlib_metadata"],
 )
 
