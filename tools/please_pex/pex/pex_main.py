@@ -283,7 +283,7 @@ def explode_zip():
     """
     # Temporarily add bootstrap to sys path
     sys.path = [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
-    import contextlib, portalocker
+    import contextlib, .bootstrap.portalocker
     sys.path = sys.path[1:]
 
     @contextlib.contextmanager
@@ -292,10 +292,10 @@ def explode_zip():
         lockfile_path = os.path.join(basepath, '.lock-%s' % uniquedir)
         lockfile = open(lockfile_path, "a+")
         # Block until we can acquire the lockfile.
-        portalocker.lock(lockfile, portalocker.LOCK_EX)
+        portalocker.lock(lockfile, .bootstrap.portalocker.LOCK_EX)
         lockfile.seek(0)
         yield lockfile
-        portalocker.lock(lockfile, portalocker.LOCK_UN)
+        portalocker.lock(lockfile, .bootstrap.portalocker.LOCK_UN)
 
     @contextlib.contextmanager
     def _explode_zip():
