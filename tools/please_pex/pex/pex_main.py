@@ -283,8 +283,9 @@ def explode_zip():
     """
     # Temporarily add bootstrap to sys path
     sys.path = [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
+    print("sys.path =", sys.path)
     import contextlib, portalocker
-    # sys.path = sys.path[1:]
+    sys.path = sys.path[1:]
 
     @contextlib.contextmanager
     def pex_lockfile(basepath, uniquedir):
