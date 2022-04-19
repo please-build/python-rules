@@ -1,3 +1,7 @@
+subinclude("//build_defs:version")
+
+version(name = "version")
+
 remote_file(
     name = "arcat",
     url = f"https://github.com/please-build/arcat/releases/download/v1.0.0/arcat-1.0.0-{CONFIG.HOSTOS}_{CONFIG.HOSTARCH}",
