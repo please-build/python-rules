@@ -175,14 +175,8 @@ pip_library(
     deps = [":importlib_metadata"],
 )
 
-python_wheel(
+pip_library(
     name = "importlib_metadata",
-    outs = [
-        "importlib_metadata",
-        "importlib_metadata-1.5.0.dist-info",
-    ],
-    hashes = ["b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"],
-    patch = "importlib_metadata.patch",
     version = "1.5.0",
     deps = [":zipp"],
 )
