@@ -113,6 +113,7 @@ class SoImport(object):
     """So import. Much binary. Such dynamic. Wow."""
 
     def __init__(self):
+
         if PY_VERSION.major < 3:
             self.suffixes = {x[0]: x for x in imp.get_suffixes() if x[2] == imp.C_EXTENSION}
         else:

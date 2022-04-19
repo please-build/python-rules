@@ -5,3 +5,10 @@ remote_file(
     binary = True,
     visibility = ["PUBLIC"],
 )
+
+filegroup(
+    name = "wheel_resolver",
+    system_srcs = ["/home/swestmoreland/wheel_tool.pex"],
+    binary = True,
+    visibility = ["PUBLIC"],
+)
