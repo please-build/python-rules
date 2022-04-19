@@ -299,9 +299,8 @@ python_wheel(
     deps = [":six"],
 )
 
-python_wheel(
+pip_library(
     name = "portalocker",
-    hashes = ["874d6063c6ceb185fe4771da41b01872d2c56d292db746698f8ad7bf1833c905"],
     version = "1.7.0",
 )
 

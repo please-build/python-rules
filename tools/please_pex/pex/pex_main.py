@@ -184,6 +184,7 @@ class ModuleDirImport(object):
 
     def load_module(self, fullname):
         """Actually load a module that we said we'd handle in find_module."""
+        print("load_module", fullname, "as", fullname[len(self.prefix):])
         module = import_module(fullname[len(self.prefix):])
         sys.modules[fullname] = module
         return module

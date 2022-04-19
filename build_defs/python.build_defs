@@ -175,15 +175,20 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     )
 
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
-    cmd = f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict'
+    cmd = f'mv $SRCS_MAIN __main__.py && mkdir .bootstrap && mv $SRCS_BOOTSTRAP .bootstrap && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict'
     if strip:
         cmd += ' --strip_py'
 
     debug_cmd = _debug_cmd("./$OUT")
 
+    srcs = {
+        'main': [pex_rule],
+        'bootstrap': [CONFIG.PYTHON.PORTALOCKER],
+        }
+
     return build_rule(
         name=name,
-        srcs=[pex_rule],
+        srcs=srcs,
         deps=[lib_rule],
         outs=[out or (name + '.pex')],
         data=data,

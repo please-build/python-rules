@@ -1,5 +1,5 @@
 def run(explode=False):
-    if not ZIP_SAFE:
+    if explode or not ZIP_SAFE:
         with explode_zip()():
             add_module_dir_to_sys_path(MODULE_DIR)
             return main()
