@@ -33,6 +33,13 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: tatskaari/release-action@master
+        uses: thought-machine/release-action@v0.3.0
+      - name: Release tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: thought-machine/release-action@v0.3.0
         with:
           release-files: plz-out/package
+          version-file: tools/VERSION
+          change-log-file: tools/ChangeLog
+          release-prefix: tools
