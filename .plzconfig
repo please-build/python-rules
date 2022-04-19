@@ -102,7 +102,7 @@ Inherit = true
 
 [PluginConfig "portalocker"]
 ConfigKey = Portalocker
-DefaultValue = //third_party/python:portalocker
+DefaultValue = //third_party/python:py_binary_bootstrap
 
 [featureflags]
 PythonWheelHashing = true

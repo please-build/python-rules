@@ -304,6 +304,24 @@ pip_library(
     version = "1.7.0",
 )
 
+genrule(
+    name = "py_binary_bootstrap",
+    cmd = [
+        "mkdir .bootstrap",
+        "ls -d $PKG_DIR/* | grep -v \.whl | xargs -I{} mv {} .bootstrap;"
+        "ls -d $PKG_DIR/* | xargs -I{} -n1 $TOOLS x {} -o {}.unzip;"
+        "for dir in $PKG_DIR/*.unzip; do mv $dir/$PKG_DIR/* .bootstrap; done",
+        "$TOOLS z -i .bootstrap/ -o .py_binary_bootstrap.zip  --include_other",
+    ],
+    srcs = [
+        ":portalocker"
+    ],
+    outs = [
+        ".py_binary_bootstrap.zip",
+    ],
+    tools = [CONFIG.JARCAT_TOOL],
+)
+
 pip_library(
     name = "numpy",
     test_only = True,
@@ -478,8 +496,8 @@ genrule(
     name = "unittest_bootstrap",
     cmd = [
         "mkdir .bootstrap",
-        "ls -d $PKG_DIR/* | grep -v \.whl | xargs -I{} mv {} .bootstrap",
-        "ls -d $PKG_DIR/* | xargs -I{} -n1 $TOOLS x {} -o {}.unzip",
+        "ls -d $PKG_DIR/* | grep -v \.whl | xargs -I{} mv {} .bootstrap;"
+        "ls -d $PKG_DIR/* | xargs -I{} -n1 $TOOLS x {} -o {}.unzip;"
         "for dir in $PKG_DIR/*.unzip; do mv $dir/$PKG_DIR/* .bootstrap; done",
         "$TOOLS z -i .bootstrap/ -o .unittest_bootstrap.zip  --include_other",
     ],
