@@ -7,7 +7,8 @@ hashcheckers = sha256
 [Parse]
 PreloadBuildDefs = test/build_defs/test.build_defs
 
-[Go]
+[Plugin "go"]
+Target = //plugins:go
 ImportPath = github.com/please-build/python-rules
 ; embedtool = //tools/please_go_embed
 gotool = //third_party/go:toolchain|go
@@ -98,3 +99,4 @@ Inherit = true
 PythonWheelHashing = true
 ExcludePythonRules = true
 SingleSHA1Hash = true
+ExcludeGoRules = true

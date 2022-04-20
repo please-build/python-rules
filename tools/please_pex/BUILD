@@ -1,4 +1,4 @@
-subinclude("//build_defs:python")
+subinclude("//build_defs:python", "///go//build_defs:go")
 
 go_binary(
     name = "please_pex",
