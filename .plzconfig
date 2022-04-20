@@ -12,8 +12,6 @@ ImportPath = github.com/please-build/python-rules
 ; embedtool = //tools/please_go_embed
 gotool = //third_party/go:toolchain|go
 
-[Java]
-JarCatTool = //tools:arcat
 
 [PluginDefinition]
 name = python
@@ -25,7 +23,7 @@ Inherit = true
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
-DefaultValue = //tools/please_pex
+DefaultValue = //tools:please_pex
 Inherit = true
 
 [PluginConfig "interpreter_options"]
@@ -90,7 +88,7 @@ Repeatable = true
 
 [PluginConfig "wheel_tool"]
 ConfigKey = WheelTool
-DefaultValue = //tools/wheel_resolver
+DefaultValue = //tools:wheel_resolver
 Optional = true
 Inherit = true
 
