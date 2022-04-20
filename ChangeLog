@@ -1,3 +1,7 @@
+Version 0.6.1
+-------------
+    * Use remote file for tools #69
+
 Version 0.6.0
 -------------
     * Set tool-related config to inherit from host repo #58
