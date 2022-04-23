@@ -1,5 +1,5 @@
 [Please]
-Version = >=16.19.0
+Version = 16.20.0-beta.16
 
 [Build]
 hashcheckers = sha256
@@ -7,13 +7,12 @@ hashcheckers = sha256
 [Parse]
 PreloadBuildDefs = test/build_defs/test.build_defs
 
-[Go]
+[Plugin "go"]
+Target = //plugins:go
 ImportPath = github.com/please-build/python-rules
 ; embedtool = //tools/please_go_embed
 gotool = //third_party/go:toolchain|go
 
-[Java]
-JarCatTool = //tools:arcat
 
 [PluginDefinition]
 name = python
@@ -25,7 +24,7 @@ Inherit = true
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
-DefaultValue = //tools/please_pex
+DefaultValue = //tools:please_pex
 Inherit = true
 
 [PluginConfig "interpreter_options"]
@@ -90,7 +89,7 @@ Repeatable = true
 
 [PluginConfig "wheel_tool"]
 ConfigKey = WheelTool
-DefaultValue = //tools/wheel_resolver
+DefaultValue = //tools:wheel_resolver
 Optional = true
 Inherit = true
 
@@ -108,3 +107,4 @@ DefaultValue = //third_party/python:py_binary_bootstrap
 PythonWheelHashing = true
 ExcludePythonRules = true
 SingleSHA1Hash = true
+ExcludeGoRules = true

@@ -611,7 +611,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
     if post_install_commands:
         cmd += post_install_commands
 
-    cmd += ['$TOOL z -d --prefix $PKG -i ' + ' -i '.join(outs or [name])]
+    cmd += ['$TOOL z -d --prefix "$PKG" -i ' + ' -i '.join(outs or [name])]
     label = f'whl:{package_name}=={version}'
 
     wheel_rule = build_rule(
