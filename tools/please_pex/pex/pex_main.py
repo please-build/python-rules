@@ -113,7 +113,6 @@ class SoImport(object):
     """So import. Much binary. Such dynamic. Wow."""
 
     def __init__(self):
-
         if PY_VERSION.major < 3:
             self.suffixes = {x[0]: x for x in imp.get_suffixes() if x[2] == imp.C_EXTENSION}
         else:
@@ -127,6 +126,8 @@ class SoImport(object):
             for name in zf.namelist():
                 path, _ = self.splitext(name)
                 if path:
+                    if path.startswith('.bootstrap/'):
+                        path = path[len('.bootstrap/'):]
                     importpath = path.replace('/', '.')
                     self.modules.setdefault(importpath, name)
                     if path.startswith(MODULE_DIR):
@@ -281,8 +282,8 @@ def explode_zip():
     inside a zipfile.
     """
     # Temporarily add bootstrap to sys path
-    ### THIS SHOULD MAYBE COME FROM CONFIG FILE?
-    sys.path = [os.path.join(sys.path[0], 'third_party/python')] + sys.path[1:]
+    sys.path = [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
+    print("sys.path =", sys.path)
     import contextlib, portalocker
     sys.path = sys.path[1:]
 
@@ -360,6 +361,8 @@ def main():
 
     N.B. This gets redefined by pex_test_main to run tests instead.
     """
+    # Add .bootstrap dir to path, after the initial pex entry
+    sys.path = sys.path[:1] + [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
     # Starts a debugging session, if defined, before running the entry point.
     start_debugger()
     # Must run this as __main__ so it executes its own __name__ == '__main__' block.

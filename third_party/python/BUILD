@@ -176,8 +176,14 @@ pip_library(
     deps = [":importlib_metadata"],
 )
 
-pip_library(
+python_wheel(
     name = "importlib_metadata",
+    outs = [
+        "importlib_metadata",
+        "importlib_metadata-1.5.0.dist-info",
+    ],
+    hashes = ["b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"],
+    patch = "importlib_metadata.patch",
     version = "1.5.0",
     deps = [":zipp"],
 )
@@ -297,6 +303,24 @@ python_wheel(
 pip_library(
     name = "portalocker",
     version = "1.7.0",
+)
+
+genrule(
+    name = "py_binary_bootstrap",
+    cmd = [
+        "mkdir .bootstrap",
+        "ls -d $PKG_DIR/* | grep -v \.whl | xargs -I{} mv {} .bootstrap;"
+        "ls -d $PKG_DIR/* | xargs -I{} -n1 $TOOLS x {} -o {}.unzip;"
+        "for dir in $PKG_DIR/*.unzip; do mv $dir/$PKG_DIR/* .bootstrap; done",
+        "$TOOLS z -i .bootstrap/ -o .py_binary_bootstrap.zip  --include_other",
+    ],
+    srcs = [
+        ":portalocker"
+    ],
+    outs = [
+        ".py_binary_bootstrap.zip",
+    ],
+    tools = [CONFIG.JARCAT_TOOL],
 )
 
 pip_library(
@@ -469,8 +493,26 @@ pip_library(
     version = "1.5.0",
 )
 
-filegroup(
+genrule(
     name = "unittest_bootstrap",
+    cmd = [
+        "mkdir .bootstrap",
+        "ls -d $PKG_DIR/* | grep -v \.whl | xargs -I{} mv {} .bootstrap;"
+        "ls -d $PKG_DIR/* | xargs -I{} -n1 $TOOLS x {} -o {}.unzip;"
+        "for dir in $PKG_DIR/*.unzip; do mv $dir/$PKG_DIR/* .bootstrap; done",
+        "$TOOLS z -i .bootstrap/ -o .unittest_bootstrap.zip  --include_other",
+    ],
+    srcs = [
+        ":unittest_deps"
+    ],
+    outs = [
+        ".unittest_bootstrap.zip",
+    ],
+    tools = [CONFIG.JARCAT_TOOL],
+)
+
+filegroup(
+    name = "unittest_deps",
     srcs = [
         ":coverage",
         ":portalocker",
@@ -479,8 +521,26 @@ filegroup(
     ],
 )
 
-filegroup(
+genrule(
     name = "pytest_bootstrap",
+    cmd = [
+        "mkdir .bootstrap",
+        "ls -d $PKG_DIR/* | grep -v \.whl | xargs -I{} mv {} .bootstrap;"
+        "ls -d $PKG_DIR/* | xargs -I{} -n1 $TOOLS x {} -o {}.unzip;"
+        "for dir in $PKG_DIR/*.unzip; do mv $dir/$PKG_DIR/* .bootstrap; done",
+        "$TOOLS z -i .bootstrap/ -o .pytest_bootstrap.zip  --include_other",
+    ],
+    srcs = [
+        ":pytest_deps"
+    ],
+    outs = [
+        ".pytest_bootstrap.zip",
+    ],
+    tools = [CONFIG.JARCAT_TOOL],
+)
+
+filegroup(
+    name = "pytest_deps",
     srcs = [
         ":attrs",
         ":funcsigs",
