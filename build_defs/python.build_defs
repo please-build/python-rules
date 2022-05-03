@@ -551,7 +551,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
     if tool:
         # Try the URLs generated using the wheel name schemes. If those fail, try
         # generating a url with the wheel_resolver tool and download that if successful.
-        cmd = f'$TOOL --package {package_name} --version {version}'
+        cmd = f'$TOOLS_PYTHON $TOOLS_WHEEL --package {package_name} --version {version}'
         if urls:
             cmd += ' --urls ' + ' '.join(['%s' % url for url in urls])
 
@@ -560,7 +560,7 @@ def python_wheel(name:str, version:str, hashes:list=None, package_name:str=None,
             tag = 'download',
             outs = [name + '.whl'],
             cmd = cmd,
-            tools = [tool],
+            tools = {"wheel": [tool], "python": [CONFIG.PYTHON.DEFAULT_INTERPRETER]},
             hashes = hashes if CONFIG.FF_PYTHON_WHEEL_HASHING else None,
             licences = licences if licences else None,
             building_description = 'Extracting...',
