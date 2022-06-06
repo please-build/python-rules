@@ -6,6 +6,8 @@ hashcheckers = sha256
 
 [Parse]
 PreloadBuildDefs = test/build_defs/test.build_defs
+preloadsubincludes = ///go//build_defs:go
+preloadsubincludes = //build_defs:python
 
 [Plugin "go"]
 Target = //plugins:go
