@@ -16,7 +16,7 @@ a target which has only had small changes.
 
 def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visibility:list=None,
                    test_only:bool&testonly=False, zip_safe:bool=True, labels:list&features&tags=[],
-                   interpreter:str=CONFIG.DEFAULT_PYTHON_INTERPRETER, strip:bool=False):
+                   interpreter:str=CONFIG.PYTHON.DEFAULT_INTERPRETER, strip:bool=False):
     """Generates a Python library target, which collects Python files for use by dependent rules.
 
     Note that each python_library performs some pre-zipping of its inputs before they're combined
@@ -94,7 +94,7 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
 
 def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=None, deps:list=[],
                   data:list=None, visibility:list=None, test_only:bool=False, zip_safe:bool=None,
-                  site:bool=False, strip:bool=False, interpreter:str=CONFIG.DEFAULT_PYTHON_INTERPRETER,
+                  site:bool=False, strip:bool=False, interpreter:str=CONFIG.PYTHON.DEFAULT_INTERPRETER,
                   shebang:str='', labels:list&features&tags=[]):
     """Generates a Python binary target.
 
@@ -132,13 +132,13 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     shebang = shebang or _interpreter_cmd(interpreter)
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
     cmd = '$TOOLS_PEX -s "%s" -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        shebang, CONFIG.PYTHON_MODULE_DIR, zipsafe_flag, CONFIG.PYTHON_INTERPRETER_OPTIONS)
+        shebang, CONFIG.PYTHON.MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
     if site:
         cmd += ' -S'
 
     if CONFIG.BUILD_CONFIG == 'dbg':
         # Both `pdb` and `debugpy` require the pex to be exploded to get debugging to work.
-        cmd = f'{cmd} -d={CONFIG.PYTHON_DEBUGGER}'.replace(' --zip_safe', '')
+        cmd = f'{cmd} -d={CONFIG.PYTHON.DEBUGGER}'.replace(' --zip_safe', '')
 
     assert main not in srcs, "main file should not be included in srcs"
 
@@ -166,7 +166,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         output_is_complete=True,
         tools={
             'interpreter': [interpreter],
-            'pex': [CONFIG.PEX_TOOL],
+            'pex': [CONFIG.PYTHON.PEX_TOOL],
         },
         test_only=test_only,
     )
@@ -208,7 +208,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
 def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:list=[], worker:str='',
                 labels:list&features&tags=[], size:str=None, flags:str='', visibility:list=None,
                 sandbox:bool=None, timeout:int=0, flaky:bool|int=0,
-                test_outputs:list=None, zip_safe:bool=None, interpreter:str=CONFIG.DEFAULT_PYTHON_INTERPRETER,
+                test_outputs:list=None, zip_safe:bool=None, interpreter:str=CONFIG.PYTHON.DEFAULT_INTERPRETER,
                 site:bool=False, test_runner:str=None):
     """Generates a Python test target.
 
@@ -248,16 +248,16 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
       test_runner (str): Specify which Python test runner to use for these tests. One of
                          `unittest`, `pytest`, or a custom test runner entry point.
     """
-    test_runner = test_runner or CONFIG.PYTHON_TEST_RUNNER
+    test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
     cmd = '$TOOLS_PEX -t -s "%s" -m "%s" -r "%s" --zip_safe --add_test_runner_deps --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        _interpreter_cmd(interpreter), CONFIG.PYTHON_MODULE_DIR, test_runner,
-        CONFIG.PYTHON_INTERPRETER_OPTIONS)
+        _interpreter_cmd(interpreter), CONFIG.PYTHON.MODULE_DIR, test_runner,
+        CONFIG.PYTHON.INTERPRETER_OPTIONS)
     if site:
         cmd += ' -S'
 
     if CONFIG.BUILD_CONFIG == 'dbg':
         # Both `pdb` and `debugpy` require the pex to be exploded to get debugging to work.
-        cmd = f'{cmd} -d={CONFIG.PYTHON_DEBUGGER}'.replace(' --zip_safe', '')
+        cmd = f'{cmd} -d={CONFIG.PYTHON.DEBUGGER}'.replace(' --zip_safe', '')
 
     # If the config specifies a PYTHON_TEST_RUNNER_BOOTSTRAP target, then this ought to contain
     # the test-runner library (e.g. pytest), and its transitive dependencies. In this case, we just
@@ -265,7 +265,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     #
     # If no bootstrap target is provided, then plz will provide a pinned set of dependencies to
     # support the specified test-runner framework.
-    bootstrap = CONFIG.PYTHON_TEST_RUNNER_BOOTSTRAP
+    bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
     if bootstrap:
         deps += [bootstrap] if bootstrap not in deps else []
         cmd = cmd.replace(' --add_test_runner_deps', '')
@@ -285,7 +285,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         deps=deps,
         tools={
             'interpreter': [interpreter],
-            'pex': [CONFIG.PEX_TOOL],
+            'pex': [CONFIG.PYTHON.PEX_TOOL],
         },
         labels = labels,
     )
@@ -378,12 +378,12 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
     package_name = package_name or name
     package_name = f'{package_name}=={version}'
     post_install_commands = post_install_commands or []
-    use_pypi = CONFIG.USE_PYPI if use_pypi is None else use_pypi
+    use_pypi = CONFIG.PYTHON.USE_PYPI if use_pypi is None else use_pypi
     index_flag = '' if use_pypi else '--no-index'
-    pip_flags = pip_flags or CONFIG.PIP_FLAGS
+    pip_flags = pip_flags or CONFIG.PYTHON.PIP_FLAGS
 
     repo_flag = ''
-    repo = repo or CONFIG.PYTHON_DEFAULT_PIP_REPO
+    repo = repo or CONFIG.PYTHON.DEFAULT_PIP_REPO
     if repo:
         if repo.startswith('//') or repo.startswith(':'):  # Looks like a build label, not a URL.
             repo_flag = f'-f %(location {repo})'
@@ -395,7 +395,7 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
     if install_subdirectory:
         target += '/' + install_subdirectory
 
-    pip_tool = "$TOOLS_PIP" if CONFIG.PIP_TOOL else '$TOOLS_PYTHON -m pip'
+    pip_tool = "$TOOLS_PIP" if CONFIG.PYTHON.PIP_TOOL else '$TOOLS_PYTHON -m pip'
 
     # Unset these compiler and linker flags as macOS doesn't have all these options.
     pip_compile_flags = 'CFLAGS=" -Wl,--build-id=none -g0 " LDFLAGS=" -Wl,--build-id=none"' if CONFIG.HOSTOS != 'darwin' else 'CFLAGS=" -g0"'
@@ -410,13 +410,13 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
     # It seems like most things have been resolved (Oct 2019ish) however a lot of python installs are probably not
     # updated yet. Essentially the "user" default will be turned off when --target is passed. Right now, it complains
     # that --prefix (and therefore --target) are incompatible with --user. See https://github.com/pypa/pip/pull/7002
-    if CONFIG.HOSTOS == 'darwin' and not CONFIG.DISABLE_VENDOR_FLAGS:
+    if CONFIG.HOSTOS == 'darwin' and not CONFIG.PYTHON.DISABLE_VENDOR_FLAGS:
         # Fix for Homebrew which fails with a superficially similar issue.
         # https://github.com/Homebrew/brew/blob/master/docs/Homebrew-and-Python.md suggests fixing with --install-option
         # but that prevents downloading binary wheels. This is more fiddly but seems to work.
         # Unfortunately it does *not* work similarly on the Debian problem :(
         pip_cmd = 'echo "[install]\nprefix=" > setup.cfg; ' + pip_cmd
-    if CONFIG.OS == 'linux' and not CONFIG.DISABLE_VENDOR_FLAGS:
+    if CONFIG.OS == 'linux' and not CONFIG.PYTHON.DISABLE_VENDOR_FLAGS:
         # Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=830892
         # tl;dr: Debian has broken --target with a custom patch, the only way to fix is to pass --system
         # which is itself Debian-specific, so we need to find if we're running on Debian. AAAAARGGGHHHH...
@@ -437,7 +437,7 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
     if post_install_commands:
         pip_cmd = ' && '.join([pip_cmd] + post_install_commands)
 
-    tools = {'pip': [CONFIG.PIP_TOOL]} if CONFIG.PIP_TOOL else {'python': [CONFIG.DEFAULT_PYTHON_INTERPRETER]}
+    tools = {'pip': [CONFIG.PYTHON.PIP_TOOL]} if CONFIG.PYTHON.PIP_TOOL else {'python': [CONFIG.PYTHON.DEFAULT_INTERPRETER]}
     srcs = build_rule(
         name = name,
         tag = "srcs",
@@ -512,7 +512,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
     """
     package_name = package_name or name.replace('-', '_')
     initial = package_name[0]
-    url_base = repo or CONFIG.PYTHON_WHEEL_REPO
+    url_base = repo or CONFIG.PYTHON.WHEEL_REPO
     if not url_base:
         fail('python.wheel_repo is not set in the config, must pass repo explicitly to python_wheel')
     urls = []
@@ -521,9 +521,9 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
                                     package_name=package_name,
                                     initial=initial,
                                     version=version)]
-    elif CONFIG.PYTHON_WHEEL_NAME_SCHEME:
+    elif CONFIG.PYTHON.WHEEL_NAME_SCHEME:
         urls += [scheme.format(url_base=url_base, package_name=package_name, initial=initial, version=version)
-                 for scheme in CONFIG.PYTHON_WHEEL_NAME_SCHEME]
+                 for scheme in CONFIG.PYTHON.WHEEL_NAME_SCHEME]
     else:
         # Populate urls using a reasonable set of possible wheel naming schemes.
         # Look for an arch-specific wheel first; in some cases there can be both (e.g. protobuf
