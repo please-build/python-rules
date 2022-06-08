@@ -1,3 +1,5 @@
+subinclude("//build_defs:python", "///go//build_defs:go")
+
 go_binary(
     name = "pex_main",
     srcs = ["pex_main.go"],
