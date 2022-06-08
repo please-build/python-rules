@@ -211,62 +211,6 @@ func (f *File) AddZipFile(filepath string) error {
 	return nil
 }
 
-// walk is a callback to walk a file tree and add all files found in it.
-func (f *File) walk(path string, mode fs.Mode) error {
-	if path != f.input && mode.IsSymlink() {
-		if resolved, err := filepath.EvalSymlinks(path); err != nil {
-			return err
-		} else if mode.IsDir() {
-			// TODO(peterebden): Is this case still needed?
-			return fs.WalkMode(resolved, f.walk)
-		}
-	}
-	for _, excl := range f.Exclude {
-		if path == excl {
-			log.Debug("Excluding %s", path)
-			if mode.IsDir() {
-				return filepath.SkipDir
-			}
-			return nil
-		}
-	}
-	if samePaths(path, f.filename) {
-		return nil
-	} else if !mode.IsDir() {
-		if !f.matchesSuffix(path, f.ExcludeSuffix) {
-			if f.matchesSuffix(path, f.Suffix) {
-				log.Debug("Adding zip file %s", path)
-				if err := f.AddZipFile(path); err != nil {
-					return fmt.Errorf("Error adding %s to zipfile: %s", path, err)
-				}
-			} else if f.IncludeOther && !f.HasExistingFile(path) {
-				if f.StripPy && strings.HasSuffix(path, ".py") && f.HasExistingFile(path+"c") {
-					log.Debug("Skipping %s since %sc exists", path, path)
-					return nil
-				}
-				targetPath := f.renamePathIfNeeded(path, false)
-				log.Debug("Including existing non-zip file %s as %s", path, targetPath)
-				if info, err := os.Lstat(path); err != nil {
-					return err
-				} else if b, err := ioutil.ReadFile(path); err != nil {
-					return fmt.Errorf("Error reading %s to zipfile: %s", path, err)
-				} else if err := f.StripBytecodeTimestamp(path, b); err != nil {
-					return err
-				} else if err := f.WriteFile(targetPath, b, info.Mode()&os.ModePerm); err != nil {
-					return err
-				}
-			}
-		}
-	} else if (len(f.Suffix) == 0 || f.AddInitPy) && path != "." && f.DirEntries { // Only add directory entries in "dumb" mode.
-		targetPath := f.renamePathIfNeeded(path, true)
-		log.Debug("Adding directory entry %s/ as %s", path, targetPath)
-		if err := f.WriteDir(targetPath); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // renamePathIfNeeded checks if the given file should be renamed according to the rename dir flag
 func (f *File) renamePathIfNeeded(name string, isDir bool) string {
 	for before, after := range f.RenameDirs {
