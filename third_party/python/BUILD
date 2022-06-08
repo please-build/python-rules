@@ -67,6 +67,13 @@ python_wheel(
 )
 
 python_wheel(
+    name = "six",
+    outs = ["six.py"],
+    hashes = ["8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"],
+    version = "1.14.0",
+)
+
+python_wheel(
     name = "requests",
     hashes = [
         "43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee",
@@ -160,10 +167,61 @@ python_multiversion_wheel(
 )
 
 python_wheel(
+    name = "attrs",
+    outs = ["attr"],
+    hashes = ["08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c"],
+    version = "19.3.0",
+)
+
+python_wheel(
+    name = "pluggy",
+    hashes = ["966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"],
+    version = "0.13.1",
+    deps = [":importlib_metadata"],
+)
+
+python_wheel(
+    name = "importlib_metadata",
+    outs = [
+        "importlib_metadata",
+        "importlib_metadata-1.5.0.dist-info",
+    ],
+    hashes = ["b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"],
+    patch = "importlib_metadata.patch",
+    version = "1.5.0",
+    deps = [":zipp"],
+)
+
+python_wheel(
+    name = "zipp",
+    outs = ["zipp.py"],
+    hashes = ["aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"],
+    version = "3.1.0",
+)
+
+python_wheel(
+    name = "py",
+    hashes = ["c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"],
+    version = "1.8.1",
+)
+
+python_wheel(
+    name = "funcsigs",
+    hashes = ["330cc27ccbf7f1e992e69fef78261dc7c6569012cf397db8d3de0234e6c937ca"],
+    version = "1.0.2",
+)
+
+python_wheel(
     name = "pkg_resources",
     package_name = "setuptools",
     hashes = ["c8b9f1a457949002e358fea7d3f2a1e1b94ddc0354b2e40afc066bf95d21bf7b"],
     version = "57.0.0",
+)
+
+python_wheel(
+    name = "packaging",
+    hashes = ["170748228214b70b672c581a3dd610ee51f733018650740e98c7df862a583f73"],
+    version = "20.1",
 )
 
 pip_library(
@@ -177,12 +235,69 @@ python_wheel(
 )
 
 python_wheel(
+    name = "more_itertools",
+    hashes = ["5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c"],
+    version = "8.2.0",
+)
+
+python_wheel(
+    name = "pytest",
+    outs = [
+        "_pytest",
+        "pytest",
+    ],
+    hashes = ["5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"],
+    version = "5.4.3",
+    deps = [
+        ":attrs",
+        ":funcsigs",
+        ":more_itertools",
+        ":packaging",
+        ":pkg_resources",
+        ":pluggy",
+        ":py",
+        ":six",
+    ],
+)
+
+python_wheel(
+    name = "behave",
+    outs = [
+        "behave",
+    ],
+    hashes = ["ebda1a6c9e5bfe95c5f9f0a2794e01c7098b3dde86c10a95d8621c5907ff6f1c"],
+    version = "1.2.6",
+    deps = [
+        ":colorama",
+        ":enum34",
+        ":parse",
+        ":parse_type",
+        ":six",
+        ":traceback2",
+        ":win_unicode_console",
+    ],
+)
+
+python_wheel(
     name = "parse",
     outs = [
         "parse.py",
     ],
     hashes = ["2bb9c56c65bf609abbbef372bdcdd7b9c163745e7daf5e8217dba50a55850510"],
     version = "1.15.0",
+)
+
+python_wheel(
+    name = "parse_type",
+    hashes = ["089a471b06327103865dfec2dd844230c3c658a4a1b5b4c8b6c16c8f77577f9e"],
+    version = "0.5.2",
+)
+
+python_wheel(
+    name = "traceback2",
+    hashes = ["8253cebec4b19094d67cc5ed5af99bf1dba1285292226e98a31929f87a5d6b23"],
+    licences = ["PSF"],
+    version = "1.4.0",
 )
 
 python_wheel(
@@ -205,17 +320,17 @@ python_wheel(
 )
 
 python_wheel(
-    name = "portalocker",
-    hashes = ["874d6063c6ceb185fe4771da41b01872d2c56d292db746698f8ad7bf1833c905"],
-    version = "1.7.0",
-)
-
-python_wheel(
     name = "absl",
     package_name = "absl_py",
     hashes = ["c106f6ef0ae86c1273b0858b40ee15b99fad1c223838387b9d11446a033bbcb1"],
     version = "0.9.0",
     deps = [":six"],
+)
+
+python_wheel(
+    name = "portalocker",
+    hashes = ["874d6063c6ceb185fe4771da41b01872d2c56d292db746698f8ad7bf1833c905"],
+    version = "1.7.0",
 )
 
 pip_library(
@@ -426,13 +541,6 @@ filegroup(
     ],
 )
 
-python_wheel(
-    name = "six",
-    outs = ["six.py"],
-    hashes = ["8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"],
-    version = "1.14.0",
-)
-
 if is_platform(
     arch = "amd64",
     os = "linux",
@@ -460,110 +568,3 @@ else:
         "https://files.pythonhosted.org/packages/93/ac/02bc6a60304a8a58383386f7675f6ebae0d2f49f162dda318e57bd95c746/coverage-5.5-pp37-none-any.whl",
     ]
 
-python_wheel(
-    name = "attrs",
-    outs = ["attr"],
-    hashes = ["08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c"],
-    version = "19.3.0",
-)
-
-python_wheel(
-    name = "pluggy",
-    hashes = ["966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"],
-    version = "0.13.1",
-    deps = [":importlib_metadata"],
-)
-
-python_wheel(
-    name = "importlib_metadata",
-    outs = [
-        "importlib_metadata",
-        "importlib_metadata-1.5.0.dist-info",
-    ],
-    hashes = ["b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"],
-    patch = "importlib_metadata.patch",
-    version = "1.5.0",
-    deps = [":zipp"],
-)
-
-python_wheel(
-    name = "zipp",
-    outs = ["zipp.py"],
-    hashes = ["aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"],
-    version = "3.1.0",
-)
-
-python_wheel(
-    name = "py",
-    hashes = ["c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"],
-    version = "1.8.1",
-)
-
-python_wheel(
-    name = "funcsigs",
-    hashes = ["330cc27ccbf7f1e992e69fef78261dc7c6569012cf397db8d3de0234e6c937ca"],
-    version = "1.0.2",
-)
-
-python_wheel(
-    name = "packaging",
-    hashes = ["170748228214b70b672c581a3dd610ee51f733018650740e98c7df862a583f73"],
-    version = "20.1",
-)
-
-python_wheel(
-    name = "more_itertools",
-    hashes = ["5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c"],
-    version = "8.2.0",
-)
-
-python_wheel(
-    name = "pytest",
-    outs = [
-        "_pytest",
-        "pytest",
-    ],
-    hashes = ["5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"],
-    version = "5.4.3",
-    deps = [
-        ":attrs",
-        ":funcsigs",
-        ":more_itertools",
-        ":packaging",
-        ":pkg_resources",
-        ":pluggy",
-        ":py",
-        ":six",
-    ],
-)
-
-python_wheel(
-    name = "behave",
-    outs = [
-        "behave",
-    ],
-    hashes = ["ebda1a6c9e5bfe95c5f9f0a2794e01c7098b3dde86c10a95d8621c5907ff6f1c"],
-    version = "1.2.6",
-    deps = [
-        ":colorama",
-        ":enum34",
-        ":parse",
-        ":parse_type",
-        ":six",
-        ":traceback2",
-        ":win_unicode_console",
-    ],
-)
-
-python_wheel(
-    name = "parse_type",
-    hashes = ["089a471b06327103865dfec2dd844230c3c658a4a1b5b4c8b6c16c8f77577f9e"],
-    version = "0.5.2",
-)
-
-python_wheel(
-    name = "traceback2",
-    hashes = ["8253cebec4b19094d67cc5ed5af99bf1dba1285292226e98a31929f87a5d6b23"],
-    licences = ["PSF"],
-    version = "1.4.0",
-)
