@@ -4,15 +4,16 @@ package main
 import (
 	"gopkg.in/op/go-logging.v1"
 
-	"github.com/thought-machine/please/src/cli"
-	"github.com/thought-machine/please/tools/please_pex/pex"
+	cli "github.com/peterebden/go-cli-init/v5/flags"
+	l "github.com/peterebden/go-cli-init/v5/logging"
+	"github.com/please-build/python-rules/tools/please_pex/pex"
 )
 
 var log = logging.MustGetLogger("please_pex")
 
 var opts = struct {
 	Usage              string
-	Verbosity          cli.Verbosity `short:"v" long:"verbosity" default:"warning" description:"Verbosity of output (higher number = more output)"`
+	Verbosity          l.Verbosity `short:"v" long:"verbosity" default:"warning" description:"Verbosity of output (higher number = more output)"`
 	Out                string        `short:"o" long:"out" env:"OUT" description:"Output file"`
 	EntryPoint         string        `short:"e" long:"entry_point" env:"SRC" description:"Entry point to pex file"`
 	ModuleDir          string        `short:"m" long:"module_dir" description:"Python module dir to implicitly load modules from"`
@@ -38,8 +39,8 @@ dependent code as a self-contained self-executable environment.
 }
 
 func main() {
-	cli.ParseFlagsOrDie("please_pex", &opts)
-	cli.InitLogging(opts.Verbosity)
+	cli.ParseFlagsOrDie("please_pex", &opts, nil)
+	l.InitLogging(opts.Verbosity)
 	w := pex.NewWriter(
 		opts.EntryPoint, opts.Interpreter, opts.InterpreterOptions, opts.Stamp,
 		opts.ZipSafe, !opts.Site)

@@ -7,8 +7,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	"io/ioutil"
-	"io/fs"
+	// "io/ioutil"
+	// "io/fs"
 	"os"
 	"path"
 	"path/filepath"
@@ -17,8 +17,6 @@ import (
 	"time"
 
 	"gopkg.in/op/go-logging.v1"
-
-	// "github.com/thought-machine/please/src/fs"
 )
 
 var log = logging.MustGetLogger("zip")
@@ -296,12 +294,6 @@ func samePaths(a, b string) bool {
 		b = path.Join(wd, b)
 	}
 	return a == b
-}
-
-// AddFiles walks the given directory and adds any zip files (determined by suffix) that it finds within.
-func (f *File) AddFiles(in string) error {
-	f.input = in
-	return fs.WalkMode(in, f.walk)
 }
 
 // shouldExcludeSuffix returns true if the given filename has a suffix that should be excluded.

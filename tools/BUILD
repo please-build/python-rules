@@ -18,7 +18,14 @@ TOOLS_VERSION = "0.1.1"
 #     visibility = ["PUBLIC"],
 # )
 
-filegroup
+filegroup(
+    name = "please_pex",
+    system_srcs = [
+        "/home/swestmoreland/please_pex",
+    ],
+    visibility = ["PUBLIC"],
+    binary = True,
+)
 
 remote_file(
     name = "wheel_resolver",
