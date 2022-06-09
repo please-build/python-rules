@@ -17,29 +17,6 @@ package(
 )
 
 python_wheel(
-    name = "tensorflow",
-    licences = ["Apache 2.0"],
-    test_only = True,
-    version = "2.6.0",
-    deps = [
-        ":absl",
-        ":astunparse",
-        ":flatbuffers",
-        ":gast",
-        ":google-pasta",
-        ":grpcio",
-        ":keras_applications",
-        ":keras_preprocessing",
-        ":numpy",
-        ":opt_einsum",
-        ":protobuf",
-        ":termcolor",
-        ":typing_extensions",
-        ":wrapt",
-    ],
-)
-
-python_wheel(
     name = "flatbuffers",
     test_only = True,
     version = "2.0",
@@ -49,14 +26,6 @@ python_wheel(
     name = "astunparse",
     test_only = True,
     version = "1.6.3",
-)
-
-python_wheel(
-    name = "typing_extensions",
-    package_name = "typing-extensions",
-    outs = ["typing_extensions.py"],
-    test_only = True,
-    version = "3.10.0.2",
 )
 
 python_wheel(

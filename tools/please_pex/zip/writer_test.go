@@ -75,17 +75,6 @@ func TestAddZipFileConcatenatesSpecialFiles(t *testing.T) {
 	})
 }
 
-func TestAddFiles(t *testing.T) {
-	f := NewFile("add_files_test.zip", false)
-	f.Suffix = []string{"zip"}
-	err := f.AddFiles("tools/please_pex/zip/test_data")
-	require.NoError(t, err)
-	err = f.AddFiles("tools/please_pex/zip/test_data_2")
-	require.NoError(t, err)
-	f.Close()
-	assertExpected(t, "add_files_test.zip", 0)
-}
-
 func assertExpected(t *testing.T, filename string, alignment int) {
 	t.Helper()
 	r, err := zip.OpenReader(filename)
@@ -113,30 +102,6 @@ func assertExpected(t *testing.T, filename string, alignment int) {
 			assert.True(t, int(offset)%alignment == 0)
 		}
 	}
-}
-
-func TestStoreSuffix(t *testing.T) {
-	// This is a sort of Android-esque example (storing PNGs at 4-byte alignment)
-	f := NewFile("test_store_suffix.zip", false)
-	f.Suffix = []string{"zip"}
-	f.StoreSuffix = []string{"png"}
-	// Removed since we can no longer align items within the archive. The rest of the
-	// test is still valid though.
-	// f.Align = 4
-	f.IncludeOther = true
-	err := f.AddFiles("tools/please_pex/zip/test_data")
-	require.NoError(t, err)
-	err = f.AddFiles("tools/please_pex/zip/test_data_2")
-	require.NoError(t, err)
-	f.Close()
-
-	r, err := zip.OpenReader("test_store_suffix.zip")
-	require.NoError(t, err)
-	defer r.Close()
-	assert.Equal(t, 3, len(r.File))
-	png := r.File[0]
-	assert.Equal(t, "tools/please_pex/zip/test_data/kitten.png", png.Name)
-	assert.Equal(t, zip.Store, png.Method)
 }
 
 func TestIsSamePath(t *testing.T) {

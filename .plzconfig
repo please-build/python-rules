@@ -24,7 +24,7 @@ Inherit = true
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
-DefaultValue = //tools:please_pex
+DefaultValue = //tools/please_pex
 Inherit = true
 
 [PluginConfig "interpreter_options"]
