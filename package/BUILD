@@ -2,7 +2,6 @@ subinclude("//tools:version", "//build_defs:archs")
 
 release_files = {
     "please_pex": "//tools/please_pex",
-    "wheel_resolver": "//tools/wheel_resolver",
 }
 
 def release_file(name:str, file_target:str, arch:str):

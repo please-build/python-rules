@@ -1,3 +1,7 @@
+Version 1.0.0
+-------------
+    * Migrate old pex tool across from main please repo
+
 Version 0.1.1
 -------------
     * Base the file name versions off this release not the main one

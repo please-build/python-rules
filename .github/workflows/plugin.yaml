@@ -24,7 +24,7 @@ jobs:
   release:
     needs: [test]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/v1'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

@@ -1,3 +1,7 @@
+Version 1.0.0
+-------------
+    * Migrate old rules across from main please repo
+
 Version 0.6.1
 -------------
     * Use remote file for tools #69
