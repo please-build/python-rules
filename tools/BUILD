@@ -17,18 +17,3 @@ remote_file(
     binary = True,
     visibility = ["PUBLIC"],
 )
-
-
-remote_file(
-    name = "wheel_resolver",
-    url = f"https://github.com/please-build/python-rules/releases/download/tools-v{TOOLS_VERSION}/wheel_resolver-{TOOLS_VERSION}-{CONFIG.HOSTOS}_{CONFIG.HOSTARCH}",
-    hashes = [
-        "40303befa469874270246082d914aef3f28461456a57e87caf6d0e0eb77d8629", # linux_amd64
-        "0c84c59d4ddf1e6904775f7f931a883f98e964f2723a159cce6b8b7dc05f60f6", # linux_arm64
-        "7c9244a886d06cc210c9776c0fa177730d9daebcc87db0ed885f215bf338238e", # darwin_amd64
-        "e76d21dc9f1e4e4afaec6a91119884c34f640229cf0518b28c2af4ef3eb8f1d1", # darwin_arm64
-        "1eec1f69154170702d2f42a88442309648d120ae5020b583a183d1b467767733", # freebsd_amd64
-    ],
-    binary = True,
-    visibility = ["PUBLIC"],
-)

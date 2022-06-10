@@ -5,4 +5,7 @@ go_library(
     srcs = ["pex.go"],
     resources = glob(["**/*.py"]),
     visibility = ["//tools/please_pex:all"],
+    deps = [
+        "//tools/please_pex/zip",
+    ],
 )

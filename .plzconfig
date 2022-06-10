@@ -24,7 +24,7 @@ Inherit = true
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
-DefaultValue = //tools:please_pex
+DefaultValue = //tools/please_pex
 Inherit = true
 
 [PluginConfig "interpreter_options"]
@@ -38,6 +38,10 @@ DefaultValue = unittest
 [PluginConfig "testrunner_deps"]
 ConfigKey = TestrunnerDeps
 DefaultValue = //third_party/python:unittest_bootstrap
+
+[PluginConfig "test_runner_bootstrap"]
+ConfigKey = TestrunnerBootstrap
+DefaultValue = ""
 
 [PluginConfig "debugger"]
 ConfigKey = Debugger
@@ -62,6 +66,7 @@ Optional = true
 [PluginConfig "use_pypi"]
 ConfigKey = UsePypi
 DefaultValue = true
+Type = bool
 
 [PluginConfig "pip_flags"]
 ConfigKey = PipFlags
@@ -72,6 +77,7 @@ Optional = true
 ConfigKey = DisableVendorFlags
 DefaultValue = false
 Inherit = true
+Type = bool
 
 [PluginConfig "pip_compile_flags"]
 ConfigKey = PipCompileFlags

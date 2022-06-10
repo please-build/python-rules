@@ -1,5 +1,18 @@
 subinclude("//build_defs:python")
 
+package(
+    default_visibility = ["PUBLIC"],
+    python = {
+        "WHEEL_REPO": "https://get.please.build/third_party/python/py3",
+        "WHEEL_NAME_SCHEME": [
+            "{url_base}/{package_name}-{version}-${{OS}}_${{ARCH}}.whl",
+            "{url_base}/{package_name}-{version}.whl",
+            "https://files.pythonhosted.org/packages/py3/{initial}/{package_name}/{package_name}-{version}-py3-none-any.whl",
+            "https://files.pythonhosted.org/packages/py2.py3/{initial}/{package_name}/{package_name}-{version}-py2.py3-none-any.whl",
+        ],
+    },
+)
+
 python_binary(
     name = "strip_source",
     main = "strip_source.py",
@@ -181,21 +194,6 @@ python_test(
     deps = ["//third_party/python:cx_oracle"],
 )
 
-# There's no wheel naming scheme in here so this
-# will use the wheel_resolver tool
-gentest(
-    name = "simple_wheel_resolver_test",
-    srcs = [":cryptography"],
-    no_test_output = True,
-    test_cmd = "true",
-)
-
-python_wheel(
-    name = "cryptography",
-    package_name = "cryptography",
-    version = "35.0.0",
-)
-
 plz_e2e_test(
     name = "correct_labels_on_pip_libary_non_zip_safe",
     cmd = "plz query print -f labels //third_party/python:numpy",
@@ -210,14 +208,4 @@ plz_e2e_test(
     expected_output = "expected_labels_on_grpcio.txt",
     labels = ["py3"],
     deps = ["//third_party/python:grpcio"],
-)
-
-python_test(
-    name = "tensorflow_test",
-    srcs = ["tensorflow_test.py"],
-    labels = [
-        "py3",
-        "pip",
-    ],
-    deps = ["//third_party/python:tensorflow"],
 )
