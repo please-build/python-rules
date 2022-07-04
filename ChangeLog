@@ -1,3 +1,7 @@
+Version 1.1.0
+-------------
+    * Point the pex tool at the releases page
+
 Version 1.0.0
 -------------
     * Migrate old rules across from main please repo

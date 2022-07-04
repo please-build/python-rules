@@ -9,6 +9,3 @@ remote_file(
     test_only = True,
     visibility = ["PUBLIC"],
 )
-
-
-

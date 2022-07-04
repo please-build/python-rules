@@ -199,11 +199,6 @@ pip_library(
 )
 
 python_wheel(
-    name = "pyparsing",
-    version = "2.4.7",
-)
-
-python_wheel(
     name = "more_itertools",
     hashes = ["5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c"],
     version = "8.2.0",
