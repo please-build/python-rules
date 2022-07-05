@@ -1,3 +1,7 @@
+Version 1.1.1
+-------------
+    * Remove go plugin preload which was causing issues in host repos
+
 Version 1.1.0
 -------------
     * Point the pex tool at the releases page
