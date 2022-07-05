@@ -5,7 +5,6 @@ Version = 16.21.3
 hashcheckers = sha256
 
 [Parse]
-PreloadSubincludes = ///go//build_defs:go
 PreloadBuildDefs = test/build_defs/test.build_defs
 
 [Plugin "go"]

@@ -1,4 +1,4 @@
-subinclude("//tools:version", "//build_defs:archs")
+subinclude("//tools:version", "//build_defs:archs", "///go//build_defs:go")
 
 release_files = {
     "please_pex": "//tools/please_pex",
