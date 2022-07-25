@@ -1,3 +1,7 @@
+Version 1.1.2
+-------------
+    * Update config value in python_test build def to use new value
+
 Version 1.1.1
 -------------
     * Remove go plugin preload which was causing issues in host repos

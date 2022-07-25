@@ -265,7 +265,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     #
     # If no bootstrap target is provided, then plz will provide a pinned set of dependencies to
     # support the specified test-runner framework.
-    bootstrap = CONFIG.PYTHON.TEST_RUNNER_BOOTSTRAP
+    bootstrap = CONFIG.PYTHON.TESTRUNNER_DEPS
     if bootstrap:
         deps += [bootstrap] if bootstrap not in deps else []
         cmd = cmd.replace(' --add_test_runner_deps', '')
