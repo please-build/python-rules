@@ -9,11 +9,13 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.6.9'
+          python-version: '3.10.6'
+      - name: Set profile
+        run: export PLZ_CONFIG_PROFILE=ci && echo $PATH
       - name: Run tests
         run: ./pleasew test --log_file plz-out/log/test.log -e e2e
       - name: Run e2e test
-        run: ./pleasew test --log_file plz-out/log/e2e.log -i e2e
+        run: ./pleasew test --profile ci --log_file plz-out/log/e2e.log -i e2e
       - name: Archive logs
         if: always()
         uses: actions/upload-artifact@v2

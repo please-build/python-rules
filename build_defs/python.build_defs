@@ -477,7 +477,7 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
 def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, package_name:str=None,
                  outs:list=None, post_install_commands:list=None, patch:str|list=None, licences:list=None,
                  test_only:bool&testonly=False, repo:str=None, zip_safe:bool=True, visibility:list=None,
-                 deps:list=[], name_scheme:str=None, strip:list=['*.pyc', 'tests']):
+                 deps:list=[], name_scheme:str=None, strip:list=['*.pyc', 'tests'], binary = False, entry_points={}):
     """Downloads a Python wheel and extracts it.
 
     This is a lightweight pip-free alternative to pip_library which supports cross-compiling.
@@ -509,7 +509,15 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
       name_scheme (str): The templatized wheel naming scheme (available template variables
                          are `url_base`, `package_name`, `initial`, and `version`).
       strip (list): Files to strip after install. Note that these are done at any level.
+      binary (bool): Whether this wheel should be executable. This assumes that the wheel will contain a __main__ module
+                     with a main() function. If this is not the case, then entry_points should be used.
+      entry_points (dict|str): Any entry points into this wheel. These relate to the entrypoints.txt in the dist-info of
+                               the wheel, which define a module, and function nif rot format "module.path:function".
+                               This parameter can be a string, in which case the rule can be ran directly, or a
+                               dictionary, for example `{"protoc", "protoc.__main__:main"}. For the latter, each key can
+                               be ran using annotated labels, e.g. `plz run //third_party/python:protobuf|protoc`
     """
+    binary = binary or entry_points
     package_name = package_name or name.replace('-', '_')
     initial = package_name[0]
     url_base = repo or CONFIG.PYTHON.WHEEL_REPO
@@ -590,8 +598,10 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         before, _, after = outs[0].partition('/')
         if after:
             cmd = f'rm -rf {before} && {cmd}'
-    return build_rule(
+
+    lib_rule = build_rule(
         name = name,
+        tag = "lib_rule" if binary else None,
         srcs = [wheel_rule],
         hashes = None if CONFIG.FF_PYTHON_WHEEL_HASHING else hashes,
         outs = outs or [name],
@@ -604,7 +614,52 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         labels = labels + [label] + ["link:plz-out/python/venv"],
         provides = {'py': wheel_rule},
     )
+    if binary:
+        entry_points = entry_points or f"{package_name}.__main__:main"
+        if isinstance(entry_points, str):
+            return _wheel_entrypoint_binary(
+                name = name,
+                entrypoint = entry_points,
+                lib_rule = lib_rule,
+                visibility = visibility,
+                test_only = test_only,
+            )
 
+        entry_point_binaries = [_wheel_entrypoint_binary(
+            name = tag(name, f"{alias}_bin"),
+            entrypoint = ep,
+            lib_rule = lib_rule,
+            visibility = visibility,
+            test_only = test_only,
+            out = f"{alias}.pex",
+        ) for alias, ep in entry_points.items()]
+
+        return filegroup(
+            name = name,
+            srcs = entry_point_binaries,
+            entry_points = {k: f"{k}.pex" for k in entry_points.keys()},
+            provides = {'py': wheel_rule}, # So things can still depend on this as a library
+            binary=True,
+            test_only=test_only,
+        )
+    return lib_rule
+
+def _wheel_entrypoint_binary(name:str, entrypoint:str, lib_rule, visibility, test_only, out=None):
+    module, _, func = entrypoint.rpartition(":")
+    main = text_file(
+        name = tag(name, "main"),
+        out = f"__{name}_main__.py",
+        content = f"import {module} as m\nm.{func}()",
+        test_only = test_only,
+    )
+    return python_binary(
+        name = name,
+        main = main,
+        out = out,
+        deps = [lib_rule],
+        test_only = test_only,
+        visibility = visibility,
+    )
 
 def _interpreter_cmd(interpreter:str):
     return f'$(out {interpreter})' if interpreter.startswith('//') or interpreter.startswith(':') else interpreter
