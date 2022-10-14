@@ -512,7 +512,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
       binary (bool): Whether this wheel should be executable. This assumes that the wheel will contain a __main__ module
                      with a main() function. If this is not the case, then entry_points should be used.
       entry_points (dict|str): Any entry points into this wheel. These relate to the entrypoints.txt in the dist-info of
-                               the wheel, which define a module, and function nif rot format "module.path:function".
+                               the wheel, which define a module, and function in the format "module.path:function".
                                This parameter can be a string, in which case the rule can be ran directly, or a
                                dictionary, for example `{"protoc", "protoc.__main__:main"}. For the latter, each key can
                                be ran using annotated labels, e.g. `plz run //third_party/python:protobuf|protoc`
