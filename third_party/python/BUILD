@@ -89,9 +89,9 @@ python_wheel(
 python_wheel(
     name = "dateutil",
     package_name = "python_dateutil",
-    hashes = ["5179fabb692e3ec5a6e994eb9a72a6f4498f19106774672fd7e664a7aa9f49c3"],
+    hashes = ["961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"],
     test_only = True,  # Not used by plz itself.
-    version = "2.4.0",
+    version = "2.8.2",
     deps = [":six"],
 )
 
@@ -112,6 +112,7 @@ if is_platform(
         "https://files.pythonhosted.org/packages/16/e0/fc9f7bd9b84e6b41d0aad1a113e36714aac0c0a9b307aca5f9af443bc50f/coverage-5.5-cp37-cp37m-manylinux2010_x86_64.whl",
         "https://files.pythonhosted.org/packages/a4/3a/8f7b217265503eae2b0ea97e714e2709e1e84ee13cd3ca6abdff1e99e76c/coverage-5.5-cp38-cp38-manylinux2010_x86_64.whl",
         "https://files.pythonhosted.org/packages/a4/79/625f1ed5da2a69f52fb44e0b7ca1b470437ff502348c716005a98a71cd49/coverage-5.5-cp39-cp39-manylinux2010_x86_64.whl",
+        "https://files.pythonhosted.org/packages/d4/3e/4f6451b8b09a1eb2d0e7f61a3d7019bd98d556fc5343378f76e8905b2789/coverage-5.5-cp310-cp310-manylinux1_x86_64.whl",
     ]
 elif is_platform(
     arch = "amd64",
@@ -123,6 +124,7 @@ elif is_platform(
         "https://files.pythonhosted.org/packages/52/44/5df49f3b462a0f5818a2f6f206d6523ff21ff9b21c1eb2906f8a31aa321c/coverage-5.5-cp37-cp37m-macosx_10_9_x86_64.whl",
         "https://files.pythonhosted.org/packages/b6/26/b53bf0fef1b4bce6f7d61fef10fbf924d943987d4c9e53c394ecebff3673/coverage-5.5-cp38-cp38-macosx_10_9_x86_64.whl",
         "https://files.pythonhosted.org/packages/0d/8a/3b13c4e1f241a7083a4ee9986b969f0238f41dcd7a8990c786bc3b4b5b19/coverage-5.5-cp39-cp39-macosx_10_9_x86_64.whl",
+        "https://files.pythonhosted.org/packages/6b/a2/43dd30964103a7ff1fd03392a30a5b08105bc85d1bafbfc51023a1bb4fd3/coverage-5.5-cp310-cp310-macosx_10_14_x86_64.whl",
     ]
 else:
     urls = [
@@ -210,8 +212,8 @@ python_wheel(
         "_pytest",
         "pytest",
     ],
-    hashes = ["5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"],
-    version = "5.4.3",
+    hashes = ["1377bda3466d70b55e3f5cecfa55bb7cfcf219c7964629b967c37cf0bda818b7"],
+    version = "7.1.3",
     deps = [
         ":attrs",
         ":funcsigs",
@@ -221,7 +223,20 @@ python_wheel(
         ":pluggy",
         ":py",
         ":six",
+        ":wcwidth",
+        ":iniconfig",
     ],
+    entry_points="pytest:main",
+)
+
+python_wheel(
+    name = "iniconfig",
+    version = "1.1.1",
+)
+
+python_wheel(
+    name = "wcwidth",
+    version = "0.2.5",
 )
 
 python_wheel(
@@ -240,6 +255,10 @@ python_wheel(
         ":traceback2",
         ":win_unicode_console",
     ],
+    entry_points = {
+        "behave": "behave.__main__:main",
+        "behave_test": "setuptools_behave:behave_test",
+    }
 )
 
 python_wheel(
@@ -300,7 +319,7 @@ python_wheel(
 pip_library(
     name = "numpy",
     test_only = True,
-    version = "1.18.4",
+    version = "1.23.4",
     zip_safe = False,
 )
 
@@ -335,7 +354,7 @@ pip_library(
 pip_library(
     name = "grpcio",
     test_only = True,
-    version = "1.32.0",
+    version = "1.49.1",
     deps = [
         ":six",
     ],
@@ -377,7 +396,7 @@ pip_library(
 pip_library(
     name = "h5py",
     test_only = True,
-    version = "2.10.0",
+    version = "3.7.0",
     deps = [
         ":numpy",
         ":six",
@@ -393,7 +412,7 @@ pip_library(
 pip_library(
     name = "pandas",
     test_only = True,
-    version = "1.0.3",
+    version = "1.5.0",
     deps = [
         ":dateutil",
         ":numpy",
@@ -411,7 +430,7 @@ pip_library(
 pip_library(
     name = "scipy",
     test_only = True,
-    version = "1.5.2",
+    version = "1.9.2",
     zip_safe = False,
     deps = [
         ":numpy",
@@ -466,6 +485,34 @@ python_wheel(
     hashes = ["f058c204341fd7ff800ee0edafc106ca0fb1c9857e8a8895a6e04cca3ddcb7bf"],
     licences = ["MIT"],
     version = "1.5.0",
+)
+
+python_wheel(
+    name = "typing_extensions",
+    outs = ["typing_extensions.py"],
+    version = "4.4.0",
+    hashes=["sha256: 16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"],
+)
+
+python_wheel(
+    name = "mypy_extensions",
+    outs = ["mypy_extensions.py"],
+    version = "0.4.3",
+    hashes=["sha256: 090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"],
+)
+
+python_wheel(
+    name = "tomli",
+    version = "2.0.1",
+    hashes=["sha256: 939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"],
+)
+
+python_wheel(
+    name = "mypy",
+    version = "0.982",
+    deps = [":typing_extensions", ":mypy_extensions", ":tomli"],
+    binary=True,
+    hashes=["sha256: 1021c241e8b6e1ca5a47e4d52601274ac078a89845cfde66c6d5f769819ffa1d"],
 )
 
 filegroup(
