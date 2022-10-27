@@ -1,3 +1,7 @@
+Version 1.2.0
+-------------
+    * Allow python_wheel to be run as binary
+
 Version 1.1.2
 -------------
     * Update config value in python_test build def to use new value
