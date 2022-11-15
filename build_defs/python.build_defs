@@ -417,10 +417,18 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
         # Unfortunately it does *not* work similarly on the Debian problem :(
         pip_cmd = 'echo "[install]\nprefix=" > setup.cfg; ' + pip_cmd
     if CONFIG.OS == 'linux' and not CONFIG.PYTHON.DISABLE_VENDOR_FLAGS:
-        # Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=830892
-        # tl;dr: Debian has broken --target with a custom patch, the only way to fix is to pass --system
-        # which is itself Debian-specific, so we need to find if we're running on Debian. AAAAARGGGHHHH...
-        pip_cmd = f'[ -f /etc/debian_version ] && SYS_FLAG="--system" || SYS_FLAG=""; {pip_cmd} $SYS_FLAG'
+        # Workaround for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=830892
+        #
+        # Version 8.1.2-1 of Debian's python3-pip package inverts pip's standard behaviour: --user becomes the default;
+        # a Debian-specific --system option reverts to upstream pip's default behaviour, and it must be passed in order
+        # to use the --target option. python3-pip 18.1-1 changes the behaviour again, implying --user only if --target
+        # is not passed and therefore removing the need to pass --system (although it can still be passed to guarantee
+        # upstream pip's behaviour). python3-pip 21.3.1-1 drops the --system option altogether, and passing it causes
+        # pip to exit with an error).
+        #
+        # The easiest way to deal with this mess is to test whether the pip_tool we're using implements --system, then
+        # to pass it in the real pip invocation if so.
+        pip_cmd = f'[ -f /etc/debian_version ] && {pip_tool} --system >/dev/null 2>&1 && SYS_FLAG="--system" || SYS_FLAG=""; {pip_cmd} $SYS_FLAG'
 
     pip_cmd += f' {repo_flag} {index_flag} {pip_flags} {package_name}'
 
