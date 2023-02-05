@@ -5,6 +5,12 @@ filegroup(
 )
 
 filegroup(
+    name = "checksums",
+    srcs = ["checksums.build_defs"],
+    visibility = ["//build_defs/..."],
+)
+
+filegroup(
     name = "python",
     srcs = ["python.build_defs"],
     visibility = ["PUBLIC"],
