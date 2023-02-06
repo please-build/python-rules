@@ -175,7 +175,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     )
 
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
-    cmd = f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict'
+    cmd = f'mv $SRC __main__.py && $TOOLS_JARCAT z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict'
     if strip:
         cmd += ' --strip_py'
 
@@ -195,7 +195,10 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         building_description="Creating pex...",
         visibility=visibility,
         requires=['py', interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER],
-        tools=[CONFIG.JARCAT_TOOL],
+        tools={
+            "int": interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER,
+            "jarcat": CONFIG.JARCAT_TOOL,
+        },
         # This makes the python_library rule the dependency for other python_library or
         # python_test rules that try to import it. Does mean that they cannot collect a .pex
         # by depending directly on the rule, they'll just get the Python files instead.
@@ -211,7 +214,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
 def _set_shebang(interpreter:str, interpreter_options:str, site:bool):
     """Returns a shebang to pass to arcat to inject at the top of a pex"""
     # Assume the path to the interpreter is relative
-    shebang = f'/usr/bin/env {interpreter}'
+    shebang = f'/usr/bin/env $TOOLS_INT'
     if not site:
         return f'#!/bin/sh\nexec {shebang} -S \\\\$0 \\\"\\\\$@\\\"\n'
 
@@ -335,7 +338,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         data=data | {'_srcs': srcs} if isinstance(data, dict) else data + srcs,
         outs=[f'{name}.pex'],
         labels=labels + ['test_results_dir'],
-        cmd=f'mv $SRC __main__.py && $TOOL z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict',
+        cmd=f'mv $SRC __main__.py && $TOOLS_JARCAT z -i . -s .pex.zip -s .whl --preamble="{shebang}" --include_other --add_init_py --strict',
         test_cmd=test_cmd,
         debug_cmd=debug_cmd,
         needs_transitive_deps=True,
@@ -350,7 +353,10 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         flaky=flaky,
         test_outputs=test_outputs,
         requires=['py', 'test', interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER],
-        tools=[CONFIG.JARCAT_TOOL],
+        tools={
+            "int": interpreter or CONFIG.PYTHON.DEFAULT_INTERPRETER,
+            "jarcat": CONFIG.JARCAT_TOOL,
+        },
     )
 
 def pip_library(name:str, version:str, hashes:list=None, package_name:str=None,
