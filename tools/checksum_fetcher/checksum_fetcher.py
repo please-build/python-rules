@@ -242,7 +242,7 @@ def write_results(results: dict[str, dict[str, str]]) -> None:
         write_lines(f, "]", "", "INTERPRETERS = {")
 
         for version, mappings in results.items():
-            write_lines(f, f'{INDENTATION}"{version}" = {{')
+            write_lines(f, f'{INDENTATION}"{version}": {{')
 
             for url, checksum in mappings.items():
                 write_lines(f, f'{INDENTATION * 2}"{url}": "{checksum}",')
