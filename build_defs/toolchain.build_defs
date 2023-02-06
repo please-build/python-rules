@@ -35,10 +35,13 @@ def cpython_toolchain(
         architecture (str): TODO Any additional architectures to install in
             GOOS_GOARCH format e.g. linux_amd64. This rule will automatically
             install the architecture provided through --arch.
+        architecture (str): A specific architecture to install in GOOS_GOARCH
+            format e.g. linux_amd64. This rule will automatically install the
+            architecture provided through --arch.
         static (bool): Whether to download a statically linked binary.
         strip_prefix (str): The prefix to remove when uncompressing the
             downloaded archive containing the interpreter.
-        labels (list): Build tags to pass to the underlying rule.
+        labels (list): Labels to apply to this rule.
         visibility (list): Visibility specification, defaults to PUBLIC.
     """
 
