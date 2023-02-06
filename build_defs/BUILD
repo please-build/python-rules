@@ -17,6 +17,12 @@ filegroup(
 )
 
 filegroup(
+    name = "toolchain",
+    srcs = ["toolchain.build_defs"],
+    visibility = ["PUBLIC"],
+)
+
+filegroup(
     name = "version",
     srcs = ["version.build_defs"],
     visibility = ["PUBLIC"],

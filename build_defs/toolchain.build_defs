@@ -1,0 +1,131 @@
+"""Rule to download a hermetic Python interpreter."""
+
+
+subinclude("//build_defs:checksums")
+
+
+def cpython_toolchain(
+    name: str,
+    version: str = None,
+    url: str | dict = None,
+    hashes: list = None,
+    architecture: str = None,
+    static: bool = True,
+    strip_prefix: str = "python",
+    labels: list = None,
+    visibility: list = ["PUBLIC"],
+):
+    """Downloads a CPython interpreter and exposes :<name>|py as entry point.
+    To use this rule, add the following to your .plzconfig:
+
+    [Plugin "python"]
+    DefaultInterpreter = //.../<name>|py
+
+    Args:
+        name (str): Name of the rule.
+        version (str): The version of the CPython interpreter which will be
+            downloaded. This rule will use the current platform's GOOS and
+            GOARCH settings. Either provide url or version, but not both.
+        url (str|dict): The URL used to download the CPython interpreter. Can
+            be a single string or a dictionary mapping of GOOS_GOARCH to URLs
+            i.e. linux-amd64: "https://...". Either provide url or version,
+            but not both.
+        hashes (list): A list of possible hashes for the downloaded archive,
+            optional.
+        architecture (str): TODO Any additional architectures to install in
+            GOOS_GOARCH format e.g. linux_amd64. This rule will automatically
+            install the architecture provided through --arch.
+        static (bool): Whether to download a statically linked binary.
+        strip_prefix (str): The prefix to remove when uncompressing the
+            downloaded archive containing the interpreter.
+        labels (list): Build tags to pass to the underlying rule.
+        visibility (list): Visibility specification, defaults to PUBLIC.
+    """
+
+    if url and version:
+        fail("Either version or url should be provided but not both")
+
+    if not architecture:
+        architecture = "%s_%s" % (CONFIG.HOSTOS, CONFIG.HOSTARCH)
+    elif architecture not in _ARCHS_MAPPING.static.keys():
+        fail('Specified architecture "%s" is not supported' % architectures)
+
+    if isinstance(url, dict):
+        url = url.get(architecture)
+
+    if version:
+        if _MINOR_MAPPING.get(version):
+            version = _MINOR_MAPPING.get(version)
+
+        if version not in SUPPORTED_VERSIONS:
+            fail('Specified version "%s" is not supported' % version)
+
+        if static:
+            architecture = _ARCHS_MAPPING.static.get(architecture)
+        else:
+            architecture = _ARCHS_MAPPING.dynamic.get(architecture)
+
+        file, checksum = _lookup_url(version, architecture)
+
+        if not hashes:
+            hashes = [checksum]
+
+        url = f"{_BASE_URL}/{file}"
+
+    return remote_file(
+        name=name,
+        url=url,
+        hashes=hashes,
+        entry_points={
+            "2to3": "bin/2to3",
+            "pip": "bin/pip",
+            "py": "bin/python3",
+            "pydoc": "bin/pydoc3",
+        },
+        strip_prefix=strip_prefix,
+        binary=True,
+        extract=True,
+        labels=labels,
+        visibility=visibility,
+    )
+
+
+def _lookup_url(version: str, arch: str):
+    files = INTERPRETERS.get(version)
+
+    for file, checksum in files.items():
+        if arch in file:
+            return file, checksum
+
+    fail('Release not found for architecture "%s"' % arch)
+
+
+_BASE_URL = "https://github.com/indygreg/python-build-standalone/releases/download"
+
+_ARCHS_MAPPING = {
+    "dynamic": {
+        "darwin_amd64": "x86_64-apple-darwin",
+        "darwin_arm64": "aarch64-apple-darwin",
+        "linux_amd64": "x86_64-unknown-linux-gnu",
+        "linux_arm64": "aarch64-unknown-linux-gnu",
+        # Someday ...
+        "windows_amd64": "x86_64-pc-windows-msvc-shared",
+        "windows_arm64": "aarch64-pc-windows-msvc-shared",
+    },
+    "static": {
+        "darwin_amd64": "x86_64-apple-darwin",
+        "darwin_arm64": "aarch64-apple-darwin",
+        "linux_amd64": "x86_64-unknown-linux-musl",
+        "linux_arm64": "aarch64-unknown-linux-musl",
+        # Someday ...
+        "windows_amd64": "x86_64-pc-windows-msvc-static",
+        "windows_arm64": "aarch64-pc-windows-msvc-static",
+    },
+}
+
+_MINOR_MAPPING = {
+    "3.8": "3.8.16",
+    "3.9": "3.9.16",
+    "3.10": "3.10.9",
+    "3.11": "3.11.1",
+}
