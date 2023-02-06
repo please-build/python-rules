@@ -93,6 +93,16 @@ DefaultValue = //tools:wheel_resolver
 Optional = true
 Inherit = true
 
+[PluginConfig "pex_shebang"]
+ConfigKey = PexShebang
+DefaultValue = "#!/usr/bin/python3"
+Optional = true
+Inherit = true
+
+[PluginConfig "portalocker"]
+ConfigKey = Portalocker
+DefaultValue = //third_party/python:py_binary_bootstrap
+
 [featureflags]
 PythonWheelHashing = true
 ExcludePythonRules = true
