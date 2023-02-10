@@ -96,17 +96,6 @@ python_library(
 )
 
 python_test(
-    name = "python2_coverage_test",
-    srcs = ["python_coverage_test.py"],
-    interpreter = "python2",
-    labels = [
-        "py2",
-        "py3",
-    ],
-    deps = [":python_coverage"],
-)
-
-python_test(
     name = "python3_coverage_test",
     srcs = ["python_coverage_test.py"],
     labels = ["py3"],
