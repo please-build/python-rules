@@ -1,4 +1,4 @@
-subinclude("//build_defs:python")
+subinclude("//build_defs:python", "///shell//build_defs:shell")
 
 package(
     default_visibility = ["PUBLIC"],
@@ -93,17 +93,6 @@ python_library(
         "py2",
         "py3",
     ],
-)
-
-python_test(
-    name = "python2_coverage_test",
-    srcs = ["python_coverage_test.py"],
-    interpreter = "python2",
-    labels = [
-        "py2",
-        "py3",
-    ],
-    deps = [":python_coverage"],
 )
 
 python_test(

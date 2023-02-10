@@ -1,5 +1,5 @@
 [Please]
-Version = 16.21.3
+Version = 17.0.0-beta.1
 
 [Build]
 hashcheckers = sha256
@@ -16,6 +16,9 @@ gotool = //third_party/go:toolchain|go
 
 [Plugin "python"]
 DisableVendorFlags = true
+
+[Plugin "shell"]
+Target = //plugins:shell
 
 [PluginDefinition]
 name = python
@@ -104,6 +107,4 @@ Inherit = true
 
 [featureflags]
 PythonWheelHashing = true
-ExcludePythonRules = true
-SingleSHA1Hash = true
 ExcludeGoRules = true
