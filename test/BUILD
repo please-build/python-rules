@@ -1,4 +1,4 @@
-subinclude("//build_defs:python")
+subinclude("//build_defs:python", "///shell//build_defs:shell")
 
 package(
     default_visibility = ["PUBLIC"],

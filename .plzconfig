@@ -17,6 +17,9 @@ gotool = //third_party/go:toolchain|go
 [Plugin "python"]
 DisableVendorFlags = true
 
+[Plugin "shell"]
+Target = //plugins:shell
+
 [PluginDefinition]
 name = python
 
