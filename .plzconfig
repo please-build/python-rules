@@ -1,5 +1,5 @@
 [Please]
-Version = 16.21.3
+Version = 17.0.0-beta.1
 
 [Build]
 hashcheckers = sha256
@@ -104,6 +104,4 @@ Inherit = true
 
 [featureflags]
 PythonWheelHashing = true
-ExcludePythonRules = true
-SingleSHA1Hash = true
 ExcludeGoRules = true
