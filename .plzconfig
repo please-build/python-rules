@@ -107,4 +107,3 @@ Inherit = true
 
 [featureflags]
 PythonWheelHashing = true
-ExcludeGoRules = true
