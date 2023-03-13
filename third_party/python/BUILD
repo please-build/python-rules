@@ -166,7 +166,7 @@ python_multiversion_wheel(
 
 pip_library(
     name = "attrs",
-    version = "19.3.0",
+    version = "21.2.0",
 )
 
 pip_library(
@@ -227,17 +227,30 @@ pip_library(
 )
 
 pip_library(
+    name = "exceptiongroup",
+    version = "1.1.1",
+)
+
+pip_library(
+    name = "iniconfig",
+    version = "2.0.0",
+)
+
+pip_library(
+    name = "tomli",
+    version = "2.0.1",
+)
+
+pip_library(
     name = "pytest",
-    version = "5.4.3",
+    version = "7.2.2",
     deps = [
         ":attrs",
-        ":funcsigs",
-        ":more_itertools",
+        ":exceptiongroup",
+        ":iniconfig",
         ":packaging",
-        ":pkg_resources",
         ":pluggy",
-        ":py",
-        ":six",
+        ":tomli",
     ],
 )
 
