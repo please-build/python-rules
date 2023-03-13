@@ -77,24 +77,12 @@ python_library(
     name = "python_coverage",
     srcs = ["python_coverage.py"],
     labels = [
-        "py2",
         "py3",
     ],
 )
 
 python_test(
-    name = "python2_coverage_test",
-    srcs = ["python_coverage_test.py"],
-    interpreter = "python2",
-    labels = [
-        "py2",
-        "py3",
-    ],
-    deps = [":python_coverage"],
-)
-
-python_test(
-    name = "python3_coverage_test",
+    name = "python_coverage_test",
     srcs = ["python_coverage_test.py"],
     labels = ["py3"],
     deps = [":python_coverage"],
@@ -197,7 +185,7 @@ python_wheel(
 )
 
 plz_e2e_test(
-    name = "correct_labels_on_pip_libary_non_zip_safe",
+    name = "correct_labels_on_pip_library_non_zip_safe",
     cmd = "plz query print -f labels //third_party/python:numpy",
     expected_output = "expected_labels_on_numpy.txt",
     labels = ["py3"],
@@ -205,7 +193,7 @@ plz_e2e_test(
 )
 
 plz_e2e_test(
-    name = "correct_labels_on_pip_libary_zip_safe",
+    name = "correct_labels_on_pip_library_zip_safe",
     cmd = "plz query print -f labels //third_party/python:grpcio",
     expected_output = "expected_labels_on_grpcio.txt",
     labels = ["py3"],

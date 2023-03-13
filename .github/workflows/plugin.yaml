@@ -3,13 +3,22 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: '3.7'
+          - python-version: '3.8'
+          - python-version: '3.9'
+          - python-version: '3.10'
+          - python-version: '3.11'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Setup python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.6.9'
+          python-version: ${{ matrix.python-version }}
       - name: Run tests
         run: ./pleasew test --log_file plz-out/log/test.log -e e2e
       - name: Run e2e test
