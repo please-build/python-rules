@@ -515,13 +515,22 @@ python_wheel(
     hashes=["sha256: 1021c241e8b6e1ca5a47e4d52601274ac078a89845cfde66c6d5f769819ffa1d"],
 )
 
+# This is the minimum set of third-party packages required for the built-in test runners to work
+# with "plz test" and "plz cover". All built-in test runners should include this as a source.
 filegroup(
-    name = "unittest_bootstrap",
+    name = "test_bootstrap",
     srcs = [
         ":coverage",
         ":portalocker",
         ":six",
         ":xmlrunner",
+    ],
+)
+
+filegroup(
+    name = "unittest_bootstrap",
+    srcs = [
+        ":test_bootstrap",
     ],
 )
 
@@ -537,7 +546,7 @@ filegroup(
         ":pluggy",
         ":py",
         ":pytest",
-        ":six",
+        ":test_bootstrap",
         ":zipp",
     ],
 )
@@ -548,7 +557,7 @@ filegroup(
         ":behave",
         ":parse",
         ":parse_type",
-        ":six",
+        ":test_bootstrap",
     ],
 )
 
