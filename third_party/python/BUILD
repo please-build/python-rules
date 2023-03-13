@@ -171,8 +171,8 @@ pip_library(
 
 pip_library(
     name = "pluggy",
-    version = "0.13.1",
     licences = ["MIT"],
+    version = "0.13.1",
     deps = [":importlib_metadata"],
 )
 
@@ -469,9 +469,15 @@ pip_library(
     version = "1.5.0",
 )
 
+pip_library(
+    name = "wcwidth",
+    licences = ["MIT"],
+    version = "0.2.6",
+)
+
 filegroup(
     name = "unittest_bootstrap",
-    srcs = [
+    deps = [
         ":coverage",
         ":portalocker",
         ":six",
@@ -481,8 +487,9 @@ filegroup(
 
 filegroup(
     name = "pytest_bootstrap",
-    srcs = [
+    deps = [
         ":attrs",
+        ":coverage",
         ":funcsigs",
         ":importlib_metadata",
         ":more_itertools",
@@ -492,14 +499,16 @@ filegroup(
         ":py",
         ":pytest",
         ":six",
+        ":wcwidth",
         ":zipp",
     ],
 )
 
 filegroup(
     name = "behave_bootstrap",
-    srcs = [
+    deps = [
         ":behave",
+        ":coverage",
         ":parse",
         ":parse_type",
         ":six",
