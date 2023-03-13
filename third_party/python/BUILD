@@ -20,7 +20,7 @@ python_wheel(
     name = "tensorflow",
     licences = ["Apache 2.0"],
     test_only = True,
-    version = "2.6.0",
+    version = "2.11.0",
     deps = [
         ":absl",
         ":astunparse",
@@ -309,7 +309,7 @@ pip_library(
 pip_library(
     name = "numpy",
     test_only = True,
-    version = "1.18.4",
+    version = "1.23.4",
     zip_safe = False,
 )
 
@@ -344,7 +344,7 @@ pip_library(
 pip_library(
     name = "grpcio",
     test_only = True,
-    version = "1.32.0",
+    version = "1.49.1",
     deps = [
         ":six",
     ],
@@ -380,7 +380,7 @@ pip_library(
 pip_library(
     name = "h5py",
     test_only = True,
-    version = "2.10.0",
+    version = "3.7.0",
     deps = [
         ":numpy",
         ":six",
@@ -396,7 +396,7 @@ pip_library(
 pip_library(
     name = "pandas",
     test_only = True,
-    version = "1.0.3",
+    version = "1.5.0",
     deps = [
         ":dateutil",
         ":numpy",
@@ -414,7 +414,7 @@ pip_library(
 pip_library(
     name = "scipy",
     test_only = True,
-    version = "1.5.2",
+    version = "1.9.2",
     zip_safe = False,
     deps = [
         ":numpy",
