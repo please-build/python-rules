@@ -1,6 +1,7 @@
 subinclude(
     "//build_defs:multiversion_wheel",
     "//build_defs:python",
+    "//build_defs:toolchain",
 )
 
 package(
@@ -14,6 +15,12 @@ package(
             "https://files.pythonhosted.org/packages/py2.py3/{initial}/{package_name}/{package_name}-{version}-py2.py3-none-any.whl",
         ],
     },
+)
+
+cpython_toolchain(
+    name = "toolchain",
+    version = "3.11",
+    static = False,
 )
 
 python_wheel(
