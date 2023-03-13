@@ -96,5 +96,4 @@ Inherit = true
 [featureflags]
 PythonWheelHashing = true
 ExcludePythonRules = true
-SingleSHA1Hash = true
 ExcludeGoRules = true

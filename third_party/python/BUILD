@@ -110,12 +110,6 @@ python_wheel(
 )
 
 python_wheel(
-    name = "colorlog",
-    hashes = ["732c191ebbe9a353ec160d043d02c64ddef9028de8caae4cfa8bd49b6afed53e"],
-    version = "4.1.0",
-)
-
-python_wheel(
     name = "dateutil",
     package_name = "python_dateutil",
     hashes = ["5179fabb692e3ec5a6e994eb9a72a6f4498f19106774672fd7e664a7aa9f49c3"],
@@ -166,13 +160,13 @@ python_multiversion_wheel(
 
 pip_library(
     name = "attrs",
-    version = "19.3.0",
+    version = "21.2.0",
 )
 
 pip_library(
     name = "pluggy",
-    version = "0.13.1",
     licences = ["MIT"],
+    version = "0.13.1",
     deps = [":importlib_metadata"],
 )
 
@@ -227,17 +221,30 @@ pip_library(
 )
 
 pip_library(
+    name = "exceptiongroup",
+    version = "1.1.1",
+)
+
+pip_library(
+    name = "iniconfig",
+    version = "2.0.0",
+)
+
+pip_library(
+    name = "tomli",
+    version = "2.0.1",
+)
+
+pip_library(
     name = "pytest",
-    version = "5.4.3",
+    version = "7.2.2",
     deps = [
         ":attrs",
-        ":funcsigs",
-        ":more_itertools",
+        ":exceptiongroup",
+        ":iniconfig",
         ":packaging",
-        ":pkg_resources",
         ":pluggy",
-        ":py",
-        ":six",
+        ":tomli",
     ],
 )
 
@@ -359,12 +366,6 @@ pip_library(
 )
 
 pip_library(
-    name = "astor",
-    test_only = True,
-    version = "0.8.1",
-)
-
-pip_library(
     name = "termcolor",
     test_only = True,
     version = "1.1.0",
@@ -443,11 +444,6 @@ pip_library(
 )
 
 pip_library(
-    name = "progress",
-    version = "1.5",
-)
-
-pip_library(
     name = "cx_oracle",
     package_name = "cx-Oracle",
     version = "8.2.1",
@@ -464,14 +460,14 @@ pip_library(
 )
 
 pip_library(
-    name = "debugpy",
+    name = "wcwidth",
     licences = ["MIT"],
-    version = "1.5.0",
+    version = "0.2.6",
 )
 
 filegroup(
     name = "unittest_bootstrap",
-    srcs = [
+    deps = [
         ":coverage",
         ":portalocker",
         ":six",
@@ -481,8 +477,9 @@ filegroup(
 
 filegroup(
     name = "pytest_bootstrap",
-    srcs = [
+    deps = [
         ":attrs",
+        ":coverage",
         ":funcsigs",
         ":importlib_metadata",
         ":more_itertools",
@@ -492,14 +489,16 @@ filegroup(
         ":py",
         ":pytest",
         ":six",
+        ":wcwidth",
         ":zipp",
     ],
 )
 
 filegroup(
     name = "behave_bootstrap",
-    srcs = [
+    deps = [
         ":behave",
+        ":coverage",
         ":parse",
         ":parse_type",
         ":six",
