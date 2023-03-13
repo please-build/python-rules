@@ -3,13 +3,21 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - python-version: '3.7'
+          - python-version: '3.8'
+          - python-version: '3.9'
+          - python-version: '3.10'
+          - python-version: '3.11'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Setup python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10.6'
+          python-version: ${{ matrix.python-version }}
       - name: Set profile
         run: export PLZ_CONFIG_PROFILE=ci && echo $PATH
       - name: Run tests
