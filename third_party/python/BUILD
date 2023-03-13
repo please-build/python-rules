@@ -110,12 +110,6 @@ python_wheel(
 )
 
 python_wheel(
-    name = "colorlog",
-    hashes = ["732c191ebbe9a353ec160d043d02c64ddef9028de8caae4cfa8bd49b6afed53e"],
-    version = "4.1.0",
-)
-
-python_wheel(
     name = "dateutil",
     package_name = "python_dateutil",
     hashes = ["5179fabb692e3ec5a6e994eb9a72a6f4498f19106774672fd7e664a7aa9f49c3"],
@@ -372,12 +366,6 @@ pip_library(
 )
 
 pip_library(
-    name = "astor",
-    test_only = True,
-    version = "0.8.1",
-)
-
-pip_library(
     name = "termcolor",
     test_only = True,
     version = "1.1.0",
@@ -456,11 +444,6 @@ pip_library(
 )
 
 pip_library(
-    name = "progress",
-    version = "1.5",
-)
-
-pip_library(
     name = "cx_oracle",
     package_name = "cx-Oracle",
     version = "8.2.1",
@@ -474,12 +457,6 @@ pip_library(
 pip_library(
     name = "distlib",
     version = "0.3.2",
-)
-
-pip_library(
-    name = "debugpy",
-    licences = ["MIT"],
-    version = "1.5.0",
 )
 
 pip_library(
