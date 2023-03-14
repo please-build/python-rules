@@ -85,42 +85,53 @@ func (pw *Writer) SetTest(srcs []string, testRunner string, addTestRunnerDeps bo
 	pw.realEntryPoint = "pex_test_main"
 	pw.testSrcs = srcs
 
+	// These are the outputs of //third_party/python:test_bootstrap and its transitive dependencies.
 	testRunnerDeps := []string{
-		".bootstrap/coverage",
 		".bootstrap/__init__.py",
-		".bootstrap/six.py",
+		".bootstrap/coverage",
+		".bootstrap/portalocker",
 	}
 
 	switch testRunner {
 	case "pytest":
-		// We only need xmlrunner for unittest, the equivalent is builtin to pytest.
+		// These are the outputs of //third_party/python:pytest_bootstrap and its transitive dependencies
+		// (except for those from //third_party/python:test_bootstrap).
 		testRunnerDeps = append(testRunnerDeps,
-			".bootstrap/pytest.py",
 			".bootstrap/_pytest",
-			".bootstrap/py",
-			".bootstrap/pluggy",
 			".bootstrap/attr",
-			".bootstrap/funcsigs",
-			".bootstrap/more_itertools",
-			".bootstrap/packaging",
-			".bootstrap/pkg_resources",
+			".bootstrap/colorama",
+			".bootstrap/exceptiongroup",
 			".bootstrap/importlib_metadata",
-			".bootstrap/zipp",
+			".bootstrap/iniconfig",
+			".bootstrap/packaging",
+			".bootstrap/pluggy",
+			".bootstrap/py",
+			".bootstrap/pytest",
+			".bootstrap/tomli",
+			".bootstrap/zipp.py",
 		)
 		pw.testRunner = filepath.Join(testRunnersDir, "pytest.py")
 	case "behave":
+		// These are the outputs of //third_party/python:behave_bootstrap and its transitive dependencies
+		// (except for those from //third_party/python:test_bootstrap).
 		testRunnerDeps = append(testRunnerDeps,
 			".bootstrap/behave",
+			".bootstrap/colorama",
+			".bootstrap/enum",
 			".bootstrap/parse.py",
 			".bootstrap/parse_type",
+			".bootstrap/six.py",
 			".bootstrap/traceback2",
-			".bootstrap/enum",
 			".bootstrap/win_unicode_console",
-			".bootstrap/colorama",
 		)
 		pw.testRunner = filepath.Join(testRunnersDir, "behave.py")
 	case "unittest":
-		testRunnerDeps = append(testRunnerDeps, ".bootstrap/xmlrunner")
+		// These are the outputs of //third_party/python:unittest_bootstrap and its transitive dependencies
+		// (except for those from //third_party/python:test_bootstrap).
+		testRunnerDeps = append(testRunnerDeps,
+			".bootstrap/six.py",
+			".bootstrap/xmlrunner",
+		)
 		pw.testRunner = filepath.Join(testRunnersDir, "unittest.py")
 	default:
 		if !strings.ContainsRune(testRunner, '.') {
