@@ -177,19 +177,6 @@ python_wheel(
 )
 
 python_wheel(
-    name = "funcsigs",
-    hashes = ["330cc27ccbf7f1e992e69fef78261dc7c6569012cf397db8d3de0234e6c937ca"],
-    version = "1.0.2",
-)
-
-python_wheel(
-    name = "pkg_resources",
-    package_name = "setuptools",
-    hashes = ["c8b9f1a457949002e358fea7d3f2a1e1b94ddc0354b2e40afc066bf95d21bf7b"],
-    version = "57.0.0",
-)
-
-python_wheel(
     name = "packaging",
     hashes = ["170748228214b70b672c581a3dd610ee51f733018650740e98c7df862a583f73"],
     version = "20.1",
@@ -201,42 +188,37 @@ pip_library(
 )
 
 python_wheel(
-    name = "more_itertools",
-    hashes = ["5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c"],
-    version = "8.2.0",
-)
-
-python_wheel(
     name = "pytest",
     outs = [
         "_pytest",
         "pytest",
     ],
-    hashes = ["1377bda3466d70b55e3f5cecfa55bb7cfcf219c7964629b967c37cf0bda818b7"],
-    version = "7.1.3",
+    hashes = ["130328f552dcfac0b1cec75c12e3f005619dc5f874f0a06e8ff7263f0ee6225e"],
+    version = "7.2.2",
     deps = [
         ":attrs",
-        ":funcsigs",
-        ":more_itertools",
-        ":packaging",
-        ":pkg_resources",
-        ":pluggy",
-        ":py",
-        ":six",
-        ":wcwidth",
+        ":colorama",
+        ":exceptiongroup",
+        ":importlib_metadata",
         ":iniconfig",
+        ":packaging",
+        ":pluggy",
+        # This is a stealth dependency (see src/_pytest/compat.py):
+        ":py",
+        ":tomli",
     ],
     entry_points="pytest:main",
 )
 
 python_wheel(
-    name = "iniconfig",
+    name = "exceptiongroup",
+    hashes = ["232c37c63e4f682982c8b6459f33a8981039e5fb8756b2074364e5055c498c9e"],
     version = "1.1.1",
 )
 
 python_wheel(
-    name = "wcwidth",
-    version = "0.2.5",
+    name = "iniconfig",
+    version = "1.1.1",
 )
 
 python_wheel(
@@ -522,8 +504,6 @@ filegroup(
     srcs = [
         ":coverage",
         ":portalocker",
-        ":six",
-        ":xmlrunner",
     ],
 )
 
@@ -531,23 +511,15 @@ filegroup(
     name = "unittest_bootstrap",
     srcs = [
         ":test_bootstrap",
+        ":xmlrunner",
     ],
 )
 
 filegroup(
     name = "pytest_bootstrap",
     srcs = [
-        ":attrs",
-        ":funcsigs",
-        ":importlib_metadata",
-        ":more_itertools",
-        ":packaging",
-        ":pkg_resources",
-        ":pluggy",
-        ":py",
         ":pytest",
         ":test_bootstrap",
-        ":zipp",
     ],
 )
 
@@ -555,8 +527,6 @@ filegroup(
     name = "behave_bootstrap",
     srcs = [
         ":behave",
-        ":parse",
-        ":parse_type",
         ":test_bootstrap",
     ],
 )
