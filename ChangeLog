@@ -1,3 +1,9 @@
+Version 1.2.2
+-------------
+    * Upgrade pytest to 7.2.2
+    * Add missing transitive dependencies for built-in test runners to
+    please_pex
+
 Version 1.2.1
 -------------
     * Test for presence of --system option before invoking pip in pip_library
