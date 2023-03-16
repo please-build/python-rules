@@ -104,6 +104,3 @@ ConfigKey = WheelTool
 DefaultValue = //tools:wheel_resolver
 Optional = true
 Inherit = true
-
-[featureflags]
-PythonWheelHashing = true

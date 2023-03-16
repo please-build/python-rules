@@ -561,7 +561,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         _tag = 'download',
         out = name + '.whl',
         url = urls,
-        hashes = hashes if CONFIG.FF_PYTHON_WHEEL_HASHING else None,
+        hashes = hashes,
         licences = licences if licences else None,
     )
 
@@ -611,7 +611,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         name = name,
         tag = "lib_rule" if binary else None,
         srcs = [wheel_rule],
-        hashes = None if CONFIG.FF_PYTHON_WHEEL_HASHING else hashes,
+        hashes = None,
         outs = outs or [name],
         tools = [CONFIG.JARCAT_TOOL],
         cmd = cmd,
