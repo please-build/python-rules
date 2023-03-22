@@ -1,7 +1,10 @@
+Version 1.2.4
+-------------
+    * Make test runner deps include their transitive deps
+
 Version 1.2.3
 -------------
-    * Remove python hashes feature flag
-
+    * Remove python hashes feature flag=
 
 Version 1.2.2
 -------------
