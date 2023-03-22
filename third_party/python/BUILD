@@ -509,7 +509,7 @@ filegroup(
 
 filegroup(
     name = "unittest_bootstrap",
-    srcs = [
+    exported_deps = [
         ":test_bootstrap",
         ":xmlrunner",
     ],
