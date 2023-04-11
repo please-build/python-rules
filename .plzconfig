@@ -105,5 +105,9 @@ DefaultValue = //tools:wheel_resolver
 Optional = true
 Inherit = true
 
-[featureflags]
-PythonWheelHashing = true
+[PluginConfig "feature_flags"]
+DefaultValue = ""
+Repeatable = true
+Optional = true
+Inherit = true
+Help = Flags to enable in-development features, or toggle breaking changes

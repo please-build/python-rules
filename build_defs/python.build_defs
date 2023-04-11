@@ -129,21 +129,11 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
                      determine something appropriate for the given interpreter.
       labels (list): Labels to apply to this rule.
     """
-    shebang = shebang or _interpreter_cmd(interpreter)
-    zipsafe_flag = '' if zip_safe is False else '--zip_safe'
-    cmd = '$TOOLS_PEX -s "%s" -m "%s" %s --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        shebang, CONFIG.PYTHON.MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
-    if site:
-        cmd += ' -S'
-
-    if CONFIG.BUILD_CONFIG == 'dbg':
-        # Both `pdb` and `debugpy` require the pex to be exploded to get debugging to work.
-        cmd = f'{cmd} -d={CONFIG.PYTHON.DEBUGGER}'.replace(' --zip_safe', '')
-
     assert main not in srcs, "main file should not be included in srcs"
 
+    lib_rule_name = '_%s#lib' % name
     lib_rule = python_library(
-        name='_%s#lib' % name,
+        name=lib_rule_name,
         srcs=[main] + srcs,
         resources=resources,
         interpreter=interpreter,
@@ -151,6 +141,26 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         visibility=visibility,
         test_only=test_only,
     )
+
+    shebang = shebang or _interpreter_cmd(interpreter)
+    zipsafe_flag = '' if zip_safe is False else '--zip_safe'
+    cmd = '$TOOLS_PEX -s "%s" -m "%s" %s --interpreter_options="%s"' % (
+        shebang, CONFIG.PYTHON.MODULE_DIR, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
+
+    # If content hashing feature flag is enabled, we use the hash of the built
+    # dependencies instead of the RULE_HASH as the base of the pex extraction
+    # folder
+    if "content_hashing" in CONFIG.PYTHON.FEATURE_FLAGS:
+        cmd += f' --stamp="$(hash :{lib_rule_name})"'
+    else:
+        cmd += ' --stamp="$RULE_HASH"'
+
+    if site:
+        cmd += ' -S'
+
+    if CONFIG.BUILD_CONFIG == 'dbg':
+        # Both `pdb` and `debugpy` require the pex to be exploded to get debugging to work.
+        cmd = f'{cmd} -d={CONFIG.PYTHON.DEBUGGER}'.replace(' --zip_safe', '')
 
     # Use the pex tool to compress the entry point & add all the bootstrap helpers etc.
     pex_rule = build_rule(
@@ -161,7 +171,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         cmd=cmd,
         requires=['py', 'pex'],
         pre_build=_handle_zip_safe if zip_safe is None else None,
-        deps=deps,
+        deps=deps + [f":{lib_rule_name}"],
         needs_transitive_deps=True,  # Needed so we can find anything with zip_safe=False on it.
         output_is_complete=True,
         tools={
@@ -729,4 +739,3 @@ if CONFIG.BAZEL_COMPATIBILITY:
     py_library = python_library
     py_binary = python_binary
     py_test = python_test
-
