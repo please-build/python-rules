@@ -395,7 +395,7 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
     repo_flag = ''
     repo = repo or CONFIG.PYTHON.DEFAULT_PIP_REPO
     if repo:
-        if repo.startswith('//') or repo.startswith(':'):  # Looks like a build label, not a URL.
+        if looks_like_build_label(repo):  # Looks like a build label, not a URL.
             repo_flag = f'-f %(location {repo})'
             deps += [repo]
         else:
@@ -679,7 +679,7 @@ def _wheel_entrypoint_binary(name:str, entrypoint:str, lib_rule, visibility, tes
     )
 
 def _interpreter_cmd(interpreter:str):
-    return f'$(out {interpreter})' if interpreter.startswith('//') or interpreter.startswith(':') else interpreter
+    return f'$(out {interpreter})' if looks_like_build_label(interpreter) else interpreter
 
 
 def _patch_cmd(patch):
