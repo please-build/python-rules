@@ -727,7 +727,7 @@ def _debug_cmd(bin:str, flags:str='', pre_cmd:str=''):
 
     # `PEX_EXPLODE` will explode the PEX before executing to allow clients to access third party sources files.
     # `DEBUG_PORT` is read by the PEX generated for debuggers that support server mode.
-    cmd = f"{bin} {flags}" if not CONFIG.DEBUG_PORT else f"PEX_EXPLODE=true DEBUG_PORT={CONFIG.DEBUG_PORT} {bin} {flags}"
+    cmd = f"PLZ_DEBUG=true {bin} {flags}" if not CONFIG.DEBUG_PORT else f"PLZ_DEBUG=true PEX_EXPLODE=true DEBUG_PORT={CONFIG.DEBUG_PORT} {bin} {flags}"
 
     if pre_cmd:
         cmd = f"{pre_cmd} && {cmd}"
