@@ -55,5 +55,7 @@ def main():
         return result
     else:
         # Starts a debugging session, if defined, before running the tests.
-        start_debugger()
+        if os.getenv("PLZ_DEBUG") is not None:
+            start_debugger()
+
         return run_tests(args)

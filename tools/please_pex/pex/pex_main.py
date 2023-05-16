@@ -364,7 +364,9 @@ def main():
     # Add .bootstrap dir to path, after the initial pex entry
     sys.path = sys.path[:1] + [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
     # Starts a debugging session, if defined, before running the entry point.
-    start_debugger()
+    if os.getenv("PLZ_DEBUG") is not None:
+        start_debugger()
+
     # Must run this as __main__ so it executes its own __name__ == '__main__' block.
     runpy.run_module(ENTRY_POINT, run_name='__main__')
     return 0  # unless some other exception gets raised, we're successful.
