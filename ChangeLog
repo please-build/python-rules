@@ -1,3 +1,13 @@
+Version 1.3.0
+-------------
+    * Allow pex files to be stamped based on their content hash rather than
+      the rule hash. This feature is gated behind the `content_hashing` feaure
+      flag which can be abled by adding it to the `python.featurefalgs` plugin
+      config variable (#107)
+    * Stop pex files starting the bedugger if they're not being ran as part of the
+      `plz debug` command. (#111)
+
+
 Version 1.2.3
 -------------
     * Remove python hashes feature flag
