@@ -32,12 +32,12 @@ Inherit = true
 ConfigKey = PexTool
 DefaultValue = //tools:please_pex
 Inherit = true
-Help = A path or build label for the pex too, which is used to create .pex files from python sources
+Help = A path or build label for the pex tool, which is used to create .pex files from python sources
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
 DefaultValue = ""
-Help = Any additonal flags to pass to the python interpreter 
+Help = Any additional flags to pass to the python interpreter 
 
 [PluginConfig "test_runner"]
 ConfigKey = TestRunner
