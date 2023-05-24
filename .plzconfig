@@ -32,18 +32,22 @@ Inherit = true
 ConfigKey = PexTool
 DefaultValue = //tools:please_pex
 Inherit = true
+Help = A path or build label for the pex tool, which is used to create .pex files from python sources
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
 DefaultValue = ""
+Help = Any additional flags to pass to the python interpreter 
 
 [PluginConfig "test_runner"]
 ConfigKey = TestRunner
 DefaultValue = unittest
+Help = The test runner to use e.g. unittest or pytest
 
 [PluginConfig "testrunner_deps"]
 ConfigKey = TestrunnerDeps
 DefaultValue = //third_party/python:unittest_bootstrap
+Help = A label for a build target containting the dependencies of the test runner
 
 [PluginConfig "test_runner_bootstrap"]
 ConfigKey = TestrunnerBootstrap
@@ -53,57 +57,68 @@ DefaultValue = ""
 ConfigKey = Debugger
 DefaultValue = pdb
 Inherit = true
+Help = The debugger to use when debugging python binaries 
 
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
 DefaultValue = third_party.python
+Help = The path to the third party python directory, in python import path format e.g. third_party.py3 for //third_party/py3
 
 [PluginConfig "pip_tool"]
 ConfigKey = PipTool
 DefaultValue = ""
 Optional = true
 Inherit = true
+Help = The tool to use for pip. Defaults to using python -m pip
 
 [PluginConfig "default_pip_repo"]
 ConfigKey = DefaultPipRepo
 DefaultValue = ""
 Optional = true
+Help = The default repository to look for pip dependencies in
 
 [PluginConfig "use_pypi"]
 ConfigKey = UsePypi
 DefaultValue = true
 Type = bool
+Help = Whether to use pypi as a responsitory for python_wheel
 
 [PluginConfig "pip_flags"]
 ConfigKey = PipFlags
 DefaultValue = ""
 Optional = true
+Help = Any additional flags to pass to pip
 
 [PluginConfig "disable_vendor_flags"]
 ConfigKey = DisableVendorFlags
 DefaultValue = false
 Inherit = true
 Type = bool
+Help = Disables any vendor specific flags e.g. the --system flag passed to debians fork of pip
 
 [PluginConfig "pip_compile_flags"]
 ConfigKey = PipCompileFlags
 Optional = true
 Inherit = true
+Help = Flags to pass to pip when compiling
 
 [PluginConfig "wheel_repo"]
 ConfigKey = WheelRepo
 Optional = true
+Help = The root URL for the wheel repo 
 
 [PluginConfig "wheel_name_scheme"]
 ConfigKey = WheelNameScheme
 Optional = true
 Repeatable = true
+Help = A format string for the wheel repo URL. Format fields url_base, package_name, initial, and version. Initial is the first character of the package name. 
 
 [PluginConfig "wheel_tool"]
 ConfigKey = WheelTool
 DefaultValue = //tools:wheel_resolver
 Optional = true
 Inherit = true
+Help = The tool used to resolve wheels with using the pypi API. 
 
 [PluginConfig "feature_flags"]
 DefaultValue = ""
