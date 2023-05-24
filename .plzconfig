@@ -47,7 +47,7 @@ Help = The test runner to use e.g. unittest or pytest
 [PluginConfig "testrunner_deps"]
 ConfigKey = TestrunnerDeps
 DefaultValue = //third_party/python:unittest_bootstrap
-Help = A path to the dependencies of the test runner
+Help = A label for a build target containting the dependencies of the test runner
 
 [PluginConfig "test_runner_bootstrap"]
 ConfigKey = TestrunnerBootstrap
