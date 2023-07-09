@@ -259,9 +259,8 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
                          `unittest`, `pytest`, or a custom test runner entry point.
     """
     test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
-    cmd = '$TOOLS_PEX -t -s "%s" -m "%s" -r "%s" --zip_safe --add_test_runner_deps --interpreter_options="%s" --stamp="$RULE_HASH"' % (
-        _interpreter_cmd(interpreter), CONFIG.PYTHON.MODULE_DIR, test_runner,
-        CONFIG.PYTHON.INTERPRETER_OPTIONS)
+    icmd = _interpreter_cmd(interpreter)
+    cmd = f'$TOOLS_PEX -t -s "{icmd}" -m "{CONFIG.PYTHON.MODULE_DIR}" -r "{test_runner}" --zip_safe --add_test_runner_deps --interpreter_options="{CONFIG.PYTHON.INTERPRETER_OPTIONS}" --stamp="$RULE_HASH"'
     if site:
         cmd += ' -S'
 
@@ -303,7 +302,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     # If there are resources specified, they have to get built into the pex.
     deps = [pex_rule]
     lib_rule = python_library(
-        name='_%s#lib' % name,
+        name=f'_{name}#lib',
         srcs=srcs,
         resources=resources,
         interpreter=interpreter,
