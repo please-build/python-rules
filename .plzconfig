@@ -1,5 +1,5 @@
 [Please]
-Version = 17.0.0-beta.1
+Version = >=17.0.0
 
 [Build]
 hashcheckers = sha256
@@ -37,7 +37,7 @@ Help = A path or build label for the pex tool, which is used to create .pex file
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
 DefaultValue = ""
-Help = Any additional flags to pass to the python interpreter 
+Help = Any additional flags to pass to the python interpreter
 
 [PluginConfig "test_runner"]
 ConfigKey = TestRunner
@@ -57,7 +57,7 @@ DefaultValue = ""
 ConfigKey = Debugger
 DefaultValue = pdb
 Inherit = true
-Help = The debugger to use when debugging python binaries 
+Help = The debugger to use when debugging python binaries
 
 [PluginConfig "module_dir"]
 ConfigKey = ModuleDir
@@ -105,20 +105,20 @@ Help = Flags to pass to pip when compiling
 [PluginConfig "wheel_repo"]
 ConfigKey = WheelRepo
 Optional = true
-Help = The root URL for the wheel repo 
+Help = The root URL for the wheel repo
 
 [PluginConfig "wheel_name_scheme"]
 ConfigKey = WheelNameScheme
 Optional = true
 Repeatable = true
-Help = A format string for the wheel repo URL. Format fields url_base, package_name, initial, and version. Initial is the first character of the package name. 
+Help = A format string for the wheel repo URL. Format fields url_base, package_name, initial, and version. Initial is the first character of the package name.
 
 [PluginConfig "wheel_tool"]
 ConfigKey = WheelTool
 DefaultValue = //tools:wheel_resolver
 Optional = true
 Inherit = true
-Help = The tool used to resolve wheels with using the pypi API. 
+Help = The tool used to resolve wheels with using the pypi API.
 
 [PluginConfig "feature_flags"]
 DefaultValue = ""
