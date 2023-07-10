@@ -16,9 +16,11 @@ genrule(
     name = "please_pex",
     srcs = {
         "bootstraps": [
-            "//third_party/python:behave_bootstrap",
-            "//third_party/python:pytest_bootstrap",
-            "//third_party/python:unittest_bootstrap",
+            "//third_party/python:coverage",
+            "//third_party/python:portalocker",
+            "//third_party/python:pytest",
+            "//third_party/python:xmlrunner",
+            "//third_party/python:behave",
         ],
         "main": [":pex_main"],
     },
@@ -35,7 +37,7 @@ genrule(
         "rm -rf third_party .bootstrap/xmlrunner/extra .bootstrap/coverage/htmlfiles .bootstrap/.*.pex.zip",
         '"$TOOL" z -d -i .bootstrap -o "$OUTS" --preamble_file $(location :pex_main)',
     ],
-    tools = [CONFIG.JARCAT_TOOL],
+    tools = [CONFIG.ARCAT_TOOL],
     visibility = ["PUBLIC"],
 )
 
