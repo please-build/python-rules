@@ -193,6 +193,7 @@ python_wheel(
         "_pytest",
         "pytest",
     ],
+    entry_points = "pytest:main",
     hashes = ["130328f552dcfac0b1cec75c12e3f005619dc5f874f0a06e8ff7263f0ee6225e"],
     version = "7.2.2",
     deps = [
@@ -207,7 +208,6 @@ python_wheel(
         ":py",
         ":tomli",
     ],
-    entry_points="pytest:main",
 )
 
 python_wheel(
@@ -226,6 +226,10 @@ python_wheel(
     outs = [
         "behave",
     ],
+    entry_points = {
+        "behave": "behave.__main__:main",
+        "behave_test": "setuptools_behave:behave_test",
+    },
     hashes = ["ebda1a6c9e5bfe95c5f9f0a2794e01c7098b3dde86c10a95d8621c5907ff6f1c"],
     version = "1.2.6",
     deps = [
@@ -237,10 +241,6 @@ python_wheel(
         ":traceback2",
         ":win_unicode_console",
     ],
-    entry_points = {
-        "behave": "behave.__main__:main",
-        "behave_test": "setuptools_behave:behave_test",
-    }
 )
 
 python_wheel(
@@ -472,36 +472,40 @@ python_wheel(
 python_wheel(
     name = "typing_extensions",
     outs = ["typing_extensions.py"],
+    hashes = ["sha256: 16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"],
     version = "4.4.0",
-    hashes=["sha256: 16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"],
 )
 
 python_wheel(
     name = "mypy_extensions",
     outs = ["mypy_extensions.py"],
+    hashes = ["sha256: 090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"],
     version = "0.4.3",
-    hashes=["sha256: 090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"],
 )
 
 python_wheel(
     name = "tomli",
+    hashes = ["sha256: 939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"],
     version = "2.0.1",
-    hashes=["sha256: 939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"],
 )
 
 python_wheel(
     name = "mypy",
+    binary = True,
+    hashes = ["sha256: 1021c241e8b6e1ca5a47e4d52601274ac078a89845cfde66c6d5f769819ffa1d"],
     version = "0.982",
-    deps = [":typing_extensions", ":mypy_extensions", ":tomli"],
-    binary=True,
-    hashes=["sha256: 1021c241e8b6e1ca5a47e4d52601274ac078a89845cfde66c6d5f769819ffa1d"],
+    deps = [
+        ":mypy_extensions",
+        ":tomli",
+        ":typing_extensions",
+    ],
 )
 
 # This is the minimum set of third-party packages required for the built-in test runners to work
 # with "plz test" and "plz cover". All built-in test runners should include this as a source.
 filegroup(
     name = "test_bootstrap",
-    srcs = [
+    deps = [
         ":coverage",
         ":portalocker",
     ],
@@ -509,7 +513,7 @@ filegroup(
 
 filegroup(
     name = "unittest_bootstrap",
-    srcs = [
+    deps = [
         ":test_bootstrap",
         ":xmlrunner",
     ],
@@ -517,7 +521,7 @@ filegroup(
 
 filegroup(
     name = "pytest_bootstrap",
-    srcs = [
+    deps = [
         ":pytest",
         ":test_bootstrap",
     ],
@@ -525,7 +529,7 @@ filegroup(
 
 filegroup(
     name = "behave_bootstrap",
-    srcs = [
+    deps = [
         ":behave",
         ":test_bootstrap",
     ],
@@ -557,4 +561,3 @@ else:
     urls = [
         "https://files.pythonhosted.org/packages/93/ac/02bc6a60304a8a58383386f7675f6ebae0d2f49f162dda318e57bd95c746/coverage-5.5-pp37-none-any.whl",
     ]
-
