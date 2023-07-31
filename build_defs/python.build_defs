@@ -665,7 +665,7 @@ def _wheel_entrypoint_binary(name:str, entrypoint:str, lib_rule, visibility, tes
     main = text_file(
         name = tag(name, "main"),
         out = f"__{name}_main__.py",
-        content = f"import {module} as m\nm.{func}()",
+        content = f"import sys\nimport {module} as m\nsys.exit(m.{func}())",
         test_only = test_only,
     )
     return python_binary(
