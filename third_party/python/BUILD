@@ -155,11 +155,10 @@ python_wheel(
     name = "importlib_metadata",
     outs = [
         "importlib_metadata",
-        "importlib_metadata-1.5.0.dist-info",
+        "importlib_metadata-6.8.0.dist-info",
     ],
-    hashes = ["b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"],
-    patch = "importlib_metadata.patch",
-    version = "1.5.0",
+    hashes = ["3ebb78df84a805d7698245025b975d9d67053cd94c79245ba4b3eb694abe68bb"],
+    version = "6.8.0",
     deps = [":zipp"],
 )
 
