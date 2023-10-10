@@ -151,16 +151,6 @@ python_test(
 )
 
 python_test(
-    name = "importlib_metadata_test",
-    srcs = ["importlib_metadata_test.py"],
-    labels = [
-        "py3",
-        "pip",
-    ],
-    deps = ["//third_party/python:importlib_metadata"],
-)
-
-python_test(
     name = "data_dict_test",
     srcs = ["data_dict_test.py"],
     data = {"txt": ["data.txt"]},
