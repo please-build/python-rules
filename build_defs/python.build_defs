@@ -716,7 +716,12 @@ def _add_licences(name, output):
             add_licence(name, line.split(' :: ')[-1])
             found = True
     if not found:
-        log.warning('No licence found for %s, should add licences = [...] to the rule', name.lstrip('_').split('#')[0])
+        name = name.lstrip('_').split('#')[0]
+        msg = f'No licence found for {name}, should add licences = [...] to the rule'
+        if CONFIG.PYTHON.REQUIRE_LICENCES:
+            fail(msg)
+        else:
+            log.warning(msg)
 
 
 # `pdb` and `debugpy` are the current debuggers supported by the PEX tool.
