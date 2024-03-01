@@ -124,7 +124,7 @@ Help = The tool used to resolve wheels with using the pypi API.
 DefaultValue = false
 Type = bool
 Inherit = true
-Help = If set, the licences field on pip_library and python_heel will be mandatory
+Help = If set, the licences field on pip_library and python_wheel will be mandatory
 
 
 [PluginConfig "feature_flags"]
