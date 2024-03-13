@@ -1,3 +1,7 @@
+Version 1.2.1
+-------------
+    * Quieten warnings from ModuleDirImport / SoImport in newer Python versions
+
 Version 1.2.0
 -------------
     * Upgrade importlib-metadata to 6.8.0 (#122) - note that this increases the
