@@ -1,3 +1,8 @@
+Version 1.5.1
+-------------
+    * Implement `find_spec` on import hooks in please_pex (#129) - quietens
+      runtime warnings from importlib._bootstrap.
+
 Version 1.5.0
 -------------
     * Upgrade importlib in please_pex's bootstrap pex to 6.8.0 (#122) - note
