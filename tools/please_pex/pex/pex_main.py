@@ -1,6 +1,8 @@
 """Zipfile entry point which supports auto-extracting itself based on zip-safety."""
 
 from importlib import import_module
+from importlib.abc import MetaPathFinder
+from importlib.util import spec_from_loader
 from zipfile import ZipFile, ZipInfo, is_zipfile
 import os
 import runpy
@@ -109,7 +111,7 @@ class ZipFileWithPermissions(ZipFile):
             os.chmod(targetpath, attr)
         return targetpath
 
-class SoImport(object):
+class SoImport(MetaPathFinder):
     """So import. Much binary. Such dynamic. Wow."""
 
     def __init__(self):
@@ -135,6 +137,13 @@ class SoImport(object):
                         self.modules.setdefault(importpath[len(MODULE_DIR)+1:], name)
             if self.modules:
                 self.zf = zf
+
+    def find_spec(self, name, path, target=None):
+        """Implements abc.MetaPathFinder."""
+        loader = self.find_module(name, path)
+        if loader is None:
+            return None
+        return spec_from_loader(name, loader)
 
     def find_module(self, fullname, path=None):
         """Attempt to locate module. Returns self if found, None if not."""
@@ -167,7 +176,7 @@ class SoImport(object):
         return None, None
 
 
-class ModuleDirImport(object):
+class ModuleDirImport(MetaPathFinder):
     """Handles imports to a directory equivalently to them being at the top level.
 
     This means that if one writes `import third_party.python.six`, it's imported like `import six`,
@@ -177,6 +186,13 @@ class ModuleDirImport(object):
 
     def __init__(self, module_dir=MODULE_DIR):
         self.prefix = module_dir.replace('/', '.') + '.'
+
+    def find_spec(self, name, path, target=None):
+        """Implements abc.MetaPathFinder."""
+        loader = self.find_module(name, path)
+        if loader is None:
+            return None
+        return spec_from_loader(name, loader)
 
     def find_module(self, fullname, path=None):
         """Attempt to locate module. Returns self if found, None if not."""
