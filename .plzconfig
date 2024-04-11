@@ -81,7 +81,7 @@ Help = The default repository to look for pip dependencies in
 ConfigKey = UsePypi
 DefaultValue = true
 Type = bool
-Help = Whether to use pypi as a responsitory for python_wheel
+Help = Whether to use PyPi as a repository for python_wheel
 
 [PluginConfig "pip_flags"]
 ConfigKey = PipFlags
