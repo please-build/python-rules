@@ -1,3 +1,8 @@
+Version 1.5.2
+-------------
+    * Have `python_wheel` provide the downloaded wheel file when `py_whl` is
+      required by a downstream target (#134)
+
 Version 1.5.1
 -------------
     * Implement `find_spec` on import hooks in please_pex (#129) - quietens
