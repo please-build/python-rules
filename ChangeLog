@@ -1,3 +1,8 @@
+Version 1.6.0
+-------------
+    * Allow for use of the wheel tool to resolve to pypi if not found in urls
+      provided.
+
 Version 1.5.2
 -------------
     * Have `python_wheel` provide the downloaded wheel file when `py_whl` is
