@@ -628,7 +628,10 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         licences = licences,
         test_only = test_only,
         labels = labels + [label] + ["link:plz-out/python/venv"],
-        provides = {'py': wheel_rule},
+        provides = {
+            "py": wheel_rule,
+            "py_whl": file_rule,
+        },
     )
     if binary:
         entry_points = entry_points or f"{package_name}.__main__:main"
@@ -654,7 +657,10 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
             name = name,
             srcs = entry_point_binaries,
             entry_points = {k: f"{k}.pex" for k in entry_points.keys()},
-            provides = {'py': wheel_rule}, # So things can still depend on this as a library
+            provides = {
+                "py": wheel_rule, # So things can still depend on this as a library
+                "py_whl": file_rule,
+            },
             binary=True,
             test_only=test_only,
         )
