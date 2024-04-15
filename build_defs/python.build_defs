@@ -494,7 +494,8 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
 def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, package_name:str=None,
                  outs:list=None, post_install_commands:list=None, patch:str|list=None, licences:list=None,
                  test_only:bool&testonly=False, repo:str=None, zip_safe:bool=True, visibility:list=None,
-                 deps:list=[], name_scheme:str=None, strip:list=['*.pyc', 'tests'], binary = False, entry_points={}):
+                 deps:list=[], name_scheme:str=None, strip:list=['*.pyc', 'tests'], binary = False,
+                 entry_points={}, tool:str=CONFIG.PYTHON.WHEEL_TOOL):
     """Downloads a Python wheel and extracts it.
 
     This is a lightweight pip-free alternative to pip_library which supports cross-compiling.
@@ -533,47 +534,70 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
                                This parameter can be a string, in which case the rule can be ran directly, or a
                                dictionary, for example `{"protoc", "protoc.__main__:main"}. For the latter, each key can
                                be ran using annotated labels, e.g. `plz run //third_party/python:protobuf|protoc`
+      tool (str): Tool to locate python wheel file in an index
     """
     binary = binary or entry_points
     package_name = package_name or name.replace('-', '_')
     initial = package_name[0]
     url_base = repo or CONFIG.PYTHON.WHEEL_REPO
-    if not url_base:
+    if not tool and not url_base:
         fail('python.wheel_repo is not set in the config, must pass repo explicitly to python_wheel')
     urls = []
-    if name_scheme:
-        urls += [name_scheme.format(url_base=url_base,
-                                    package_name=package_name,
-                                    initial=initial,
-                                    version=version)]
-    elif CONFIG.PYTHON.WHEEL_NAME_SCHEME:
-        urls += [scheme.format(url_base=url_base, package_name=package_name, initial=initial, version=version)
-                 for scheme in CONFIG.PYTHON.WHEEL_NAME_SCHEME]
-    else:
-        # Populate urls using a reasonable set of possible wheel naming schemes.
-        # Look for an arch-specific wheel first; in some cases there can be both (e.g. protobuf
-        # has optional arch-specific bits) and we prefer the one with the cool stuff.
-        urls += ['{url_base}/{package_name}-{version}-${{OS}}-${{ARCH}}.whl'.format(url_base=url_base,
-                                                                                    package_name=package_name,
-                                                                                    initial=initial,
-                                                                                    version=version),
-                 '{url_base}/{package_name}-{version}-${{OS}}_${{ARCH}}.whl'.format(url_base=url_base,
-                                                                                    package_name=package_name,
-                                                                                    initial=initial,
-                                                                                    version=version),
-                 '{url_base}/{package_name}-{version}.whl'.format(url_base=url_base,
-                                                                  package_name=package_name,
-                                                                  initial=initial,
-                                                                  version=version)]
+    if url_base:
+        if name_scheme:
+            urls += [name_scheme.format(url_base=url_base,
+                                        package_name=package_name,
+                                        initial=initial,
+                                        version=version)]
+        elif CONFIG.PYTHON.WHEEL_NAME_SCHEME:
+            urls += [scheme.format(url_base=url_base, package_name=package_name, initial=initial, version=version)
+                     for scheme in CONFIG.PYTHON.WHEEL_NAME_SCHEME]
+        else:
+            # Populate urls using a reasonable set of possible wheel naming schemes.
+            # Look for an arch-specific wheel first; in some cases there can be both (e.g. protobuf
+            # has optional arch-specific bits) and we prefer the one with the cool stuff.
+            urls += ['{url_base}/{package_name}-{version}-${{OS}}-${{ARCH}}.whl'.format(url_base=url_base,
+                                                                                        package_name=package_name,
+                                                                                        initial=initial,
+                                                                                        version=version),
+                     '{url_base}/{package_name}-{version}-${{OS}}_${{ARCH}}.whl'.format(url_base=url_base,
+                                                                                        package_name=package_name,
+                                                                                        initial=initial,
+                                                                                        version=version),
+                     '{url_base}/{package_name}-{version}.whl'.format(url_base=url_base,
+                                                                      package_name=package_name,
+                                                                      initial=initial,
+                                                                      version=version)]
 
-    file_rule = remote_file(
-        name = name,
-        _tag = 'download',
-        out = name + '.whl',
-        url = urls,
-        hashes = hashes,
-        licences = licences if licences else None,
-    )
+    file_rule = None
+    if tool:
+        # Try the URLs generated using the wheel name schemes. If those fail, try
+        # generating a url with the wheel_resolver tool and download that if successful.
+        cmd = f'$TOOL --package {package_name} --version {version}'
+        if urls:
+            cmd += ' --urls ' + ' '.join(['%s' % url for url in urls])
+        file_rule = build_rule(
+            name = name,
+            tag = 'download',
+            outs = [name + '.whl'],
+            cmd = cmd,
+            tools = [tool],
+            hashes = hashes,
+            labels = ["python_wheel_download"],
+            licences = licences if licences else None,
+            sandbox = False,
+        )
+    else:
+        if not urls:
+            fail('python.wheel_repo is not set in the config, must pass repo explicitly to python_wheel')
+        file_rule = remote_file(
+            name = name,
+            _tag = 'download',
+            out = name + '.whl',
+            url = urls,
+            hashes = hashes,
+            licences = licences if licences else None,
+        )
 
     cmd = ['$TOOL x $SRCS_SRC']
 
