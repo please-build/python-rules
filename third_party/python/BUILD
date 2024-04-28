@@ -102,71 +102,49 @@ python_wheel(
     deps = [":six"],
 )
 
+_coverage_version = "7.3.2"
+_coverage_soabis = ["cp38", "cp39", "cp310", "cp311", "cp312"]
+
 if is_platform(
     arch = "amd64",
     os = "linux",
 ):
-    urls = [
-        "https://files.pythonhosted.org/packages/a4/3a/8f7b217265503eae2b0ea97e714e2709e1e84ee13cd3ca6abdff1e99e76c/coverage-5.5-cp38-cp38-manylinux2010_x86_64.whl",
-        "https://files.pythonhosted.org/packages/a4/79/625f1ed5da2a69f52fb44e0b7ca1b470437ff502348c716005a98a71cd49/coverage-5.5-cp39-cp39-manylinux2010_x86_64.whl",
-        "https://files.pythonhosted.org/packages/d4/3e/4f6451b8b09a1eb2d0e7f61a3d7019bd98d556fc5343378f76e8905b2789/coverage-5.5-cp310-cp310-manylinux1_x86_64.whl",
+    _coverage_arch = "manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64"
+    _coverage_urls = [
+        f"https://files.pythonhosted.org/packages/{s}/c/coverage/coverage-{_coverage_version}-{s}-{s}-{_coverage_arch}.whl"
+        for s in _coverage_soabis
     ]
 elif is_platform(
     arch = "amd64",
     os = "darwin",
 ):
-    urls = [
-        "https://files.pythonhosted.org/packages/b6/26/b53bf0fef1b4bce6f7d61fef10fbf924d943987d4c9e53c394ecebff3673/coverage-5.5-cp38-cp38-macosx_10_9_x86_64.whl",
-        "https://files.pythonhosted.org/packages/0d/8a/3b13c4e1f241a7083a4ee9986b969f0238f41dcd7a8990c786bc3b4b5b19/coverage-5.5-cp39-cp39-macosx_10_9_x86_64.whl",
-        "https://files.pythonhosted.org/packages/6b/a2/43dd30964103a7ff1fd03392a30a5b08105bc85d1bafbfc51023a1bb4fd3/coverage-5.5-cp310-cp310-macosx_10_14_x86_64.whl",
+    _coverage_arch = "macosx_10_9_x86_64"
+    _coverage_urls = [
+        f"https://files.pythonhosted.org/packages/{s}/c/coverage/coverage-{_coverage_version}-{s}-{s}-{_coverage_arch}.whl"
+        for s in _coverage_soabis
     ]
 else:
-    urls = [
-        "https://files.pythonhosted.org/packages/93/ac/02bc6a60304a8a58383386f7675f6ebae0d2f49f162dda318e57bd95c746/coverage-5.5-pp37-none-any.whl",
+    _coverage_urls = [
+        f"https://files.pythonhosted.org/packages/pp38/c/coverage/coverage-{_coverage_version}-pp38-pp39-pp310-none-any.whl",
     ]
 
 python_multiversion_wheel(
     name = "coverage",
-    urls = urls,
-    version = "5.5",
-)
-
-python_wheel(
-    name = "attrs",
-    outs = ["attr"],
-    hashes = ["08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c"],
-    version = "19.3.0",
+    urls = _coverage_urls,
+    version = _coverage_version,
 )
 
 python_wheel(
     name = "pluggy",
-    hashes = ["966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"],
-    version = "0.13.1",
-    deps = [":importlib_metadata"],
-)
-
-python_wheel(
-    name = "importlib_metadata",
-    outs = [
-        "importlib_metadata",
-        "importlib_metadata-6.8.0.dist-info",
-    ],
-    hashes = ["3ebb78df84a805d7698245025b975d9d67053cd94c79245ba4b3eb694abe68bb"],
-    version = "6.8.0",
-    deps = [":zipp"],
-)
-
-python_wheel(
-    name = "zipp",
-    outs = ["zipp.py"],
-    hashes = ["aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"],
-    version = "3.1.0",
+    hashes = ["d89c696a773f8bd377d18e5ecda92b7a3793cbe66c87060a6fb58c7b6e1061f7"],
+    version = "1.3.0",
 )
 
 python_wheel(
     name = "py",
-    hashes = ["c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"],
-    version = "1.8.1",
+    hashes = ["607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"],
+    licences = ["MIT"],
+    version = "1.11.0",
 )
 
 python_wheel(
@@ -187,17 +165,17 @@ python_wheel(
         "pytest",
     ],
     entry_points = "pytest:main",
-    hashes = ["130328f552dcfac0b1cec75c12e3f005619dc5f874f0a06e8ff7263f0ee6225e"],
-    version = "7.2.2",
+    hashes = ["1d881c6124e08ff0a1bb75ba3ec0bfd8b5354a01c194ddd5a0a870a48d99b002"],
+    version = "7.4.2",
     deps = [
-        ":attrs",
         ":colorama",
         ":exceptiongroup",
-        ":importlib_metadata",
         ":iniconfig",
         ":packaging",
         ":pluggy",
-        # This is a stealth dependency (see src/_pytest/compat.py):
+        # Not a formal dependency, but pytest uses this version instead of its vendorised copy if it
+        # is installed, and the hack that makes the vendorised copy work doesn't play nicely with
+        # pex archives - see https://github.com/pytest-dev/pytest/pull/10396
         ":py",
         ":tomli",
     ],
@@ -205,8 +183,8 @@ python_wheel(
 
 python_wheel(
     name = "exceptiongroup",
-    hashes = ["232c37c63e4f682982c8b6459f33a8981039e5fb8756b2074364e5055c498c9e"],
-    version = "1.1.1",
+    hashes = ["343280667a4585d195ca1cf9cef84a4e178c4b6cf2274caef9859782b567d5e3"],
+    version = "1.1.3",
 )
 
 python_wheel(
