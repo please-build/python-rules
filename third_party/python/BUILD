@@ -102,7 +102,7 @@ python_wheel(
     deps = [":six"],
 )
 
-_coverage_version = "7.3.2"
+_coverage_version = "7.5.0"
 _coverage_soabis = ["cp38", "cp39", "cp310", "cp311", "cp312"]
 
 if is_platform(
@@ -125,7 +125,7 @@ elif is_platform(
     ]
 else:
     _coverage_urls = [
-        f"https://files.pythonhosted.org/packages/pp38/c/coverage/coverage-{_coverage_version}-pp38-pp39-pp310-none-any.whl",
+        f"https://files.pythonhosted.org/packages/pp38.pp39.pp310/c/coverage/coverage-{_coverage_version}-pp38.pp39.pp310-none-any.whl",
     ]
 
 python_multiversion_wheel(
