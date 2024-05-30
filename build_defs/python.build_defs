@@ -331,7 +331,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     if isinstance(data, dict):
         data['_srcs'] = srcs
     else:
-        data.append(srcs)
+        data.extend(srcs)
 
     if interpreter.startswith('//') or interpreter.startswith(':'):
         if isinstance(data, dict):
