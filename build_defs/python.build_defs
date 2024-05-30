@@ -333,7 +333,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     else:
         data.extend(srcs)
 
-    if interpreter.startswith('//') or interpreter.startswith(':'):
+    if looks_like_build_label(interpreter):
         if isinstance(data, dict):
             data['_interpreter'] = interpreter
         else:
