@@ -337,10 +337,12 @@ def explode_zip():
                 # that the cache has already been prepared.
                 lockfile.write("pex unzip completed")
         sys.path = [PEX_PATH] + [x for x in sys.path if x != PEX]
-        yield
-        if no_cache:
-            import shutil
-            shutil.rmtree(basepath)
+        try:
+            yield
+        finally:
+            if no_cache:
+                import shutil
+                shutil.rmtree(basepath)
 
     return _explode_zip
 
