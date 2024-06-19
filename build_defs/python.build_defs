@@ -217,7 +217,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
 
 def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:list=[], worker:str='',
                 labels:list&features&tags=[], size:str=None, flags:str='', visibility:list=None,
-                sandbox:bool=None, timeout:int=0, flaky:bool|int=0,
+                sandbox:bool=None, timeout:int=0, flaky:bool|int=0, env:dict=None,
                 test_outputs:list=None, zip_safe:bool=None, interpreter:str=CONFIG.PYTHON.DEFAULT_INTERPRETER,
                 site:bool=False, test_runner:str=None):
     """Generates a Python test target.
@@ -246,6 +246,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
       sandbox (bool): Sandbox the test on Linux to restrict access to namespaces such as network.
       timeout (int): Maximum time this test is allowed to run for, in seconds.
       flaky (int | bool): True to mark this test as flaky, or an integer for a number of reruns.
+      env (dict): Environment variables to pass to the test
       test_outputs (list): Extra test output files to generate from this test.
       zip_safe (bool): Allows overriding whether the output is marked zip safe or not.
                        If set to explicitly True or False, the output will be marked
@@ -360,6 +361,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         test_timeout=timeout,
         size = size,
         flaky=flaky,
+        env=env,
         test_outputs=test_outputs,
         requires=['py', 'test', interpreter],
         tools=[CONFIG.ARCAT_TOOL],
