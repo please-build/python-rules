@@ -81,7 +81,7 @@ Help = The default repository to look for pip dependencies in
 ConfigKey = UsePypi
 DefaultValue = true
 Type = bool
-Help = Whether to use pypi as a responsitory for python_wheel
+Help = Whether to use PyPi as a repository for python_wheel
 
 [PluginConfig "pip_flags"]
 ConfigKey = PipFlags
@@ -115,7 +115,6 @@ Help = A format string for the wheel repo URL. Format fields url_base, package_n
 
 [PluginConfig "wheel_tool"]
 ConfigKey = WheelTool
-DefaultValue = //tools:wheel_resolver
 Optional = true
 Inherit = true
 Help = The tool used to resolve wheels with using the pypi API.

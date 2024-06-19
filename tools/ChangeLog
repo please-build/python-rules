@@ -1,3 +1,12 @@
+Version 1.2.2
+-------------
+    * Always clean up exploded pex when exiting the Python entry point (#142)
+    * Upgrade coverage in bootstrap pex to 7.3.2 (#126)
+
+Version 1.2.1
+-------------
+    * Quieten warnings from ModuleDirImport / SoImport in newer Python versions
+
 Version 1.2.0
 -------------
     * Upgrade importlib-metadata to 6.8.0 (#122) - note that this increases the
