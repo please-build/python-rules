@@ -1,3 +1,15 @@
+Version 1.7.0
+-------------
+    * Always clean up exploded pex files when exiting the Python entry point
+      (#142)
+    * `python_test`: add `env` parameter (#140)
+    * `python_test`: make in-repo interpreter available to test at runtime
+      (#141)
+    * Add plugin configuration option `require_licences`, which controls
+      whether the `licences` parameter is mandatory for `pip_library` and
+      `python_wheel` (#128)
+    * Upgrade coverage to 7.5.0 (#139, #144)
+
 Version 1.6.0
 -------------
     * Allow for use of the wheel tool to resolve to pypi if not found in urls
