@@ -37,26 +37,20 @@ def main():
     are maybe cross-compiling for.
     """
     parser = argparse.ArgumentParser()
+    parser.add_argument("--package", type=str, help="the package to resolve")
     parser.add_argument(
-            '--package',
-            type=str,
-            help='the package to resolve')
+        "--version", type=str, help="the version of the package to be resolved"
+    )
     parser.add_argument(
-            '--version',
-            type=str,
-            help='the version of the package to be resolved')
+        "--arch", nargs="*", type=str, default=[], help="specify architecture"
+    )
     parser.add_argument(
-            '--arch',
-            nargs="*",
-            type=str,
-            default=[],
-            help='specify architecture')
-    parser.add_argument(
-            '--urls',
-            nargs="*",
-            type=str,
-            default=[],
-            help='URLs to try before looking in wheel index')
+        "--urls",
+        nargs="*",
+        type=str,
+        default=[],
+        help="URLs to try before looking in wheel index",
+    )
 
     args = parser.parse_args()
 
