@@ -51,8 +51,15 @@ def main():
         default=[],
         help="URLs to try before looking in wheel index",
     )
+    parser.add_argument(
+        "--log-level",
+        default=logging.INFO,
+        type=lambda x: getattr(logging, x),
+        help="Set logging level.",
+    )
 
     args = parser.parse_args()
+    logging.basicConfig(level=args.log_level)
 
     # If any URLs were passed, try them first before looking in the wheel index
     if args.urls:
