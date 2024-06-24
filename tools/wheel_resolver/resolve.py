@@ -64,19 +64,33 @@ def main():
     # If any URLs were passed, try them first before looking in the wheel index
     if args.urls:
         for url in args.urls:
-            if try_download(url):
+            result = try_download(url)
+            logging.info("trying download of %r: %s", url, result)
+            if result:
                 return
 
     # Fetch all available wheel urls from index
     urls = tg.get_download_urls(args.package, args.version)
+    logging.debug(
+        "found the following URLs for %r at %s: %r", args.package, args.version, urls
+    )
     if urls is None:
-        logging.critical("No matching urls found in index")
+        logging.critical("no matching URLs for %r at %s", args.package, args.version)
         sys.exit(1)
 
     result = tg.get_url(urls, args.arch)
+    logging.debug(
+        "found the following URL for %r at %s compatible with %s: %r",
+        args.package,
+        args.version,
+        args.arch,
+        result,
+    )
 
     if result is not None:
-        if try_download(result):
+        success = try_download(result)
+        logging.info("trying download of %r: %s", url, success)
+        if success:
             return
 
     logging.critical("Found %s URLs but none are compatible", len(urls))
