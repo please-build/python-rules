@@ -1,3 +1,9 @@
+## unreleased
+
+### Added
+
+- wheel_resolver tool; see [README](./wheel_resolver/README.md)
+
 Version 1.2.2
 -------------
     * Always clean up exploded pex when exiting the Python entry point (#142)

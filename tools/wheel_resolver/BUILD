@@ -1,0 +1,39 @@
+subinclude("//build_defs:python")
+
+python_binary(
+    name = "wheel_resolver",
+    main = "main.py",
+    visibility = ["PUBLIC"],
+    deps = [
+        ":wheel",
+    ],
+)
+
+python_library(
+    name = "wheel",
+    srcs = [
+        "__init__.py",
+        "wheel.py",
+    ],
+    deps = [
+        "//third_party/python:click",
+        "//third_party/python:click-log",
+        "//third_party/python:distlib",
+        "//third_party/python:packaging",
+        "//third_party/python:requests",
+    ],
+)
+
+python_test(
+    name = "test",
+    timeout = 600,
+    srcs = [
+        "__init___test.py",
+        "wheel_test.py",
+    ],
+    test_runner = "pytest",
+    deps = [
+        ":wheel",
+        "//third_party/python:pytest",
+    ],
+)
