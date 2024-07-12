@@ -14,6 +14,7 @@ class CompatibleUrlNotFoundError(RuntimeError):
 
 
 def url(
+    *,
     package_name: str,
     package_version: typing.Optional[str],
     tags: typing.List[str],
