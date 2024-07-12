@@ -37,28 +37,16 @@ click_log.basic_config(_LOGGER)
 )
 @click.option(
     "--interpreter",
-    type=click.Choice(
-        choices=sorted(
-            list(tags.INTERPRETER_SHORT_NAMES.keys())
-            + list(tags.INTERPRETER_SHORT_NAMES.values())
-        ),
-        case_sensitive=False,
-    ),
-    default=tags.interpreter_name(),
+    default={t.interpreter for t in tags.sys_tags()},
+    multiple=True,
+    metavar="INTERPRETER",
     show_default=True,
-    help="The interpreter name or abbreviation code",
-)
-@click.option(
-    "--interpreter-version",
-    default=tags.interpreter_version(),
-    show_default=True,
-    metavar="INTERPRETER_VERSION",
-    help="The interpreter version, for example 312 for 3.12",
+    help="The interpreter name or abbreviation code with version, for example py31 or cp310",
 )
 @click.option(
     "--platform",
     # Must cast to list so click knows we want multiple default values.
-    default=list(tags.platform_tags()),
+    default=set(tags.platform_tags()),
     metavar="PLATFORM",
     multiple=True,
     help="The platform identifier, for example linux_x86_64 or linux_i686",
@@ -76,10 +64,9 @@ def main(
     url: typing.List[str],
     package_name: typing.Optional[str],
     package_version: typing.Optional[str],
-    interpreter: str,
-    interpreter_version: str,
-    platform: typing.Iterable[str],
-    abi: typing.Iterable[str],
+    interpreter: typing.Tuple[str, ...],
+    platform: typing.Tuple[str, ...],
+    abi: typing.Tuple[str, ...],
 ):
     """Resolve a wheel by name and version to a URL.
 
@@ -98,14 +85,15 @@ def main(
             return
 
     u = wheel.url(
-        package_name,
-        package_version,
+        package_name=package_name,
+        package_version=package_version,
         tags=[
             str(x)
+            for i in interpreter
             for x in tags.generic_tags(
-                interpreter=f"{interpreter}{interpreter_version}",
-                abis=abi,
-                platforms=platform,
+                interpreter=i,
+                abis=set(abi),
+                platforms=set(platform).union({"any"}),
             )
         ],
         # We're currently hardcoding PyPI but we should consider allowing other

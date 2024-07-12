@@ -14,6 +14,7 @@ class CompatibleUrlNotFoundError(RuntimeError):
 
 
 def url(
+    *,
     package_name: str,
     package_version: typing.Optional[str],
     tags: typing.List[str],
@@ -25,6 +26,7 @@ def url(
         package_version,
     )
     _LOGGER.debug("tags: %s", ", ".join(tags))
+    _LOGGER.debug("any tags: %s", ", ".join(t for t in tags if "-any" in t))
 
     requirement = package_name
     if package_version:
