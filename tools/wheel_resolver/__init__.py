@@ -1,6 +1,8 @@
 import click
 import typing
 import requests
+import os
+import urllib.request
 import logging
 import click_log
 import sys
@@ -11,6 +13,23 @@ import distlib.locators
 _LOGGER = logging.getLogger(__name__)
 
 click_log.basic_config(_LOGGER)
+
+def try_download(url):
+    """
+    Try to download url to $OUTS. Returns false if
+    it failed.
+    """
+    output = os.environ.get("OUTS")
+    if output is None:
+        _LOGGER.critical("No output directory found")
+        sys.exit(1)
+
+    try:
+        urllib.request.urlretrieve(url, output)
+    except urllib.error.HTTPError:
+        return False
+
+    return True
 
 
 @click.command()
@@ -106,4 +125,9 @@ def main(
             "%s-%s is not available, tried %r", package_name, package_version, u
         )
         sys.exit(1)
+
+    if not try_download(u):
+        _LOGGER.error("Could not download from %r", u)
+        sys.exit(1)
+
     click.echo(u)
