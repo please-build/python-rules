@@ -117,7 +117,7 @@ def main(
         ],
         # We're currently hardcoding PyPI but we should consider allowing other
         # repositories
-        locator=distlib.locators.PyPIJSONLocator(url="https://pypi.org/pypi"),
+        locator=distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple"),
     )
     response = requests.head(u)
     if response.status_code != requests.codes.ok:
