@@ -12,10 +12,12 @@ class TestMain:
         result = runner.invoke(cli=sut.main, args=["--help"])
         assert result.exit_code == 0
 
+    @unittest.mock.patch.object(sut.output, "try_download")
     @unittest.mock.patch.object(sut.requests, "head")
     def test_any_in_platforms(
-        self, _mock_requests_head: unittest.mock.MagicMock
+            self, _mock_requests_head: unittest.mock.MagicMock, _mock_try_download: unittest.mock.MagicMock
     ) -> None:
+        _mock_try_download.return_value = True
         _mock_requests_head.return_value = requests.Response()
         _mock_requests_head.return_value.status_code = requests.codes.ok
 
