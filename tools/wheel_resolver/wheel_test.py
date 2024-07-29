@@ -127,6 +127,11 @@ class TestIsCompatible:
                 expected=True,
             ),
             IsCompatibleCase(
+                url="https://files.pythonhosted.org/packages/29/61/bf33c6c85c55bc45a29eee3195848ff2d518d84735eb0e2d8cb42e0d285e/PyYAML-6.0.1-cp310.cp311-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+                tags=["cp310-cp310-manylinux_2_17_x86_64"],
+                expected=True,
+            ),
+            IsCompatibleCase(
                 url="https://files.pythonhosted.org/packages/29/61/bf33c6c85c55bc45a29eee3195848ff2d518d84735eb0e2d8cb42e0d285e/PyYAML-6.0.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
                 tags=["cp311-cp311-manylinux_2_17_x86_64"],
                 expected=False,

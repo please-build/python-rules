@@ -1,6 +1,7 @@
 import typing
 import distlib.locators
 import logging
+import itertools
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -74,4 +75,16 @@ def _is_wheel(url: str) -> bool:
 
 
 def _is_compatible(url: str, tags: typing.List[str]) -> bool:
-    return any(t in url for t in tags)
+    url_tags = extract_wheel_tags(url)
+    return any(t in url_tags for t in tags)
+
+
+def extract_wheel_tags(url: str) -> list[str]:
+    _, _, interpreter, abi, platform = url.replace(".whl", "").split("/")[-1].split("-")
+    interpreters, abis, platforms = (
+        interpreter.split("."),
+        abi.split("."),
+        platform.split("."),
+    )
+    combinations = list(itertools.product(interpreters, abis, platforms))
+    return ["-".join(combo) for combo in combinations]
