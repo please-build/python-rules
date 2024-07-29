@@ -103,7 +103,14 @@ python_wheel(
 )
 
 _coverage_version = "7.5.0"
-_coverage_soabis = ["cp38", "cp39", "cp310", "cp311", "cp312"]
+
+_coverage_soabis = [
+    "cp38",
+    "cp39",
+    "cp310",
+    "cp311",
+    "cp312",
+]
 
 if is_platform(
     arch = "amd64",
@@ -149,8 +156,8 @@ python_wheel(
 
 python_wheel(
     name = "packaging",
-    hashes = ["170748228214b70b672c581a3dd610ee51f733018650740e98c7df862a583f73"],
-    version = "20.1",
+    hashes = [],
+    version = "24.1",
 )
 
 pip_library(
@@ -430,6 +437,7 @@ pip_library(
 
 pip_library(
     name = "distlib",
+    licences = ["PSF-2.0"],
     version = "0.3.2",
 )
 
@@ -504,4 +512,22 @@ filegroup(
         ":behave",
         ":test_bootstrap",
     ],
+)
+
+python_wheel(
+    name = "click",
+    hashes = [],
+    version = "8.1.7",
+    deps = [],
+)
+
+python_wheel(
+    name = "click-log",
+    package_name = "click_log",
+    outs = ["click_log"],
+    hashes = [],
+    name_scheme = "{url_base}/ae/5a/4f025bc751087833686892e17e7564828e409c43b632878afeae554870cd/{package_name}-{version}-py2.py3-none-any.whl",
+    repo = "https://files.pythonhosted.org/packages",
+    version = "0.4.0",
+    deps = [],
 )
