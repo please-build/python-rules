@@ -80,11 +80,10 @@ def _is_compatible(url: str, tags: typing.List[str]) -> bool:
 
 
 def extract_wheel_tags(url: str) -> list[str]:
-    _, _, interpreter, abi, platform = url.replace(".whl", "").split("/")[-1].split("-")
-    interpreters, abis, platforms = (
-        interpreter.split("."),
-        abi.split("."),
-        platform.split("."),
-    )
+    _, _, interpreter, abi, platform = url.removesuffix(".whl").split("/")[-1].split("-")
+    interpreters = interpreter.split(".")
+    abis = abi.split(".")
+    platforms = platform.split(".")
+    
     combinations = list(itertools.product(interpreters, abis, platforms))
     return ["-".join(combo) for combo in combinations]
