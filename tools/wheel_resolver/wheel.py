@@ -20,6 +20,7 @@ def url(
     package_version: typing.Optional[str],
     tags: typing.List[str],
     locator: distlib.locators.Locator,
+    prereleases: bool = True,
 ) -> str:
     _LOGGER.info(
         "locating %s-%s",
@@ -27,13 +28,14 @@ def url(
         package_version,
     )
     _LOGGER.debug("tags: %s", ", ".join(tags))
+    _LOGGER.debug("prerelease wheels: %s", prereleases)
 
     requirement = package_name
     if package_version:
         requirement = f"{requirement} (=={package_version})"
     _LOGGER.debug("requirement: %r", requirement)
 
-    distribution = locator.locate(requirement)
+    distribution = locator.locate(requirement=requirement, prereleases=prereleases)
     _LOGGER.debug("distribution: %r", distribution)
 
     if not distribution:
@@ -45,13 +47,7 @@ def url(
         "len(distribution.download_urls): %d", len(distribution.download_urls)
     )
 
-    compatible_urls = sorted(
-        [
-            x
-            for x in distribution.download_urls
-            if _is_wheel(x) and _is_compatible(x, tags=tags)
-        ]
-    )
+    compatible_urls = sorted([x for x in distribution.download_urls if _is_wheel(x)])
 
     if not compatible_urls:
         raise CompatibleUrlNotFoundError(
@@ -72,18 +68,3 @@ def url(
 
 def _is_wheel(url: str) -> bool:
     return url.endswith(".whl")
-
-
-def _is_compatible(url: str, tags: typing.List[str]) -> bool:
-    url_tags = extract_wheel_tags(url)
-    return any(t in url_tags for t in tags)
-
-
-def extract_wheel_tags(url: str) -> list[str]:
-    _, _, interpreter, abi, platform = url.removesuffix(".whl").split("/")[-1].split("-")
-    interpreters = interpreter.split(".")
-    abis = abi.split(".")
-    platforms = platform.split(".")
-    
-    combinations = list(itertools.product(interpreters, abis, platforms))
-    return ["-".join(combo) for combo in combinations]
