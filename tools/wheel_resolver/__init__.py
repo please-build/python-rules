@@ -8,6 +8,7 @@ import tools.wheel_resolver.wheel as wheel
 import tools.wheel_resolver.output as output
 import packaging.tags as tags
 import distlib.locators
+import itertools
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ click_log.basic_config(_LOGGER)
 @click.option(
     "--platform",
     # Must cast to list so click knows we want multiple default values.
-    default=set(tags.platform_tags()),
+    default={t.platform for t in tags.sys_tags()},
     metavar="PLATFORM",
     multiple=True,
     help="The platform identifier, for example linux_x86_64 or linux_i686",
@@ -60,14 +61,23 @@ click_log.basic_config(_LOGGER)
     multiple=True,
     help="The ABI identifier, for example cp310 or abi3",
 )
+@click.option(
+    "--prereleases",
+    default=False,
+    metavar="PRERELEASES",
+    show_default=True,
+    multiple=False,
+    help="Whether prereleased wheels should also be downloaded",
+)
 @click_log.simple_verbosity_option(_LOGGER)
 def main(
     url: typing.List[str],
-    package_name: typing.Optional[str],
+    package_name: str,
     package_version: typing.Optional[str],
     interpreter: typing.Tuple[str, ...],
     platform: typing.Tuple[str, ...],
     abi: typing.Tuple[str, ...],
+    prereleases: bool = False,
 ):
     """Resolve a wheel by name and version to a URL.
 
@@ -85,6 +95,11 @@ def main(
             click.echo(u)
             return
 
+    # We're currently hardcoding PyPI but we should consider allowing other
+    # repositories
+    # TODO (tm-jdelapuente): allow downloads from other package repositories
+    locator = distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple")
+    locator.wheel_tags = list(itertools.product(interpreter, abi, platform))
     u = wheel.url(
         package_name=package_name,
         package_version=package_version,
@@ -97,16 +112,9 @@ def main(
                 platforms=set(platform).union({"any"}),
             )
         ],
-        # We're currently hardcoding PyPI but we should consider allowing other
-        # repositories
-        locator=distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple"),
+        locator=locator,
+        prereleases=prereleases,
     )
-    response = requests.head(u)
-    if response.status_code != requests.codes.ok:
-        _LOGGER.error(
-            "%s-%s is not available, tried %r", package_name, package_version, u
-        )
-        sys.exit(1)
 
     if not output.try_download(u):
         _LOGGER.error("Could not download from %r", u)

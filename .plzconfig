@@ -119,6 +119,11 @@ Optional = true
 Inherit = true
 Help = The tool used to resolve wheels with using the pypi API.
 
+[PluginConfig "prereleases"]
+DefaultValue = false
+Type = bool
+Help = Allow prereleased versions in python_wheel targets
+
 [PluginConfig "require_licences"]
 DefaultValue = false
 Type = bool
