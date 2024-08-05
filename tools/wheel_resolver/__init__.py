@@ -97,6 +97,7 @@ def main(
 
     # We're currently hardcoding PyPI but we should consider allowing other
     # repositories
+    # TODO (tm-jdelapuente): allow downloads from other package repositories
     locator = distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple")
     locator.wheel_tags = list(itertools.product(interpreter, abi, platform))
     u = wheel.url(
