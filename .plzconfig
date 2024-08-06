@@ -131,7 +131,7 @@ Inherit = true
 Help = If set, the licences field on pip_library and python_wheel will be mandatory
 
 [PluginConfig "verbosity"]
-DefaultVault = "info"
+DefaultValue = "info"
 Help = Passes verbosity level to wheel_tool, for example: wheel_tool --verbosity info
 Optional = true
 
