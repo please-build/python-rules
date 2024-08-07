@@ -70,6 +70,7 @@ go_module(
     install = ["..."],
     module = "github.com/peterebden/go-cli-init/v5",
     version = "v5.1.0",
+    licences = ["Apache-2.0"],
     visibility = ["PUBLIC"],
     deps = [
         ":go-flags",
@@ -125,5 +126,6 @@ go_module(
     name = "xsys",
     install = ["..."],
     module = "golang.org/x/sys",
+    licences = ["BSD-3-Clause"],
     version = "v0.0.0-20210823070655-63515b42dcdf",
 )
