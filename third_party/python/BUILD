@@ -433,7 +433,7 @@ pip_library(
 pip_library(
     name = "setuptools",
     test_only = True,
-    licences = ["MIT"]
+    licences = ["MIT"],
     version = "47.1.1",
 )
 
