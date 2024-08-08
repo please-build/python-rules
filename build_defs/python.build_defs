@@ -588,7 +588,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         # generating a url with the wheel_resolver tool and download that if successful.
         cmd = f'$TOOL --package {package_name} --version {version} --prereleases {prereleases}'
         if urls:
-            cmd += ' --urls ' + ' '.join(['%s' % url for url in urls])
+            cmd += ''.join([' --urls %s' % url for url in urls])
         file_rule = build_rule(
             name = name,
             tag = 'download',
