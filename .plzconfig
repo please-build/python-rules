@@ -1,5 +1,5 @@
 [Please]
-Version = >=17.0.0
+Version = >=17.10.1
 
 [Build]
 hashcheckers = sha256
@@ -98,6 +98,7 @@ Help = Disables any vendor specific flags e.g. the --system flag passed to debia
 
 [PluginConfig "pip_compile_flags"]
 ConfigKey = PipCompileFlags
+DefaultValue = ""
 Optional = true
 Inherit = true
 Help = Flags to pass to pip when compiling
