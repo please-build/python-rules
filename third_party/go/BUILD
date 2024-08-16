@@ -3,14 +3,14 @@ subinclude("//build_defs:archs", "///go//build_defs:go")
 go_toolchain(
     name = "toolchain",
     hashes = [
-        "b770812aef17d7b2ea406588e2b97689e9557aac7e646fe76218b216e2c51406",  # darwin_arm64
-        "ffd070acf59f054e8691b838f274d540572db0bd09654af851e4e76ab88403dc",  # darwin_amd64
-        "905a297f19ead44780548933e0ff1a1b86e8327bb459e92f9c0012569f76f5e3",  # linux_amd64
-        "2c2252902b87ba605fdc0b12b4c860fe6553c0c5483c12cc471756ebdd8249fe",  # freebsd_amd64
+        "9c3c0124b01b5365f73a1489649f78f971ecf84844ad9ca58fde133096ddb61b",  # darwin_amd64
+        "ebac39fd44fc22feed1bb519af431c84c55776e39b30f4fd62930da9c0cfd1e3",  # darwin_arm64
+        "424a5618406800365fe3ad96a795fb55ce394bea3ff48eaf56d292bf7a916d1e",  # freebsd_amd64
+        "999805bed7d9039ec3da1a53bfbcafc13e367da52aa823cb60b68ba22d44c616",  # linux_amd64
     ],
     architectures = SUPPORTED_ARCHS,
     strip_srcs = CONFIG.BUILD_CONFIG != "dbg",
-    version = "1.23.0",
+    version = "1.22.6",
 )
 
 go_module(
