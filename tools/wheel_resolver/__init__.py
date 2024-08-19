@@ -85,12 +85,12 @@ def main(
 
     """
     try:
-        download_output = output.get()
+        output_name = output.get()
     except output.OutputNotSetError:
         _LOGGER.error("could not get $OUTS")
         sys.exit(1)
 
-    if output.download(package_name, package_version, url, download_output):
+    if output.download(package_name, package_version, url, output_name):
         return
 
     locator = distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple")
@@ -114,10 +114,9 @@ def main(
         pypi_url = (u,)
     except Exception as error:
         _LOGGER.error(error)
-        _LOGGER.error(
-            "could not find PyPI URL for %s-%s", package_name, package_version
-        )
+        _LOGGER.error(f"could not find PyPI URL for {package_name}-{package_version}")
         sys.exit(1)
 
-    if not output.download(package_name, package_version, pypi_url, download_output):
+    if not output.download(package_name, package_version, pypi_url, output_name):
         _LOGGER.error("could not download %s-%s", package_name, package_version)
+        sys.exit(1)
