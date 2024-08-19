@@ -18,16 +18,20 @@ def get() -> str:
 
 
 def download(
-    package_name: str, package_version: str, url: typing.List[str], download_output: str
-) -> typing.Optional[str]:
+    package_name: str,
+    package_version: typing.Optional[str],
+    url: typing.Tuple[str],
+    download_output: str,
+) -> bool:
     """Download url to $OUTS."""
     for u in url:
         try:
             urllib.request.urlretrieve(u, download_output)
-        except urllib.error.HTTPError:
+        except urllib.error.HTTPError as error:
             _LOGGER.warning(
-                "%s-%s is not available in %s", package_name, package_version, u
+                f"download {package_name}-{package_version} from {u}: {error}",
             )
         else:
-            return u
-    return None
+            _LOGGER.info(f"downloaded {package_name}-{package_version} from {u}")
+            return True
+    return False

@@ -1,7 +1,6 @@
 import typing
 import distlib.locators
 import logging
-import itertools
 
 _LOGGER = logging.getLogger(__name__)
 

@@ -1,6 +1,5 @@
 import click
 import typing
-import requests
 import logging
 import click_log
 import sys
@@ -88,8 +87,11 @@ def main(
     try:
         download_output = output.get()
     except output.OutputNotSetError:
-        _LOGGER.error("Could not get $OUTS")
+        _LOGGER.error("could not get $OUTS")
         sys.exit(1)
+
+    if output.download(package_name, package_version, url, download_output):
+        return
 
     locator = distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple")
     locator.wheel_tags = list(itertools.product(interpreter, abi, platform))
@@ -109,12 +111,13 @@ def main(
             locator=locator,
             prereleases=prereleases,
         )
-        url += (u,)
-        print(url)
+        pypi_url = (u,)
     except Exception as error:
-        _LOGGER.warning(error)
+        _LOGGER.error(error)
+        _LOGGER.error(
+            "could not find PyPI URL for %s-%s", package_name, package_version
+        )
+        sys.exit(1)
 
-    origin_url = output.download(package_name, package_version, url, download_output)
-    if origin_url:
-        click.echo(f"Downloaded {package_name}-{package_version} from {origin_url}")
-        return
+    if not output.download(package_name, package_version, pypi_url, download_output):
+        _LOGGER.error("could not download %s-%s", package_name, package_version)
