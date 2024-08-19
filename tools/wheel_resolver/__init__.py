@@ -71,7 +71,7 @@ click_log.basic_config(_LOGGER)
 )
 @click_log.simple_verbosity_option(_LOGGER)
 def main(
-    url: typing.List[str],
+    url: typing.Tuple[str],
     package_name: str,
     package_version: typing.Optional[str],
     interpreter: typing.Tuple[str, ...],
@@ -85,39 +85,36 @@ def main(
     PyPI for PACKAGE with VERSION.
 
     """
-    for u in url:
-        response = requests.head(u)
-        if response.status_code != requests.codes.ok:
-            _LOGGER.warning(
-                "%s-%s is not available, tried %r", package_name, package_version, u
-            )
-        else:
-            click.echo(u)
-            return
-
-    # We're currently hardcoding PyPI but we should consider allowing other
-    # repositories
-    # TODO (tm-jdelapuente): allow downloads from other package repositories
-    locator = distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple")
-    locator.wheel_tags = list(itertools.product(interpreter, abi, platform))
-    u = wheel.url(
-        package_name=package_name,
-        package_version=package_version,
-        tags=[
-            str(x)
-            for i in interpreter
-            for x in tags.generic_tags(
-                interpreter=i,
-                abis=set(abi),
-                platforms=set(platform).union({"any"}),
-            )
-        ],
-        locator=locator,
-        prereleases=prereleases,
-    )
-
-    if not output.try_download(u):
-        _LOGGER.error("Could not download from %r", u)
+    try:
+        download_output = output.get()
+    except output.OutputNotSetError:
+        _LOGGER.error("Could not get $OUTS")
         sys.exit(1)
 
-    click.echo(u)
+    locator = distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple")
+    locator.wheel_tags = list(itertools.product(interpreter, abi, platform))
+    try:
+        u = wheel.url(
+            package_name=package_name,
+            package_version=package_version,
+            tags=[
+                str(x)
+                for i in interpreter
+                for x in tags.generic_tags(
+                    interpreter=i,
+                    abis=set(abi),
+                    platforms=set(platform).union({"any"}),
+                )
+            ],
+            locator=locator,
+            prereleases=prereleases,
+        )
+        url += (u,)
+        print(url)
+    except Exception as error:
+        _LOGGER.warning(error)
+
+    origin_url = output.download(package_name, package_version, url, download_output)
+    if origin_url:
+        click.echo(f"Downloaded {package_name}-{package_version} from {origin_url}")
+        return
