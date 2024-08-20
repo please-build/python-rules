@@ -1,6 +1,7 @@
 Version 1.7.2
 -------------
     * Allow the `name_scheme` argument to `python_wheel` to be a list instead of a single string.
+    * Update required Please version to 17.10.3 to avoid a memory consumption bug.
 
 Version 1.7.1
 -------------

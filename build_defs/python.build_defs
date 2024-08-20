@@ -516,8 +516,9 @@ _DEFAULT_WHEEL_NAME_SCHEMES = [
 def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, package_name:str=None,
                  outs:list=None, post_install_commands:list=None, patch:str|list=None, licences:list=None,
                  test_only:bool&testonly=False, repo:str=None, zip_safe:bool=True, visibility:list=None,
-                 deps:list=[], name_scheme:str|list=None, strip:list=['*.pyc', 'tests'], binary = False,
-                 entry_points={}, tool:str=CONFIG.PYTHON.WHEEL_TOOL, prereleases:bool=CONFIG.PYTHON.PRERELEASES,
+                 deps:list=[], name_scheme:str|list=CONFIG.PYTHON.WHEEL_NAME_SCHEME,
+                 strip:list=['*.pyc', 'tests'], binary = False, entry_points={},
+                 tool:str=CONFIG.PYTHON.WHEEL_TOOL, prereleases:bool=CONFIG.PYTHON.PRERELEASES,
                  tool_verbosity:str=CONFIG.PYTHON.VERBOSITY):
     """Downloads a Python wheel and extracts it.
 
@@ -570,13 +571,10 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         fail('python.wheel_repo is not set in the config, must pass repo explicitly to python_wheel')
     urls = []
     if url_base:
-        if name_scheme:
-            if isinstance(name_scheme, str):
-                name_scheme = [name_scheme]
-        elif CONFIG.PYTHON.WHEEL_NAME_SCHEME:
-            name_scheme = CONFIG.PYTHON.WHEEL_NAME_SCHEME
-        else:
+        if not name_scheme:
             name_scheme = _DEFAULT_WHEEL_NAME_SCHEMES
+        elif isinstance(name_scheme, str):
+            name_scheme = [name_scheme]
 
         urls += [
             scheme.format(url_base=url_base, package_name=package_name, initial=initial, version=version)

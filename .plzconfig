@@ -1,5 +1,5 @@
 [Please]
-Version = >=17.10.1
+Version = >=17.10.3
 
 [Build]
 hashcheckers = sha256
