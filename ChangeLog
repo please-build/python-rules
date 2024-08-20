@@ -1,3 +1,10 @@
+Version 1.7.1
+-------------
+    * Bug: change so that every URL is passed with its individual --urls flag in python_wheel (#154)
+    * Add missing licences to third party python dependencies (#155, #156)
+    * Update go-rules to v1.21.1 and build tools with Go 1.23.0 (#157)
+    * Specify default value for pip_compile_flags config option (#158)
+
 Version 1.7.0
 -------------
     * Always clean up exploded pex files when exiting the Python entry point
