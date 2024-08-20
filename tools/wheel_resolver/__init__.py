@@ -1,6 +1,5 @@
 import click
 import typing
-import requests
 import logging
 import click_log
 import sys
@@ -71,7 +70,7 @@ click_log.basic_config(_LOGGER)
 )
 @click_log.simple_verbosity_option(_LOGGER)
 def main(
-    url: typing.List[str],
+    url: typing.Tuple[str],
     package_name: str,
     package_version: typing.Optional[str],
     interpreter: typing.Tuple[str, ...],
@@ -85,39 +84,39 @@ def main(
     PyPI for PACKAGE with VERSION.
 
     """
-    for u in url:
-        response = requests.head(u)
-        if response.status_code != requests.codes.ok:
-            _LOGGER.warning(
-                "%s-%s is not available, tried %r", package_name, package_version, u
-            )
-        else:
-            click.echo(u)
-            return
-
-    # We're currently hardcoding PyPI but we should consider allowing other
-    # repositories
-    # TODO (tm-jdelapuente): allow downloads from other package repositories
-    locator = distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple")
-    locator.wheel_tags = list(itertools.product(interpreter, abi, platform))
-    u = wheel.url(
-        package_name=package_name,
-        package_version=package_version,
-        tags=[
-            str(x)
-            for i in interpreter
-            for x in tags.generic_tags(
-                interpreter=i,
-                abis=set(abi),
-                platforms=set(platform).union({"any"}),
-            )
-        ],
-        locator=locator,
-        prereleases=prereleases,
-    )
-
-    if not output.try_download(u):
-        _LOGGER.error("Could not download from %r", u)
+    try:
+        output_name = output.get()
+    except output.OutputNotSetError:
+        _LOGGER.error("could not get $OUTS")
         sys.exit(1)
 
-    click.echo(u)
+    if output.download(package_name, package_version, url, output_name):
+        return
+
+    locator = distlib.locators.SimpleScrapingLocator(url="https://pypi.org/simple")
+    locator.wheel_tags = list(itertools.product(interpreter, abi, platform))
+    try:
+        u = wheel.url(
+            package_name=package_name,
+            package_version=package_version,
+            tags=[
+                str(x)
+                for i in interpreter
+                for x in tags.generic_tags(
+                    interpreter=i,
+                    abis=set(abi),
+                    platforms=set(platform).union({"any"}),
+                )
+            ],
+            locator=locator,
+            prereleases=prereleases,
+        )
+        pypi_url = (u,)
+    except Exception as error:
+        _LOGGER.error(error)
+        _LOGGER.error(f"could not find PyPI URL for {package_name}-{package_version}")
+        sys.exit(1)
+
+    if not output.download(package_name, package_version, pypi_url, output_name):
+        _LOGGER.error("could not download %s-%s", package_name, package_version)
+        sys.exit(1)
