@@ -574,6 +574,8 @@ filegroup(
     ],
 )
 
+# Note: this package is used for //test:name_scheme_test as an example of something using a list of
+# name schemes
 python_wheel(
     name = "click",
     hashes = [],
@@ -582,6 +584,8 @@ python_wheel(
     deps = [],
 )
 
+# Note: this package is used for //test:name_scheme_test as an example of something using a single
+# string name scheme.
 python_wheel(
     name = "click-log",
     package_name = "click_log",
