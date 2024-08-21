@@ -182,3 +182,17 @@ plz_e2e_test(
     labels = ["py3"],
     deps = ["//third_party/python:grpcio"],
 )
+
+# Test that python_wheel targets can have name_scheme as a list or a string
+
+python_test(
+    name = "name_scheme_test",
+    srcs = ["name_scheme_test.py"],
+    labels = [
+        "py3",
+    ],
+    deps = [
+        "//third_party/python:click",
+        "//third_party/python:click-log",
+    ],
+)
