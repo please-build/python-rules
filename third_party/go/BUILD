@@ -8,9 +8,18 @@ go_toolchain(
         "424a5618406800365fe3ad96a795fb55ce394bea3ff48eaf56d292bf7a916d1e",  # freebsd_amd64
         "999805bed7d9039ec3da1a53bfbcafc13e367da52aa823cb60b68ba22d44c616",  # linux_amd64
     ],
+    install_std = False,
     architectures = SUPPORTED_ARCHS,
     strip_srcs = CONFIG.BUILD_CONFIG != "dbg",
     version = "1.22.6",
+)
+
+go_stdlib(
+    name = "std",
+    tags = [
+        "netgo",
+        "osusergo",
+    ],
 )
 
 go_module(
