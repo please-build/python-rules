@@ -1,6 +1,7 @@
 Version 1.7.3
 -------------
     * Updated xmlrunner package
+	* Specify default value for `pip_compile_flags` config option (#158)
 
 Version 1.7.2
 -------------
