@@ -10,7 +10,6 @@ go_toolchain(
     ],
     install_std = False,
     architectures = SUPPORTED_ARCHS,
-    strip_srcs = CONFIG.BUILD_CONFIG != "dbg",
     version = "1.22.6",
 )
 
@@ -22,119 +21,47 @@ go_stdlib(
     ],
 )
 
-go_module(
-    name = "go-logging.v1",
-    licences = ["BSD-3-Clause"],
+go_repo(
     module = "gopkg.in/op/go-logging.v1",
     version = "v1.0.0-20160211212156-b2cb9fa56473",
-    visibility = ["PUBLIC"],
 )
 
-go_module(
-    name = "testify",
-    install = [
-        "assert",
-        "require",
-    ],
-    licences = ["MIT"],
+go_repo(
     module = "github.com/stretchr/testify",
-    version = "v1.7.0",
-    visibility = ["PUBLIC"],
-    deps = [
-        ":difflib",
-        ":spew",
-        ":yaml",
-    ],
+    version = "v1.9.0",
 )
 
-go_module(
-    name = "difflib",
-    install = ["difflib"],
-    licences = ["BSD-3-Clause"],
+go_repo(
     module = "github.com/pmezard/go-difflib",
     version = "v1.0.0",
-    visibility = ["PUBLIC"],
 )
 
-go_module(
-    name = "spew",
-    install = ["spew"],
-    licences = ["ISC"],
+go_repo(
     module = "github.com/davecgh/go-spew",
-    patch = "spew_omit_empty.patch",
     version = "v1.1.1",
-    visibility = ["PUBLIC"],
 )
 
-go_module(
-    name = "yaml",
-    licences = ["MIT"],
-    module = "gopkg.in/yaml.v3",
-    version = "v3.0.0-20210107192922-496545a6307b",
-    visibility = ["PUBLIC"],
-)
-
-go_module(
-    name = "cli-init",
-    install = ["..."],
+go_repo(
     module = "github.com/peterebden/go-cli-init/v5",
-    version = "v5.1.0",
-    licences = ["Apache-2.0"],
-    visibility = ["PUBLIC"],
-    deps = [
-        ":go-flags",
-        ":go-logging.v1",
-        ":humanize",
-        ":xcrypto",
-    ],
+    version = "v5.2.1",
 )
 
-go_module(
-    name = "go-flags",
-    licences = ["BSD-3-Clause"],
+go_repo(
     module = "github.com/thought-machine/go-flags",
-    version = "v1.6.0",
-    visibility = ["PUBLIC"],
-    deps = [":xsys"],
+    version = "v1.6.3",
 )
 
-go_module(
-    name = "humanize",
-    licences = ["MIT"],
-    module = "github.com/dustin/go-humanize",
-    version = "v1.0.0",
-    visibility = ["PUBLIC"],
-)
-
-go_module(
-    name = "xcrypto",
-    install = [
-        "cast5",
-        "curve25519",
-        "curve25519/internal/field",
-        "ed25519",
-        "ssh/terminal",
-    ],
-    licences = ["BSD-3-Clause"],
-    module = "golang.org/x/crypto",
-    version = "v0.0.0-20210920023735-84f357641f63",
-    visibility = ["PUBLIC"],
-    deps = [":xterm"],
-)
-
-go_module(
-    name = "xterm",
-    licences = ["BSD-3-Clause"],
+go_repo(
     module = "golang.org/x/term",
-    version = "v0.0.0-20210615171337-6886f2dfbf5b",
-    visibility = ["PUBLIC"],
-    deps = [":xsys"],
+    version = "v0.18.0",
 )
 
-go_module(
-    name = "xsys",
-    install = ["..."],
+go_repo(
     module = "golang.org/x/sys",
-    licences = ["BSD-3-Clause"],
-    version = "v0.0.0-20210823070655-63515b42dcdf",
+    version = "v0.20.0",
+)
+
+go_repo(
+    module = "github.com/dustin/go-humanize",
+    version = "v1.0.1",
 )
