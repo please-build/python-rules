@@ -65,3 +65,8 @@ go_repo(
     module = "github.com/dustin/go-humanize",
     version = "v1.0.1",
 )
+
+go_repo(
+    module = "gopkg.in/yaml.v3",
+    version = "v3.0.1",
+)
