@@ -1,3 +1,8 @@
+Version 1.7.3
+-------------
+    * Updated xmlrunner package
+	* Specify default value for `pip_compile_flags` config option (#158)
+
 Version 1.7.2
 -------------
     * Allow the `name_scheme` argument to `python_wheel` to be a list instead of a single string.
