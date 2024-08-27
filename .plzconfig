@@ -10,9 +10,8 @@ PreloadBuildDefs = test/build_defs/test.build_defs
 [Plugin "go"]
 Target = //plugins:go
 ImportPath = github.com/please-build/python-rules
-; embedtool = //tools/please_go_embed
 gotool = //third_party/go:toolchain|go
-
+Stdlib = //third_party/go:std
 
 [Plugin "python"]
 DisableVendorFlags = true

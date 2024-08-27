@@ -7,8 +7,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	// "io/ioutil"
-	// "io/fs"
 	"os"
 	"path"
 	"path/filepath"
