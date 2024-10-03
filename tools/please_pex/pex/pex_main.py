@@ -250,10 +250,9 @@ class ModuleDirImport(MetaPathFinder):
                         if name and self._match_file(name, ""):
                             return True
 
-        if context.name in sys.modules:
-            distribution = PexDistribution(context.name)
-            if distribution._has_distribution():
-                yield distribution
+        distribution = PexDistribution(context.name)
+        if distribution._has_distribution():
+            yield distribution
 
     def get_code(self, fullname):
         module = self.load_module(fullname)
