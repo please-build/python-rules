@@ -2,9 +2,11 @@
 
 from importlib import import_module
 from importlib.abc import MetaPathFinder
+from importlib.metadata import Distribution
 from importlib.util import spec_from_loader
 from zipfile import ZipFile, ZipInfo, is_zipfile
 import os
+import re
 import runpy
 import sys
 
@@ -210,55 +212,48 @@ class ModuleDirImport(MetaPathFinder):
         loading the metadata for packages for the indicated ``context``.
         """
 
-        try:
-            from importlib_metadata import Distribution
-            import re
-        except:
-            pass
-        else:
+        class PexDistribution(Distribution):
+            template = r"{path}(-.*)?\.(dist|egg)-info/{filename}"
 
-            class PexDistribution(Distribution):
-                template = r"{path}(-.*)?\.(dist|egg)-info/{filename}"
+            def __init__(self, name, prefix=MODULE_DIR):
+                """Construct a distribution for a pex file to the metadata directory.
 
-                def __init__(self, name, prefix=MODULE_DIR):
-                    """Construct a distribution for a pex file to the metadata directory.
+                :param name: A module name
+                :param prefix: Modules prefix
+                """
+                self._name = name
+                self._prefix = prefix
 
-                    :param name: A module name
-                    :param prefix: Modules prefix
-                    """
-                    self._name = name
-                    self._prefix = prefix
+            def _match_file(self, name, filename):
+                if re.match(
+                    self.template.format(
+                        path=os.path.join(self._prefix, self._name),
+                        filename=filename,
+                    ),
+                    name,
+                ):
+                    return name
 
-                def _match_file(self, name, filename):
-                    if re.match(
-                        self.template.format(
-                            path=os.path.join(self._prefix, self._name),
-                            filename=filename,
-                        ),
-                        name,
-                    ):
-                        return name
+            def read_text(self, filename):
+                if is_zipfile(sys.argv[0]):
+                    zf = ZipFileWithPermissions(sys.argv[0])
+                    for name in zf.namelist():
+                        if name and self._match_file(name, filename):
+                            return zf.read(name).decode(encoding="utf-8")
 
-                def read_text(self, filename):
-                    if is_zipfile(sys.argv[0]):
-                        zf = ZipFileWithPermissions(sys.argv[0])
-                        for name in zf.namelist():
-                            if name and self._match_file(name, filename):
-                                return zf.read(name).decode(encoding="utf-8")
+            read_text.__doc__ = Distribution.read_text.__doc__
 
-                read_text.__doc__ = Distribution.read_text.__doc__
+            def _has_distribution(self):
+                if is_zipfile(sys.argv[0]):
+                    zf = ZipFileWithPermissions(sys.argv[0])
+                    for name in zf.namelist():
+                        if name and self._match_file(name, ""):
+                            return True
 
-                def _has_distribution(self):
-                    if is_zipfile(sys.argv[0]):
-                        zf = ZipFileWithPermissions(sys.argv[0])
-                        for name in zf.namelist():
-                            if name and self._match_file(name, ""):
-                                return True
-
-            if context.name in sys.modules:
-                distribution = PexDistribution(context.name)
-                if distribution._has_distribution():
-                    yield distribution
+        if context.name in sys.modules:
+            distribution = PexDistribution(context.name)
+            if distribution._has_distribution():
+                yield distribution
 
     def get_code(self, fullname):
         module = self.load_module(fullname)
