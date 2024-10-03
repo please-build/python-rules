@@ -21,8 +21,6 @@ class PythonCoverageTest(unittest.TestCase):
         import coverage
         self.assertIsNotNone(coverage)
 
-    @unittest.skipIf(sys.version_info.major < 3,
-                     'Not working on python2 as python2 does not support multi-version-wheels')
     def test_can_import_tracer(self):
         """Test we can import the binary tracer module."""
         from coverage import tracer
