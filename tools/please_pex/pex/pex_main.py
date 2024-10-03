@@ -1,6 +1,6 @@
 """Zipfile entry point which supports auto-extracting itself based on zip-safety."""
 
-from importlib import import_module
+from importlib import import_module, machinery
 from importlib.abc import MetaPathFinder
 from importlib.metadata import Distribution
 from importlib.util import spec_from_loader
@@ -9,48 +9,6 @@ import os
 import re
 import runpy
 import sys
-
-
-PY_VERSION = sys.version_info
-
-if PY_VERSION.major >= 3:
-    from importlib import machinery
-else:
-    import imp
-
-if PY_VERSION >= (3, 2):
-    from os import makedirs
-else:
-    # backported from cpython 3.8
-    def makedirs(name, mode=0o777, exist_ok=False):
-        """makedirs(name [, mode=0o777][, exist_ok=False])
-        Super-mkdir; create a leaf directory and all intermediate ones.  Works like
-        mkdir, except that any intermediate path segment (not just the rightmost)
-        will be created if it does not exist. If the target directory already
-        exists, raise an OSError if exist_ok is False. Otherwise no exception is
-        raised.  This is recursive.
-        """
-        head, tail = os.path.split(name)
-        if not tail:
-            head, tail = os.path.split(head)
-        if head and tail and not os.path.exists(head):
-            try:
-                makedirs(head, exist_ok=exist_ok)
-            except FileExistsError:
-                # Defeats race condition when another thread created the path
-                pass
-            cdir = curdir
-            if isinstance(tail, bytes):
-                cdir = bytes(curdir, "ASCII")
-            if tail == cdir:  # xxx/newdir/. exists if xxx/newdir exists
-                return
-        try:
-            os.mkdir(name, mode)
-        except OSError:
-            # Cannot rely on checking for EEXIST, since the operating system
-            # could give priority to other errors like EACCES or EROFS
-            if not exist_ok or not os.path.isdir(name):
-                raise
 
 
 try:
@@ -117,12 +75,7 @@ class SoImport(MetaPathFinder):
     """So import. Much binary. Such dynamic. Wow."""
 
     def __init__(self):
-
-        if PY_VERSION.major < 3:
-            self.suffixes = {x[0]: x for x in imp.get_suffixes() if x[2] == imp.C_EXTENSION}
-        else:
-            self.suffixes = machinery.EXTENSION_SUFFIXES  # list, as importlib will not be using the file description
-
+        self.suffixes = machinery.EXTENSION_SUFFIXES  # list, as importlib will not be using the file description
         self.suffixes_by_length = sorted(self.suffixes, key=lambda x: -len(x))
         # Identify all the possible modules we could handle.
         self.modules = {}
@@ -161,11 +114,7 @@ class SoImport(MetaPathFinder):
         with tempfile.NamedTemporaryFile(suffix=ext, prefix=os.path.basename(prefix)) as f:
             f.write(self.zf.read(filename))
             f.flush()
-            if PY_VERSION.major < 3:
-                suffix = self.suffixes[ext]
-                mod = imp.load_module(fullname, None, f.name, suffix)
-            else:
-                mod = machinery.ExtensionFileLoader(fullname, f.name).load_module()
+            mod = machinery.ExtensionFileLoader(fullname, f.name).load_module()
         # Make it look like module came from the original location for nicer tracebacks.
         mod.__file__ = filename
         return mod
@@ -315,12 +264,12 @@ def explode_zip():
         global PEX_PATH
 
         PEX_PATH, basepath, uniquedir, no_cache = pex_paths()
-        makedirs(basepath, exist_ok=True)
+        os.makedirs(basepath, exist_ok=True)
         with pex_lockfile(basepath, uniquedir) as lockfile:
             if len(lockfile.read()) == 0:
                 import compileall, zipfile
 
-                makedirs(PEX_PATH, exist_ok=True)
+                os.makedirs(PEX_PATH, exist_ok=True)
                 with ZipFileWithPermissions(PEX, "r") as zf:
                     zf.extractall(PEX_PATH)
 
