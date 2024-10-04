@@ -5,6 +5,7 @@ from importlib.abc import MetaPathFinder
 from importlib.metadata import Distribution
 from importlib.util import spec_from_loader
 from zipfile import ZipFile, ZipInfo, is_zipfile
+import itertools
 import os
 import re
 import runpy
@@ -127,6 +128,36 @@ class SoImport(MetaPathFinder):
         return None, None
 
 
+class PexDistribution(Distribution):
+    """Represents a distribution package that exists within a pex file (which is, ultimately, a zip
+    file). Distribution packages are identified by the presence of a suitable dist-info or egg-info
+    directory member inside the pex file, which need not necessarily exist at the top level if a
+    directory prefix is specified in the constructor.
+    """
+    def __init__(self, name, pex_file, prefix):
+        self._name = name
+        self._pex_file = pex_file
+        self._prefix = prefix
+
+    def _match_file(self, name, filename):
+        if re.match(
+            r"{path}(?:-.*)?\.(?:dist|egg)-info/{filename}".format(
+                path=os.path.join(self._prefix, self._name) if self._prefix else self._name,
+                filename=filename,
+            ),
+            name,
+        ):
+            return name
+
+    def read_text(self, filename):
+        zf = ZipFileWithPermissions(self._pex_file)
+        for name in zf.namelist():
+            if name and self._match_file(name, filename):
+                return zf.read(name).decode(encoding="utf-8")
+
+    read_text.__doc__ = Distribution.read_text.__doc__
+
+
 class ModuleDirImport(MetaPathFinder):
     """Handles imports to a directory equivalently to them being at the top level.
 
@@ -134,9 +165,25 @@ class ModuleDirImport(MetaPathFinder):
     but becomes accessible under both names. This handles both the fully-qualified import names
     and packages importing as their expected top-level names internally.
     """
-
     def __init__(self, module_dir=MODULE_DIR):
-        self.prefix = module_dir.replace('/', '.') + '.'
+        self.prefix = module_dir.replace("/", ".") + "."
+        self._distributions = self._find_all_distributions(module_dir)
+
+    def _find_all_distributions(self, module_dir):
+        dists = {}
+        if is_zipfile(sys.argv[0]):
+            zf = ZipFileWithPermissions(sys.argv[0])
+            for name in zf.namelist():
+                if name and (m := re.search(
+                    r"{module_dir}(?P<name>[^/]+?)-[^/-]+?\.(?:dist|egg)-info/$".format(
+                        module_dir=module_dir + os.sep,
+                    ),
+                    name,
+                )):
+                    dists.setdefault(m.group("name"), []).append(
+                        PexDistribution(m.group("name"), sys.argv[0], prefix=module_dir)
+                    )
+        return dists
 
     def find_spec(self, name, path, target=None):
         """Implements abc.MetaPathFinder."""
@@ -160,48 +207,10 @@ class ModuleDirImport(MetaPathFinder):
         """Return an iterable of all Distribution instances capable of
         loading the metadata for packages for the indicated ``context``.
         """
-
-        class PexDistribution(Distribution):
-            template = r"{path}(-.*)?\.(dist|egg)-info/{filename}"
-
-            def __init__(self, name, prefix=MODULE_DIR):
-                """Construct a distribution for a pex file to the metadata directory.
-
-                :param name: A module name
-                :param prefix: Modules prefix
-                """
-                self._name = name
-                self._prefix = prefix
-
-            def _match_file(self, name, filename):
-                if re.match(
-                    self.template.format(
-                        path=os.path.join(self._prefix, self._name),
-                        filename=filename,
-                    ),
-                    name,
-                ):
-                    return name
-
-            def read_text(self, filename):
-                if is_zipfile(sys.argv[0]):
-                    zf = ZipFileWithPermissions(sys.argv[0])
-                    for name in zf.namelist():
-                        if name and self._match_file(name, filename):
-                            return zf.read(name).decode(encoding="utf-8")
-
-            read_text.__doc__ = Distribution.read_text.__doc__
-
-            def _has_distribution(self):
-                if is_zipfile(sys.argv[0]):
-                    zf = ZipFileWithPermissions(sys.argv[0])
-                    for name in zf.namelist():
-                        if name and self._match_file(name, ""):
-                            return True
-
-        distribution = PexDistribution(context.name)
-        if distribution._has_distribution():
-            yield distribution
+        if context.name:
+            return self._distributions.get(context.name, [])
+        else:
+            return itertools.chain(self._distributions.values())
 
     def get_code(self, fullname):
         module = self.load_module(fullname)
