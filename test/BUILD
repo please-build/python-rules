@@ -196,3 +196,11 @@ python_test(
         "//third_party/python:click-log",
     ],
 )
+
+python_test(
+    name = "distribution_metadata_test",
+    srcs = ["distribution_metadata_test.py"],
+    deps = [
+        "//third_party/python:pygments",
+    ],
+)
