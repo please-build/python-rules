@@ -2,15 +2,19 @@ name: Python rules
 on: [push, pull_request]
 jobs:
   test:
+    name: Test (Python ${{ matrix.python-version }}, ${{ matrix.pex-tool }} pex tool)
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
-          - python-version: '3.8'
-          - python-version: '3.9'
-          - python-version: '3.10'
-          - python-version: '3.11'
-          - python-version: '3.12'
+        python-version:
+          - '3.8'
+          - '3.9'
+          - '3.10'
+          - '3.11'
+          - '3.12'
+        pex-tool:
+          - default
+          - in-repo
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -20,6 +24,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Set profile
         run: export PLZ_CONFIG_PROFILE=ci && echo $PATH
+      - name: Build and use in-repo pex tool
+        if: matrix.pex-tool == 'in-repo'
+        run: |
+          ./pleasew build //tools/please_pex
+          cp $(./pleasew query outputs //tools/please_pex) $HOME/please_pex
+          echo "PLZ_ARGS=-o plugin.python.pextool:$HOME/please_pex" >> $GITHUB_ENV
       - name: Run tests
         run: ./pleasew test --log_file plz-out/log/test.log -e e2e
       - name: Run e2e test
@@ -28,7 +38,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logs-${{ matrix.python-version }}
+          name: logs-${{ matrix.python-version }}-please_pex-${{ matrix.pex-tool }}
           path: plz-out/log
   release:
     needs: [test]
