@@ -574,6 +574,27 @@ filegroup(
     ],
 )
 
+# Note: this is used by //test:distribution_metadata_test as an example of a module that contains
+# distribution metadata. The importlib.metadata API should be able to identify the version of the
+# module from the contents of its .dist-info directory. The choice of module isn't that important,
+# and is fairly arbitrary - it just happens to be widely-used, written in pure Python, and has no
+# dependencies.
+
+python_wheel(
+    name = "pygments",
+    outs = [
+        "pygments",
+        "pygments-2.18.0.dist-info",
+    ],
+    hashes = ["b8e6aca0523f3ab76fee51799c488e38782ac06eafcf95e7ba832985c8e7b13a"],
+    licences = ["BSD-2-Clause"],
+    test_only = True,
+    version = "2.18.0",
+    visibility = [
+        "//test:distribution_metadata_test",
+    ],
+)
+
 # Note: this package is used for //test:name_scheme_test as an example of something using a list of
 # name schemes
 python_wheel(

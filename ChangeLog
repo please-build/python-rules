@@ -1,3 +1,8 @@
+Version 1.7.4
+-------------
+    * Remove stealth dependency on importlib-metadata in pex meta path finder (#176)
+    * Load distribution metadata for unimported modules in pex meta path finder (#178, #184)
+
 Version 1.7.3
 -------------
     * Updated xmlrunner package
