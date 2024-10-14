@@ -47,11 +47,7 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
     if srcs or resources:
         cmd = '$TOOLS_ARCAT z -d -o ${OUTS} -i .'
         if srcs:
-            # This is a bit of a hack, but rather annoying. We want to put bytecode in its 'legacy' location
-            # in python3 because zipimport doesn't look in __pycache__. Unfortunately the flag doesn't exist
-            # in python2 so we have to guess whether we should apply it or not.
-            bytecode_flag = '-b' if 'python3' in interpreter or 'pypy3' in interpreter else ''
-            compile_cmd = f'$TOOLS_INT -S -m compileall {bytecode_flag} -f $SRCS_SRCS'
+            compile_cmd = f'$TOOLS_INT -S -m compileall -b -f $SRCS_SRCS'
             if strip:
                 cmd = ' && '.join([compile_cmd, 'rm -f $SRCS_SRCS', cmd])
             else:
