@@ -204,3 +204,9 @@ python_test(
         "//third_party/python:pygments",
     ],
 )
+
+# This test need only run in the GitHub Actions workflow - it is skipped outside this environment.
+python_test(
+    name = "ci_test",
+    srcs = ["ci_test.py"],
+)
