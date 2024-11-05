@@ -441,11 +441,10 @@ pip_library(
     name = "scipy",
     test_only = True,
     licences = ["BSD-3-Clause"],
-    version = "1.9.2",
+    version = "1.14.1",
     zip_safe = False,
     deps = [
         ":numpy",
-        ":setuptools",
     ],
 )
 
