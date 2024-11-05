@@ -316,7 +316,7 @@ pip_library(
     name = "numpy",
     test_only = True,
     licences = ["BSD-3-Clause"],
-    version = "1.23.4",
+    version = "2.1.3",
     zip_safe = False,
 )
 
