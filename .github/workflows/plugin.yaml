@@ -5,6 +5,7 @@ jobs:
     name: Test (Python ${{ matrix.python-version }}, ${{ matrix.pex-tool }} pex tool)
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version:
           - '3.9'
