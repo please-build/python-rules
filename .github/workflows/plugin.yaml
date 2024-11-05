@@ -24,9 +24,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Use this Python in Please build environments
         run: |
-          echo "$PATH"
           echo "CI_PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
-          echo "PLZ_ARGS=-o build.passenv:PATH -o build.passenv:CI_PYTHON_VERSION" >> $GITHUB_ENV
+          echo "PLZ_ARGS=-o plugin.python.defaultinterpreter:$(which python3) -o build.passenv:CI_PYTHON_VERSION" >> $GITHUB_ENV
       - name: Build and use in-repo pex tool
         if: matrix.pex-tool == 'in-repo'
         run: |
