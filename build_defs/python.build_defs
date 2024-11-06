@@ -315,7 +315,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 
     deps = [pex_rule, lib_rule]
 
-    test_cmd = f'$TOOL $TEST {flags}'
+    test_cmd = f'$TOOL $TEST {flags}' if site else f'$TOOL -S $TEST {flags}'
     worker_cmd = f'$(worker {worker})' if worker else ""
     if worker_cmd:
         test_cmd = f'{worker_cmd} && {test_cmd} '
