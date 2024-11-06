@@ -1,0 +1,3 @@
+[plugin "python"]
+defaultinterpreter = //third_party/cpython:cpython|python
+defaultshebang = /usr/bin/python3 -S

@@ -91,7 +91,7 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
 def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=None, deps:list=[],
                   data:list=None, visibility:list=None, test_only:bool=False, zip_safe:bool=None,
                   site:bool=False, strip:bool=False, interpreter:str=CONFIG.PYTHON.DEFAULT_INTERPRETER,
-                  shebang:str='', labels:list&features&tags=[]):
+                  shebang:str=CONFIG.PYTHON.DEFAULT_SHEBANG, labels:list&features&tags=[]):
     """Generates a Python binary target.
 
     This compiles all source files together into a single .pex file which can
@@ -311,7 +311,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 
     deps = [pex_rule, lib_rule]
 
-    test_cmd = f'$TEST {flags}'
+    test_cmd = f'$TOOL $TEST {flags}'
     worker_cmd = f'$(worker {worker})' if worker else ""
     if worker_cmd:
         test_cmd = f'{worker_cmd} && {test_cmd} '
@@ -329,12 +329,6 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         data['_srcs'] = srcs
     else:
         data.extend(srcs)
-
-    if looks_like_build_label(interpreter):
-        if isinstance(data, dict):
-            data['_interpreter'] = interpreter
-        else:
-            data.append(interpreter)
 
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
     return build_rule(
@@ -361,6 +355,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         test_outputs=test_outputs,
         requires=['py', 'test', interpreter],
         tools=[CONFIG.ARCAT_TOOL],
+        test_tools = [interpreter],
     )
 
 
