@@ -4,6 +4,7 @@ release = "20241016"
 remote_file(
     name = "download",
     url = f"https://github.com/indygreg/python-build-standalone/releases/download/{release}/cpython-{version}+{release}-x86_64_v2-unknown-linux-gnu-pgo+lto-full.tar.zst",
+    hashes = ["98f64550d63fa2f5468b28482b1fed8aef33a70d81f1549b7a8be1a59db41d98"],
 )
 
 genrule(
