@@ -313,42 +313,12 @@ python_wheel(
 )
 
 pip_library(
-    name = "numpy",
+    name = "pyyaml",
+    package_name = "PyYAML",
     test_only = True,
-    licences = ["BSD-3-Clause"],
-    version = "1.23.4",
+    licences = ["MIT"],
+    version = "6.0.2",
     zip_safe = False,
-)
-
-pip_library(
-    name = "keras_applications",
-    test_only = True,
-    licences = ["MIT"],
-    version = "1.0.8",
-    deps = [
-        ":h5py",
-    ],
-)
-
-pip_library(
-    name = "opt_einsum",
-    test_only = True,
-    licences = ["MIT"],
-    version = "3.2.1",
-    deps = [
-        ":numpy",
-    ],
-)
-
-pip_library(
-    name = "keras_preprocessing",
-    test_only = True,
-    licences = ["MIT"],
-    version = "1.1.0",
-    deps = [
-        ":numpy",
-        ":six",
-    ],
 )
 
 pip_library(
@@ -400,53 +370,10 @@ pip_library(
 )
 
 pip_library(
-    name = "h5py",
-    test_only = True,
-    licences = ["BSD-3-Clause"],
-    version = "3.7.0",
-    deps = [
-        ":numpy",
-        ":six",
-    ],
-)
-
-pip_library(
-    name = "pytz",
-    test_only = True,
-    licences = ["MIT"],
-    version = "2018.4",
-)
-
-pip_library(
-    name = "pandas",
-    test_only = True,
-    licences = ["BSD-3-Clause"],
-    version = "1.5.0",
-    deps = [
-        ":dateutil",
-        ":numpy",
-        ":pytz",
-        ":six",
-    ],
-)
-
-pip_library(
     name = "setuptools",
     test_only = True,
     licences = ["MIT"],
     version = "47.1.1",
-)
-
-pip_library(
-    name = "scipy",
-    test_only = True,
-    licences = ["BSD-3-Clause"],
-    version = "1.9.2",
-    zip_safe = False,
-    deps = [
-        ":numpy",
-        ":setuptools",
-    ],
 )
 
 pip_library(
