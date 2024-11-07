@@ -155,6 +155,9 @@ class PexDistribution(Distribution):
             if name and self._match_file(name, filename):
                 return zf.read(name).decode(encoding="utf-8")
 
+    def locate_file(self, path):
+        raise RuntimeError("This distribution has no real file system")
+
     read_text.__doc__ = Distribution.read_text.__doc__
 
 
