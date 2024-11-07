@@ -108,16 +108,6 @@ python_test(
 )
 
 python_test(
-    name = "numpy_test",
-    srcs = ["numpy_test.py"],
-    labels = [
-        "py3",
-        "pip",
-    ],
-    deps = ["//third_party/python:numpy"],
-)
-
-python_test(
     name = "namespaced_packages_test",
     srcs = ["namespaced_packages_test.py"],
     labels = [
@@ -128,26 +118,6 @@ python_test(
         "//third_party/python:googleapis_common_protos",
         "//third_party/python:protobuf_pip",
     ],
-)
-
-python_test(
-    name = "pandas_test",
-    srcs = ["pandas_test.py"],
-    labels = [
-        "py3",
-        "pip",
-    ],
-    deps = ["//third_party/python:pandas"],
-)
-
-python_test(
-    name = "scipy_test",
-    srcs = ["scipy_test.py"],
-    labels = [
-        "py3",
-        "pip",
-    ],
-    deps = ["//third_party/python:scipy"],
 )
 
 python_test(
@@ -169,10 +139,10 @@ python_test(
 
 plz_e2e_test(
     name = "correct_labels_on_pip_libary_non_zip_safe",
-    cmd = "plz query print -f labels //third_party/python:numpy",
-    expected_output = "expected_labels_on_numpy.txt",
+    cmd = "plz query print -f labels //third_party/python:pyyaml",
+    expected_output = "expected_labels_on_pyyaml.txt",
     labels = ["py3"],
-    deps = ["//third_party/python:numpy"],
+    deps = ["//third_party/python:pyyaml"],
 )
 
 plz_e2e_test(
