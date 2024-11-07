@@ -90,10 +90,10 @@ python_wheel(
 
 python_wheel(
     name = "urllib3",
-    hashes = ["2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc"],
+    hashes = ["0ed14ccfbf1c30a9072c7ca157e4319b70d65f623e91e7b32fadb2853431016e"],
     licences = ["MIT"],
     test_only = True,
-    version = "1.25.8",
+    version = "1.26.20",
 )
 
 python_wheel(
