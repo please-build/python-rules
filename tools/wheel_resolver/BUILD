@@ -21,7 +21,6 @@ python_library(
         "//third_party/python:click-log",
         "//third_party/python:distlib",
         "//third_party/python:packaging",
-        "//third_party/python:requests",
     ],
 )
 

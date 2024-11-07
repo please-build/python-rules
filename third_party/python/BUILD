@@ -53,8 +53,9 @@ python_wheel(
     hashes = [
         "43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee",
     ],
-    version = "2.23.0",
     licences = ["Apache-2.0"],
+    test_only = True,
+    version = "2.23.0",
     deps = [
         ":certifi",
         ":chardet",
@@ -67,6 +68,7 @@ python_wheel(
     name = "certifi",
     licences = ["MPL-2.0"],
     hashes = ["017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3"],
+    test_only = True,
     version = "2019.11.28",
 )
 
@@ -74,6 +76,7 @@ python_wheel(
     name = "chardet",
     hashes = ["fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"],
     licences = ["LGPL-2.1-only"],
+    test_only = True,
     version = "3.0.4",
 )
 
@@ -81,6 +84,7 @@ python_wheel(
     name = "idna",
     hashes = ["a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"],
     licences = ["BSD-3-Clause"],
+    test_only = True,
     version = "2.9",
 )
 
@@ -88,6 +92,7 @@ python_wheel(
     name = "urllib3",
     hashes = ["2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc"],
     licences = ["MIT"],
+    test_only = True,
     version = "1.25.8",
 )
 
