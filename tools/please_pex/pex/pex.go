@@ -126,7 +126,6 @@ func (pw *Writer) SetTest(srcs []string, testRunner string, addTestRunnerDeps bo
 		// These are the outputs of //third_party/python:unittest_bootstrap and its transitive dependencies
 		// (except for those from //third_party/python:test_bootstrap).
 		testRunnerDeps = append(testRunnerDeps,
-			".bootstrap/six.py",
 			".bootstrap/xmlrunner",
 		)
 		pw.testRunner = filepath.Join(testRunnersDir, "unittest.py")
