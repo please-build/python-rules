@@ -117,37 +117,52 @@ python_wheel(
     deps = [":six"],
 )
 
-_coverage_version = "7.5.0"
+_coverage_version = "7.6.4"
 
-_coverage_soabis = [
-    "cp38",
-    "cp39",
-    "cp310",
-    "cp311",
-    "cp312",
-]
+_coverage_soabis = {
+    "linux_amd64": {
+        "manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64": [
+            "cp39",
+            "cp310",
+            "cp311",
+            "cp312",
+            "cp313",
+        ],
+    },
+    "darwin_amd64": {
+        "macosx_10_9_x86_64": [
+            "cp39",
+            "cp310",
+            "cp311",
+        ],
+        "macosx_10_13_x86_64": [
+            "cp312",
+            "cp313",
+        ],
+    },
+}
 
 if is_platform(
     arch = "amd64",
     os = "linux",
 ):
-    _coverage_arch = "manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64"
     _coverage_urls = [
-        f"https://files.pythonhosted.org/packages/{s}/c/coverage/coverage-{_coverage_version}-{s}-{s}-{_coverage_arch}.whl"
-        for s in _coverage_soabis
+        f"https://files.pythonhosted.org/packages/{abi}/c/coverage/coverage-{_coverage_version}-{abi}-{abi}-{arch}.whl"
+        for arch, abis in _coverage_soabis["linux_amd64"].items()
+        for abi in abis
     ]
 elif is_platform(
     arch = "amd64",
     os = "darwin",
 ):
-    _coverage_arch = "macosx_10_9_x86_64"
     _coverage_urls = [
-        f"https://files.pythonhosted.org/packages/{s}/c/coverage/coverage-{_coverage_version}-{s}-{s}-{_coverage_arch}.whl"
-        for s in _coverage_soabis
+        f"https://files.pythonhosted.org/packages/{abi}/c/coverage/coverage-{_coverage_version}-{abi}-{abi}-{arch}.whl"
+        for arch, abis in _coverage_soabis["darwin_amd64"].items()
+        for abi in abis
     ]
 else:
     _coverage_urls = [
-        f"https://files.pythonhosted.org/packages/pp38.pp39.pp310/c/coverage/coverage-{_coverage_version}-pp38.pp39.pp310-none-any.whl",
+        f"https://files.pythonhosted.org/packages/pp38.pp39.pp310/c/coverage/coverage-{_coverage_version}-pp39.pp310-none-any.whl",
     ]
 
 python_multiversion_wheel(
