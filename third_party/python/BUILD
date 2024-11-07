@@ -36,9 +36,8 @@ python_wheel(
 python_wheel(
     name = "xmlrunner",
     package_name = "unittest_xml_reporting",
-    licences = ["BSD"],
+    licences = ["BSD-2-Clause"],
     version = "3.2.0",
-    deps = [":six"],
 )
 
 python_wheel(
