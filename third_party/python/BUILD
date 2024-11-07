@@ -45,8 +45,8 @@ python_wheel(
     name = "six",
     outs = ["six.py"],
     licences = ["MIT"],
-    hashes = ["8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"],
-    version = "1.14.0",
+    hashes = ["8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"],
+    version = "1.16.0",
 )
 
 python_wheel(
