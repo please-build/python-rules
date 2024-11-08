@@ -123,55 +123,59 @@ python_wheel(
 
 _coverage_version = "7.6.4"
 
-_coverage_soabis = {
-    "linux_amd64": {
-        "manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64": [
-            "cp39",
-            "cp310",
-            "cp311",
-            "cp312",
-            "cp313",
-        ],
-    },
+_coverage_tags = {
     "darwin_amd64": {
         "macosx_10_9_x86_64": [
-            "cp39",
-            "cp310",
-            "cp311",
+            ["cp39", "cp39"],
+            ["cp310", "cp310"],
+            ["cp311", "cp311"],
         ],
         "macosx_10_13_x86_64": [
-            "cp312",
-            "cp313",
+            ["cp312", "cp312"],
+            ["cp313", "cp313"],
+        ],
+    },
+    "darwin_arm64": {
+        "macosx_11_0_arm64": [
+            ["cp39", "cp39"],
+            ["cp310", "cp310"],
+            ["cp311", "cp311"],
+            ["cp312", "cp312"],
+            ["cp313", "cp313"],
+        ],
+    },
+    "linux_amd64": {
+        "manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64": [
+            ["cp39", "cp39"],
+            ["cp310", "cp310"],
+            ["cp311", "cp311"],
+            ["cp312", "cp312"],
+            ["cp313", "cp313"],
+        ],
+    },
+    "linux_arm64": {
+        "manylinux_2_17_aarch64.manylinux2014_aarch64": [
+            ["cp39", "cp39"],
+            ["cp310", "cp310"],
+            ["cp311", "cp311"],
+            ["cp312", "cp312"],
+            ["cp313", "cp313"],
+        ],
+    },
+    "other": {
+        "any": [
+            ["pp39.pp310", "none"],
         ],
     },
 }
 
-if is_platform(
-    arch = "amd64",
-    os = "linux",
-):
-    _coverage_urls = [
-        f"https://files.pythonhosted.org/packages/{abi}/c/coverage/coverage-{_coverage_version}-{abi}-{abi}-{arch}.whl"
-        for arch, abis in _coverage_soabis["linux_amd64"].items()
-        for abi in abis
-    ]
-elif is_platform(
-    arch = "amd64",
-    os = "darwin",
-):
-    _coverage_urls = [
-        f"https://files.pythonhosted.org/packages/{abi}/c/coverage/coverage-{_coverage_version}-{abi}-{abi}-{arch}.whl"
-        for arch, abis in _coverage_soabis["darwin_amd64"].items()
-        for abi in abis
-    ]
-else:
-    _coverage_urls = [
-        f"https://files.pythonhosted.org/packages/pp39.pp310/c/coverage/coverage-{_coverage_version}-pp39.pp310-none-any.whl",
-    ]
-
 python_multiversion_wheel(
     name = "coverage",
-    urls = _coverage_urls,
+    urls = [
+        f"https://files.pythonhosted.org/packages/{python}/c/coverage/coverage-{_coverage_version}-{python}-{abi}-{platform}.whl"
+        for platform, t in _coverage_tags.get(f"{CONFIG.OS}_{CONFIG.HOSTARCH}", _coverage_tags.get("other")).items()
+        for python, abi in t
+    ],
     licences = ["Apache-2.0"],
     version = _coverage_version,
 )
