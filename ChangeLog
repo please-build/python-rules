@@ -1,3 +1,15 @@
+Version 1.8.0
+-------------
+    * Further remove support for unsupported versions of Python (#188, #191)
+    * Fix `DeprecationWarning`s in test suite under Python >= 3.12 (#196)
+    * Remove old version of NumPy from test suite (#195)
+    * Upgrade six to 1.16.0 in built-in test runners (#198)
+    * Remove unnecessary copy of six from unittest test runner (#199)
+    * Upgrade coverage to 7.6.4 in built-in test runners (#197)
+    * Add native-speed coverage tracing support for ARM64 platforms in built-in test runners (#209)
+    * Remove site-wide dependency on setuptools in test suite (#202)
+    * Fix distribution file enumeration under Python >= 3.12 in pex meta path finder (#208)
+
 Version 1.7.4
 -------------
     * Remove stealth dependency on importlib-metadata in pex meta path finder (#176)
