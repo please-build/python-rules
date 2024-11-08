@@ -4,12 +4,12 @@ from importlib import import_module, machinery
 from importlib.abc import MetaPathFinder
 from importlib.metadata import Distribution
 from importlib.util import spec_from_loader
-from zipfile import ZipFile, ZipInfo, is_zipfile
 import itertools
 import os
 import re
 import runpy
 import sys
+import zipfile
 
 
 try:
@@ -56,11 +56,11 @@ ZIP_SAFE = __ZIP_SAFE__
 PEX_STAMP = '__PEX_STAMP__'
 
 # Workaround for https://bugs.python.org/issue15795
-class ZipFileWithPermissions(ZipFile):
+class ZipFileWithPermissions(zipfile.ZipFile):
     """ Custom ZipFile class handling file permissions. """
 
     def _extract_member(self, member, targetpath, pwd):
-        if not isinstance(member, ZipInfo):
+        if not isinstance(member, zipfile.ZipInfo):
             member = self.getinfo(member)
 
         targetpath = super(ZipFileWithPermissions, self)._extract_member(
@@ -80,7 +80,7 @@ class SoImport(MetaPathFinder):
         self.suffixes_by_length = sorted(self.suffixes, key=lambda x: -len(x))
         # Identify all the possible modules we could handle.
         self.modules = {}
-        if is_zipfile(sys.argv[0]):
+        if zipfile.is_zipfile(sys.argv[0]):
             zf = ZipFileWithPermissions(sys.argv[0])
             for name in zf.namelist():
                 path, _ = self.splitext(name)
@@ -156,7 +156,10 @@ class PexDistribution(Distribution):
                 return zf.read(name).decode(encoding="utf-8")
 
     def locate_file(self, path):
-        raise RuntimeError("This distribution has no real file system")
+        return zipfile.Path(
+            self._pex_file,
+            at=os.path.join(self._prefix, path) if self._prefix else path,
+        )
 
     read_text.__doc__ = Distribution.read_text.__doc__
 
@@ -174,7 +177,7 @@ class ModuleDirImport(MetaPathFinder):
 
     def _find_all_distributions(self, module_dir):
         dists = {}
-        if is_zipfile(sys.argv[0]):
+        if zipfile.is_zipfile(sys.argv[0]):
             zf = ZipFileWithPermissions(sys.argv[0])
             for name in zf.namelist():
                 if name and (m := re.search(
