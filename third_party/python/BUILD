@@ -166,7 +166,7 @@ elif is_platform(
     ]
 else:
     _coverage_urls = [
-        f"https://files.pythonhosted.org/packages/pp38.pp39.pp310/c/coverage/coverage-{_coverage_version}-pp39.pp310-none-any.whl",
+        f"https://files.pythonhosted.org/packages/pp39.pp310/c/coverage/coverage-{_coverage_version}-pp39.pp310-none-any.whl",
     ]
 
 python_multiversion_wheel(
