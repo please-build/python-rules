@@ -455,39 +455,10 @@ python_wheel(
 )
 
 python_wheel(
-    name = "typing_extensions",
-    outs = ["typing_extensions.py"],
-    hashes = ["sha256: 16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"],
-    licences = ["PSF-2.0"],
-    version = "4.4.0",
-)
-
-python_wheel(
-    name = "mypy_extensions",
-    outs = ["mypy_extensions.py"],
-    hashes = ["sha256: 090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"],
-    licences = ["MIT"],
-    version = "0.4.3",
-)
-
-python_wheel(
     name = "tomli",
     hashes = ["sha256: 939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"],
     licences = ["MIT"],
     version = "2.0.1",
-)
-
-python_wheel(
-    name = "mypy",
-    binary = True,
-    hashes = ["sha256: 1021c241e8b6e1ca5a47e4d52601274ac078a89845cfde66c6d5f769819ffa1d"],
-    licences = ["MIT"],
-    version = "0.982",
-    deps = [
-        ":mypy_extensions",
-        ":tomli",
-        ":typing_extensions",
-    ],
 )
 
 # This is the minimum set of third-party packages required for the built-in test runners to work
