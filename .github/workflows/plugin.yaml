@@ -16,12 +16,6 @@ jobs:
         pex-tool:
           - default
           - in-repo
-        exclude:
-          # Disabled until a please_pex release works with Python >= 3.12:
-          - python-version: '3.12'
-            pex-tool: default
-          - python-version: '3.13'
-            pex-tool: default
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
