@@ -348,10 +348,7 @@ pip_library(
     name = "grpcio",
     test_only = True,
     licences = ["Apache-2.0"],
-    version = "1.49.1",
-    deps = [
-        ":six",
-    ],
+    version = "1.67.1",
 )
 
 pip_library(
