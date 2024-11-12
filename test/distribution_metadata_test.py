@@ -1,4 +1,4 @@
-from importlib.metadata import PackagePath, files, version
+from importlib.metadata import PackagePath, files, version, distributions
 import unittest
 
 
@@ -12,3 +12,8 @@ class DistributionMetadataTest(unittest.TestCase):
 
     def test_importlib_metadata_files(self):
         self.assertIn(PackagePath("pygments/__init__.py"), files("pygments"))
+
+    @unittest.skip("Skipped until we release the fixed tool version")
+    def test_importlib_metadata_iteration(self):
+        for distribution in distributions():
+            self.assertFalse(isinstance(distribution, list))

@@ -1,3 +1,7 @@
+Version 1.5.1
+-------------
+    * Fix some cases of AttributeError turning up from importlib.metadata (#216)
+
 Version 1.5.0
 -------------
     * Add native-speed coverage tracing support for ARM64 platforms in `python_test` (#209)
