@@ -216,7 +216,7 @@ class ModuleDirImport(MetaPathFinder):
         if context.name:
             return self._distributions.get(context.name, [])
         else:
-            return itertools.chain(self._distributions.values())
+            return itertools.chain(*self._distributions.values())
 
     def get_code(self, fullname):
         module = self.load_module(fullname)
