@@ -171,7 +171,6 @@ python_test(
     name = "distribution_metadata_test",
     srcs = ["distribution_metadata_test.py"],
     deps = [
-        "//third_party/python:importlib_metadata",
         "//third_party/python:pygments",
     ],
 )
