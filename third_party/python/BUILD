@@ -453,7 +453,7 @@ python_wheel(
 
 python_wheel(
     name = "tomli",
-    hashes = ["sha256: 939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"],
+    hashes = ["939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"],
     licences = ["MIT"],
     version = "2.0.1",
 )
