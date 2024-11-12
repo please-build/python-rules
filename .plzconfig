@@ -1,5 +1,5 @@
 [Please]
-Version = >=17.10.3
+Version = >=17.12.2
 
 [Build]
 hashcheckers = sha256
@@ -26,6 +26,12 @@ name = python
 ConfigKey = DefaultInterpreter
 DefaultValue = python3
 Inherit = true
+Help = The Python interpreter to use for any case where one is not explicitly specified
+
+[PluginConfig "default_shebang"]
+Inherit = true
+Optional = true
+Help = The shebang to set on binaries / tests where one is not explicitly specified
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool

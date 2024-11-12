@@ -13,7 +13,7 @@ class StripSourceTest(unittest.TestCase):
 
     def test_can_run_binary(self):
         """Test that the dependent binary can be run successfully."""
-        subprocess.check_call([self.filename])
+        subprocess.check_call([os.environ["TOOLS"], self.filename])
 
     def test_does_not_have_py_file(self):
         """Test that the binary doesn't have the source in it."""

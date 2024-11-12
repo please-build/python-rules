@@ -91,7 +91,7 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
 def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=None, deps:list=[],
                   data:list=None, visibility:list=None, test_only:bool=False, zip_safe:bool=None,
                   site:bool=False, strip:bool=False, interpreter:str=CONFIG.PYTHON.DEFAULT_INTERPRETER,
-                  shebang:str='', labels:list&features&tags=[]):
+                  shebang:str=CONFIG.PYTHON.DEFAULT_SHEBANG, labels:list&features&tags=[]):
     """Generates a Python binary target.
 
     This compiles all source files together into a single .pex file which can
@@ -121,7 +121,8 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
                    started with the -S flag to avoid importing site.
       interpreter (str): The Python interpreter to use. Defaults to the value of the
                          Python.DefaultInterpreter setting.
-      shebang (str): Exact shebang to apply to the generated file. By default we will
+      shebang (str): Exact shebang to apply to the generated file. Defaults to the value
+                     of the python.defaultshebang setting, if not set we will
                      determine something appropriate for the given interpreter.
       labels (list): Labels to apply to this rule.
     """
@@ -215,7 +216,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
                 labels:list&features&tags=[], size:str=None, flags:str='', visibility:list=None,
                 sandbox:bool=None, timeout:int=0, flaky:bool|int=0, env:dict=None,
                 test_outputs:list=None, zip_safe:bool=None, interpreter:str=CONFIG.PYTHON.DEFAULT_INTERPRETER,
-                site:bool=False, test_runner:str=None):
+                site:bool=False, test_runner:str=None, shebang:str=CONFIG.PYTHON.DEFAULT_SHEBANG):
     """Generates a Python test target.
 
     This works very similarly to python_binary; it is also a single .pex file
@@ -250,14 +251,17 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
                        transitive dependencies are themselves marked as not zip-safe.
       interpreter (str): The Python interpreter to use. Defaults to the value of the
                          Python.DefaultInterpreter setting.
+      shebang (str): Exact shebang to apply to the generated file. Defaults to the value
+                     of the python.defaultshebang setting, if not set we will
+                     determine something appropriate for the given interpreter.
       site (bool): Allows the Python interpreter to import site; conversely if False, it will be
                    started with the -S flag to avoid importing site.
       test_runner (str): Specify which Python test runner to use for these tests. One of
                          `unittest`, `pytest`, or a custom test runner entry point.
     """
     test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
-    icmd = _interpreter_cmd(interpreter)
-    cmd = f'$TOOLS_PEX -t -s "{icmd}" -m "{CONFIG.PYTHON.MODULE_DIR}" -r "{test_runner}" --zip_safe --add_test_runner_deps --interpreter_options="{CONFIG.PYTHON.INTERPRETER_OPTIONS}" --stamp="$RULE_HASH"'
+    shebang = shebang or _interpreter_cmd(interpreter)
+    cmd = f'$TOOLS_PEX -t -s "{shebang}" -m "{CONFIG.PYTHON.MODULE_DIR}" -r "{test_runner}" --zip_safe --add_test_runner_deps --interpreter_options="{CONFIG.PYTHON.INTERPRETER_OPTIONS}" --stamp="$RULE_HASH"'
     if site:
         cmd += ' -S'
 
@@ -311,7 +315,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
 
     deps = [pex_rule, lib_rule]
 
-    test_cmd = f'$TEST {flags}'
+    test_cmd = f'$TOOL $TEST {flags}' if site else f'$TOOL -S $TEST {flags}'
     worker_cmd = f'$(worker {worker})' if worker else ""
     if worker_cmd:
         test_cmd = f'{worker_cmd} && {test_cmd} '
@@ -329,12 +333,6 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         data['_srcs'] = srcs
     else:
         data.extend(srcs)
-
-    if looks_like_build_label(interpreter):
-        if isinstance(data, dict):
-            data['_interpreter'] = interpreter
-        else:
-            data.append(interpreter)
 
     # This rule concatenates the .pex with all the other precompiled zip files from dependent rules.
     return build_rule(
@@ -361,6 +359,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         test_outputs=test_outputs,
         requires=['py', 'test', interpreter],
         tools=[CONFIG.ARCAT_TOOL],
+        test_tools = [interpreter],
     )
 
 
