@@ -214,9 +214,11 @@ class ModuleDirImport(MetaPathFinder):
         loading the metadata for packages for the indicated ``context``.
         """
         if context.name:
-            return self._distributions.get(context.name, [])
+            dist = self._distributions.get(context.name)
+            if dist:
+                yield dist
         else:
-            return itertools.chain(self._distributions.values())
+            yield from self._distributions.values()
 
     def get_code(self, fullname):
         module = self.load_module(fullname)
