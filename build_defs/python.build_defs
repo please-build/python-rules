@@ -513,9 +513,9 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
                  outs:list=None, post_install_commands:list=None, patch:str|list=None, licences:list=None,
                  test_only:bool&testonly=False, repo:str=None, zip_safe:bool=True, visibility:list=None,
                  deps:list=[], name_scheme:str|list=CONFIG.PYTHON.WHEEL_NAME_SCHEME,
-                 strip:list=['*.pyc', 'tests'], binary = False, entry_points={},
+                 strip:list=['*.pyc', 'tests'], binary = False, entry_points:dict|str={},
                  tool:str=CONFIG.PYTHON.WHEEL_TOOL, prereleases:bool=CONFIG.PYTHON.PRERELEASES,
-                 tool_verbosity:str=CONFIG.PYTHON.VERBOSITY):
+                 tool_verbosity:str=CONFIG.PYTHON.VERBOSITY, interpreter:str=CONFIG.PYTHON.DEFAULT_INTERPRETER):
     """Downloads a Python wheel and extracts it.
 
     This is a lightweight pip-free alternative to pip_library which supports cross-compiling.
@@ -547,6 +547,8 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
       zip_safe (bool): Flag to indicate whether a pex including this rule will be zip-safe.
       visibility (list): Visibility declaration.
       deps (list): Dependencies of this rule.
+      interpreter (str): The Python interpreter to use. Defaults to the value of the
+                         Python.DefaultInterpreter setting.
       name_scheme (str | list): The templatized wheel naming scheme(s) (available template variables
                                 are `url_base`, `package_name`, `initial`, and `version`).
       strip (list): Files to strip after install. Note that these are done at any level.
@@ -581,7 +583,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
     if tool:
         # Try the URLs generated using the wheel name schemes. If those fail, try
         # generating a url with the wheel_resolver tool and download that if successful.
-        cmd = f'$TOOL --package {package_name} --version {version} --prereleases {prereleases} --verbosity {tool_verbosity}'
+        cmd = f'$TOOLS_PYTHON $TOOLS_RESOLVER --package {package_name} --version {version} --prereleases {prereleases} --verbosity {tool_verbosity}'
         if urls:
             cmd += ''.join([' --urls %s' % url for url in urls])
         file_rule = build_rule(
@@ -589,7 +591,10 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
             tag = 'download',
             outs = [name + '.whl'],
             cmd = cmd,
-            tools = [tool],
+            tools = {
+                "resolver": [tool],
+                "python": [interpreter],
+            },
             hashes = hashes,
             labels = ["python_wheel_download"],
             licences = licences if licences else None,
