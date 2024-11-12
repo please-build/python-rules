@@ -536,3 +536,28 @@ python_wheel(
     version = "0.4.0",
     deps = [],
 )
+
+python_wheel(
+    name = "zipp",
+    outs = ["zipp.py"],
+    licences = ["MIT"],
+    version = "3.1.0",
+    test_only = True,
+    visibility = [],
+)
+
+# Note: This package is provided for distribution_metadata_test
+python_wheel(
+    name = "importlib_metadata",
+    outs = [
+        "importlib_metadata",
+        "importlib_metadata-8.5.0.dist-info",
+    ],
+    test_only = True,
+    licences = ["Apache-2.0"],
+    version = "8.5.0",
+    deps = [":zipp"],
+    visibility = [
+        "//test:distribution_metadata_test",
+    ],
+)
