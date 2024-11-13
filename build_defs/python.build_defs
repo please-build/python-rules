@@ -52,6 +52,9 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
                 cmd = ' && '.join([compile_cmd, 'rm -f $SRCS_SRCS', cmd])
             else:
                 cmd = ' && '.join([compile_cmd, cmd])
+        if looks_like_build_label(interpreter) and ('|' in interpreter):
+            before, _, _ = interpreter.partition('|')
+            cmd += f' --exclude_tools="$(location {before})"'
         # Pre-zip the files for later collection by python_binary.
         zip_rule = build_rule(
             name=name,
