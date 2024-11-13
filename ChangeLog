@@ -1,3 +1,7 @@
+Version 1.10.1
+--------------
+    * Exclude in-repo interpreters from collection for pexes during remote execution (#218)
+
 Version 1.10.0
 --------------
     * Support in-repo interpreters for tests & add a default shebang (#194)

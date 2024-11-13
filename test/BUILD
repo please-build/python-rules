@@ -180,3 +180,8 @@ python_test(
     name = "ci_test",
     srcs = ["ci_test.py"],
 )
+
+python_test(
+    name = "interpreter_not_included_test",
+    srcs = ["interpreter_not_included_test.py"],
+)
