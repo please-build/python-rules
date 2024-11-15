@@ -3,7 +3,7 @@
 ;
 ; To use this configuration:
 ; 1) Run `plz build //tools/please_pex`
-; 2) Copy plz-out/bin/tools/please_pex/please_pex to tools/please_pex_dev
+; 2) Run `cp -f plz-out/bin/tools/please_pex/please_pex tools/please_pex_dev`
 ; 3) Run `plz --profile=tool_dev [...]`
 
 [Plugin "python"]

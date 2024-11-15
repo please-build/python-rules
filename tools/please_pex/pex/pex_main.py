@@ -134,24 +134,17 @@ class PexDistribution(Distribution):
     directory member inside the pex file, which need not necessarily exist at the top level if a
     directory prefix is specified in the constructor.
     """
-    def __init__(self, name, pex_file, prefix):
+    def __init__(self, name, pex_file, zip_file, prefix):
         self._name = name
+        self._zf = zip_file
         self._pex_file = pex_file
         self._prefix = prefix
-        self._re = re.compile(r"{path}(?:-.*)?\.(?:dist|egg)-info/(.*)".format(
-            path=os.path.join(self._prefix, self._name) if self._prefix else self._name,
-        ))
-
-    def _match_file(self, name, filename):
-        match = self._re.match(name)
-        if match and match.group(1) == filename:
-            return name
+        self._files = {}
 
     def read_text(self, filename):
-        zf = ZipFileWithPermissions(self._pex_file)
-        for name in zf.namelist():
-            if name and self._match_file(name, filename):
-                return zf.read(name).decode(encoding="utf-8")
+        full_name = self._files.get(filename)
+        if full_name:
+            return self._zf.read(full_name).decode(encoding="utf-8")
 
     def locate_file(self, path):
         return zipfile.Path(
@@ -175,18 +168,22 @@ class ModuleDirImport(MetaPathFinder):
 
     def _find_all_distributions(self, module_dir):
         dists = {}
-        if zipfile.is_zipfile(sys.argv[0]):
-            zf = ZipFileWithPermissions(sys.argv[0])
+        pex_file = sys.argv[0]
+        if zipfile.is_zipfile(pex_file):
+            zf = ZipFileWithPermissions(pex_file)
+            r = re.compile(r"{module_dir}{sep}([^/]+)-[^/-]+?\.(?:dist|egg)-info/(.*)".format(
+                module_dir=module_dir,
+                sep = os.sep,
+            ))
             for name in zf.namelist():
-                if name and (m := re.search(
-                    r"{module_dir}(?P<name>[^/]+?)-[^/-]+?\.(?:dist|egg)-info/$".format(
-                        module_dir=module_dir + os.sep,
-                    ),
-                    name,
-                )):
-                    dists.setdefault(m.group("name"), []).append(
-                        PexDistribution(m.group("name"), sys.argv[0], prefix=module_dir)
-                    )
+                match = r.match(name)
+                if match:
+                    mod = match.group(1)
+                    dist = dists.get(mod)
+                    if not dist:
+                        dist = [PexDistribution(mod, pex_file, zf, prefix=module_dir)]
+                        dists[mod] = dist
+                    dist[0]._files[match.group(2)] = name
         return dists
 
     def find_spec(self, name, path, target=None):
