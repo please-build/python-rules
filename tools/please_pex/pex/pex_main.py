@@ -1,5 +1,6 @@
 """Zipfile entry point which supports auto-extracting itself based on zip-safety."""
 
+from collections import defaultdict
 from importlib import import_module, machinery
 from importlib.abc import MetaPathFinder
 from importlib.metadata import Distribution
@@ -134,12 +135,13 @@ class PexDistribution(Distribution):
     directory member inside the pex file, which need not necessarily exist at the top level if a
     directory prefix is specified in the constructor.
     """
-    def __init__(self, name, pex_file, zip_file, prefix):
+    def __init__(self, name, pex_file, zip_file, files, prefix):
         self._name = name
         self._zf = zip_file
         self._pex_file = pex_file
         self._prefix = prefix
-        self._files = {}
+        # Mapping of <path within distribution> -> <full path in zipfile>
+        self._files = files
 
     def read_text(self, filename):
         full_name = self._files.get(filename)
@@ -167,7 +169,6 @@ class ModuleDirImport(MetaPathFinder):
         self._distributions = self._find_all_distributions(module_dir)
 
     def _find_all_distributions(self, module_dir):
-        dists = {}
         pex_file = sys.argv[0]
         if zipfile.is_zipfile(pex_file):
             zf = ZipFileWithPermissions(pex_file)
@@ -175,16 +176,14 @@ class ModuleDirImport(MetaPathFinder):
                 module_dir=module_dir,
                 sep = os.sep,
             ))
+            filenames = defaultdict(dict)
             for name in zf.namelist():
                 match = r.match(name)
                 if match:
-                    mod = match.group(1)
-                    dist = dists.get(mod)
-                    if not dist:
-                        dist = [PexDistribution(mod, pex_file, zf, prefix=module_dir)]
-                        dists[mod] = dist
-                    dist[0]._files[match.group(2)] = name
-        return dists
+                    filenames[match.group(1)][match.group(2)] = name
+            return {mod: [PexDistribution(mod, pex_file, zf, files, prefix=module_dir)]
+                    for mod, files in filenames.items()}
+        return {}
 
     def find_spec(self, name, path, target=None):
         """Implements abc.MetaPathFinder."""
