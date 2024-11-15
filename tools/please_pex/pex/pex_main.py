@@ -1,5 +1,6 @@
 """Zipfile entry point which supports auto-extracting itself based on zip-safety."""
 
+from collections import defaultdict
 from importlib import import_module, machinery
 from importlib.abc import MetaPathFinder
 from importlib.metadata import Distribution
@@ -134,24 +135,18 @@ class PexDistribution(Distribution):
     directory member inside the pex file, which need not necessarily exist at the top level if a
     directory prefix is specified in the constructor.
     """
-    def __init__(self, name, pex_file, prefix):
+    def __init__(self, name, pex_file, zip_file, files, prefix):
         self._name = name
+        self._zf = zip_file
         self._pex_file = pex_file
         self._prefix = prefix
-        self._re = re.compile(r"{path}(?:-.*)?\.(?:dist|egg)-info/(.*)".format(
-            path=os.path.join(self._prefix, self._name) if self._prefix else self._name,
-        ))
-
-    def _match_file(self, name, filename):
-        match = self._re.match(name)
-        if match and match.group(1) == filename:
-            return name
+        # Mapping of <path within distribution> -> <full path in zipfile>
+        self._files = files
 
     def read_text(self, filename):
-        zf = ZipFileWithPermissions(self._pex_file)
-        for name in zf.namelist():
-            if name and self._match_file(name, filename):
-                return zf.read(name).decode(encoding="utf-8")
+        full_name = self._files.get(filename)
+        if full_name:
+            return self._zf.read(full_name).decode(encoding="utf-8")
 
     def locate_file(self, path):
         return zipfile.Path(
@@ -174,20 +169,21 @@ class ModuleDirImport(MetaPathFinder):
         self._distributions = self._find_all_distributions(module_dir)
 
     def _find_all_distributions(self, module_dir):
-        dists = {}
-        if zipfile.is_zipfile(sys.argv[0]):
-            zf = ZipFileWithPermissions(sys.argv[0])
+        pex_file = sys.argv[0]
+        if zipfile.is_zipfile(pex_file):
+            zf = ZipFileWithPermissions(pex_file)
+            r = re.compile(r"{module_dir}{sep}([^/]+)-[^/-]+?\.(?:dist|egg)-info/(.*)".format(
+                module_dir=module_dir,
+                sep = os.sep,
+            ))
+            filenames = defaultdict(dict)
             for name in zf.namelist():
-                if name and (m := re.search(
-                    r"{module_dir}(?P<name>[^/]+?)-[^/-]+?\.(?:dist|egg)-info/$".format(
-                        module_dir=module_dir + os.sep,
-                    ),
-                    name,
-                )):
-                    dists.setdefault(m.group("name"), []).append(
-                        PexDistribution(m.group("name"), sys.argv[0], prefix=module_dir)
-                    )
-        return dists
+                match = r.match(name)
+                if match:
+                    filenames[match.group(1)][match.group(2)] = name
+            return {mod: [PexDistribution(mod, pex_file, zf, files, prefix=module_dir)]
+                    for mod, files in filenames.items()}
+        return {}
 
     def find_spec(self, name, path, target=None):
         """Implements abc.MetaPathFinder."""

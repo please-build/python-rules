@@ -1,3 +1,7 @@
+Version 1.5.2
+-------------
+    * Performance improvements to please_pex (#219, #220)
+
 Version 1.5.1
 -------------
     * Fix some cases of AttributeError turning up from importlib.metadata (#216)
