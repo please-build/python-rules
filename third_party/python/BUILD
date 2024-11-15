@@ -264,7 +264,6 @@ python_wheel(
     version = "1.2.6",
     deps = [
         ":colorama",
-        ":enum34",
         ":parse",
         ":parse_type",
         ":six",
