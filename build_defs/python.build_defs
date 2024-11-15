@@ -614,7 +614,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
             licences = licences if licences else None,
         )
 
-    cmd = ['$TOOL x $SRCS_SRC']
+    cmd = ['$TOOLS_ARCAT x $SRCS_SRC']
 
     if strip:
         cmd += ['find . %s | xargs rm -rf' % ' -or '.join(['-name "%s"' % s for s in strip])]
@@ -627,7 +627,10 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
     if post_install_commands:
         cmd += post_install_commands
 
-    cmd += ['$TOOL z -d --prefix $PKG -i ' + ' -i '.join(outs or [name])]
+    cmd += [
+        '$TOOLS_PYTHON -m compileall -b -f .',
+        '$TOOLS_ARCAT z -d --prefix $PKG -i ' + ' -i '.join(outs or [name]),
+    ]
     label = f'whl:{package_name}=={version}'
 
     wheel_rule = build_rule(
@@ -644,7 +647,10 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         deps = deps,
         test_only = test_only,
         licences = licences,
-        tools = [CONFIG.ARCAT_TOOL],
+        tools = {
+            "arcat": [CONFIG.ARCAT_TOOL],
+            "python": [interpreter],
+        },
         post_build = None if licences else _add_licences,
         sandbox = False,
         labels = ['py:zip-unsafe', label] if not zip_safe else [label],
