@@ -138,15 +138,13 @@ class PexDistribution(Distribution):
         self._name = name
         self._pex_file = pex_file
         self._prefix = prefix
+        self._re = re.compile(r"{path}(?:-.*)?\.(?:dist|egg)-info/(.*)".format(
+            path=os.path.join(self._prefix, self._name) if self._prefix else self._name,
+        ))
 
     def _match_file(self, name, filename):
-        if re.match(
-            r"{path}(?:-.*)?\.(?:dist|egg)-info/{filename}".format(
-                path=os.path.join(self._prefix, self._name) if self._prefix else self._name,
-                filename=filename,
-            ),
-            name,
-        ):
+        match = self._re.match(name)
+        if match and match.group(1) == filename:
             return name
 
     def read_text(self, filename):
