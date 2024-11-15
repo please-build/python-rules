@@ -628,6 +628,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         cmd += post_install_commands
 
     cmd += [
+        # N.B. we need -b for legacy locations because that's all zipimport knows to look for :(
         '$TOOLS_PYTHON -m compileall -b -f .',
         '$TOOLS_ARCAT z -d --prefix $PKG -i ' + ' -i '.join(outs or [name]),
     ]
