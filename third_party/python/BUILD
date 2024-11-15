@@ -264,7 +264,6 @@ python_wheel(
     version = "1.2.6",
     deps = [
         ":colorama",
-        ":enum34",
         ":parse",
         ":parse_type",
         ":six",
@@ -302,14 +301,6 @@ python_wheel(
     hashes = ["7a7fb8bf98bcacb328d1f607065c0f89107c7e8f4b02caf12e5f02fb462512a6"],
     licences = ["MIT"],
     version = "0.5",
-)
-
-python_wheel(
-    name = "enum34",
-    outs = ["enum"],
-    hashes = ["708aabfb3d5898f99674c390d360d59efdd08547019763622365f19e84a7fef4"],
-    licences = ["BSD-3-Clause"],
-    version = "1.1.9",
 )
 
 python_wheel(
