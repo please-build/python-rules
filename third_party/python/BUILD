@@ -305,14 +305,6 @@ python_wheel(
 )
 
 python_wheel(
-    name = "enum34",
-    outs = ["enum"],
-    hashes = ["708aabfb3d5898f99674c390d360d59efdd08547019763622365f19e84a7fef4"],
-    licences = ["BSD-3-Clause"],
-    version = "1.1.9",
-)
-
-python_wheel(
     name = "colorama",
     hashes = ["7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"],
     licences = ["BSD-3-Clause"],
