@@ -1,3 +1,7 @@
+Version 1.5.3
+-------------
+    * Updated some deprecated functions on import hooks (#222)
+
 Version 1.5.2
 -------------
     * Performance improvements to please_pex (#219, #220)

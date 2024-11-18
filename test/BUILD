@@ -185,3 +185,11 @@ python_test(
     name = "interpreter_not_included_test",
     srcs = ["interpreter_not_included_test.py"],
 )
+
+python_test(
+    name = "module_dir_import_test",
+    srcs = ["module_dir_import_test.py"],
+    deps = [
+        "//third_party/python:six",
+    ],
+)

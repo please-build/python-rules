@@ -10,6 +10,7 @@ import os
 import re
 import runpy
 import sys
+import tempfile
 import zipfile
 
 
@@ -97,29 +98,27 @@ class SoImport(MetaPathFinder):
 
     def find_spec(self, name, path, target=None):
         """Implements abc.MetaPathFinder."""
-        loader = self.find_module(name, path)
-        if loader is None:
-            return None
-        return spec_from_loader(name, loader)
+        if name in self.modules:
+            return spec_from_loader(name, self)
 
-    def find_module(self, fullname, path=None):
-        """Attempt to locate module. Returns self if found, None if not."""
-        if fullname in self.modules:
-            return self
-
-    def load_module(self, fullname):
-        """Actually load a module that we said we'd handle in find_module."""
-        import tempfile
-
-        filename = self.modules[fullname]
+    def create_module(self, spec):
+        """Create a module object that we're going to load."""
+        filename = self.modules[spec.name]
         prefix, ext = self.splitext(filename)
         with tempfile.NamedTemporaryFile(suffix=ext, prefix=os.path.basename(prefix)) as f:
             f.write(self.zf.read(filename))
             f.flush()
-            mod = machinery.ExtensionFileLoader(fullname, f.name).load_module()
+            spec.origin = f.name
+            loader = machinery.ExtensionFileLoader(spec.name, f.name)
+            spec.loader = loader
+            mod = loader.create_module(spec)
         # Make it look like module came from the original location for nicer tracebacks.
         mod.__file__ = filename
         return mod
+
+    def exec_module(self, mod):
+        """Because we set spec.loader above, the ExtensionFileLoader's exec_module is called."""
+        raise NotImplementedError("SoImport.exec_module isn't used")
 
     def splitext(self, path):
         """Similar to os.path.splitext, but splits our longest known suffix preferentially."""
@@ -187,21 +186,17 @@ class ModuleDirImport(MetaPathFinder):
 
     def find_spec(self, name, path, target=None):
         """Implements abc.MetaPathFinder."""
-        loader = self.find_module(name, path)
-        if loader is None:
-            return None
-        return spec_from_loader(name, loader)
+        if name.startswith(self.prefix):
+            return spec_from_loader(name, self)
 
-    def find_module(self, fullname, path=None):
-        """Attempt to locate module. Returns self if found, None if not."""
-        if fullname.startswith(self.prefix):
-            return self
-
-    def load_module(self, fullname):
+    def create_module(self, spec):
         """Actually load a module that we said we'd handle in find_module."""
-        module = import_module(fullname[len(self.prefix):])
-        sys.modules[fullname] = module
+        module = import_module(spec.name[len(self.prefix):])
+        sys.modules[spec.name] = module
         return module
+
+    def exec_module(self, mod):
+        """Nothing to do, create_module already did the work."""
 
     def find_distributions(self, context):
         """Return an iterable of all Distribution instances capable of
