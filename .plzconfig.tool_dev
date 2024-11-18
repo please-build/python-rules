@@ -8,3 +8,6 @@
 
 [Plugin "python"]
 PexTool = //tools:please_pex_dev
+
+[BuildEnv]
+tool-dev = true
