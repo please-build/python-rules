@@ -18,6 +18,5 @@ class DistributionMetadataTest(unittest.TestCase):
         for distribution in distributions():
             self.assertFalse(isinstance(distribution, list))
 
-    @unittest.skipIf(os.getenv("TOOL_DEV", "") != "true", "needs updated please_pex")
     def test_importlib_metadata_hyphens(self):
         self.assertEqual(version("google-pasta"), "0.2.0")

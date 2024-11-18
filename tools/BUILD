@@ -2,17 +2,17 @@ subinclude("//build_defs:version")
 
 version(name = "version")
 
-TOOLS_VERSION = "1.5.3"
+TOOLS_VERSION = "1.5.4"
 
 remote_file(
     name = "please_pex",
     url = f"https://github.com/please-build/python-rules/releases/download/tools-v{TOOLS_VERSION}/please_pex-{TOOLS_VERSION}-{CONFIG.OS}_{CONFIG.ARCH}",
     hashes = [
-        "3092c4ddab2265cbda66c752cd484d97a685d0f18016baaa124e493e1c98fda0",  # please_pex-1.5.3-darwin_amd64
-        "06c8e6680718e16289325cea275aa9d14bb19ab0446337754635e76375779dc6",  # please_pex-1.5.3-darwin_arm64
-        "bb8ed4b14e0d19e73e12905471be71370a1378f8395d846470a2b4b1be19440d",  # please_pex-1.5.3-freebsd_amd64
-        "630e08fdff2af6727a6a9f785e2da708c879a8faff35df689b176d76ed9dae1e",  # please_pex-1.5.3-linux_amd64
-        "6f65e36407f76706536a83c5156439738331ade8b2688d19c23270823ddab494",  # please_pex-1.5.3-linux_arm64
+        "f8c19359244f2470c6832a5ba6b19ae43cd5482be305b3a0177b44c02ab46121",  # please_pex-1.5.4-darwin_amd64
+        "4a64e768e4620182457feeb8cd7f5707efacc404b7af41d46996e56d467fbed1",  # please_pex-1.5.4-darwin_arm64
+        "bc0cddb71e3d16607f9e6fcb0fd7465e2863720c5659fc8fdf2d69311a083043",  # please_pex-1.5.4-freebsd_amd64
+        "6396b005313a29326a610e9de20e87a25670131dafcf5018be85f23c3a31f8d9",  # please_pex-1.5.4-linux_amd64
+        "85f5d0096008021cea952b51f839d8a3689040a2fd2e3d46b06e3da8314a3f5e",  # please_pex-1.5.4-linux_arm64
     ],
     binary = True,
     visibility = ["PUBLIC"],

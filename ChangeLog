@@ -1,3 +1,7 @@
+Version 1.11.2
+--------------
+    * please_pex now maps hyphens to underscores for resolving distribution metadata (#224)
+
 Version 1.11.1
 --------------
     * Updated some deprecated functions in please_pex import hooks (#222)
