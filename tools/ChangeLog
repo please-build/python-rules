@@ -1,3 +1,7 @@
+Version 1.5.4
+-------------
+    * Handle packages with hyphenated names when loading distribution metadata (#224)
+
 Version 1.5.3
 -------------
     * Updated some deprecated functions on import hooks (#222)
