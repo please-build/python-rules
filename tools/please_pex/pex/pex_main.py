@@ -102,7 +102,7 @@ class SoImport(MetaPathFinder):
             return spec_from_loader(name, self)
 
     def create_module(self, spec):
-        """Create a module object that we're going to load.."""
+        """Create a module object that we're going to load."""
         filename = self.modules[spec.name]
         prefix, ext = self.splitext(filename)
         with tempfile.NamedTemporaryFile(suffix=ext, prefix=os.path.basename(prefix)) as f:
@@ -117,8 +117,7 @@ class SoImport(MetaPathFinder):
         return mod
 
     def exec_module(self, mod):
-        """Executes a module object once created."""
-        # Because we set spec.loader above, the ExtensionFileLoader's exec_module is called.
+        """Because we set spec.loader above, the ExtensionFileLoader's exec_module is called."""
         raise NotImplementedError("SoImport.exec_module isn't used")
 
     def splitext(self, path):
@@ -187,21 +186,17 @@ class ModuleDirImport(MetaPathFinder):
 
     def find_spec(self, name, path, target=None):
         """Implements abc.MetaPathFinder."""
-        loader = self.find_module(name, path)
-        if loader is None:
-            return None
-        return spec_from_loader(name, loader)
+        if name.startswith(self.prefix):
+            return spec_from_loader(name, self)
 
-    def find_module(self, fullname, path=None):
-        """Attempt to locate module. Returns self if found, None if not."""
-        if fullname.startswith(self.prefix):
-            return self
-
-    def load_module(self, fullname):
+    def create_module(self, spec):
         """Actually load a module that we said we'd handle in find_module."""
-        module = import_module(fullname[len(self.prefix):])
-        sys.modules[fullname] = module
+        module = import_module(spec.name[len(self.prefix):])
+        sys.modules[spec.name] = module
         return module
+
+    def exec_module(self, mod):
+        """Nothing to do, create_module already did the work."""
 
     def find_distributions(self, context):
         """Return an iterable of all Distribution instances capable of
