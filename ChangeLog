@@ -1,3 +1,7 @@
+Version 1.11.1
+--------------
+    * Updated some deprecated functions in please_pex import hooks (#222)
+
 Version 1.11.0
 --------------
     * Compile .pyc files for python_wheel (#221)
