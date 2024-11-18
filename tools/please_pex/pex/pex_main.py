@@ -203,7 +203,9 @@ class ModuleDirImport(MetaPathFinder):
         loading the metadata for packages for the indicated ``context``.
         """
         if context.name:
-            return self._distributions.get(context.name, [])
+            # The installed directories have underscores in the place of what might be a hyphen
+            # in the package name (e.g. the package opentelemetry-sdk installs opentelemetry_sdk).
+            return self._distributions.get(context.name.replace("-", "_"), [])
         else:
             return itertools.chain(*self._distributions.values())
 

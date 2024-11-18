@@ -16,3 +16,6 @@ class DistributionMetadataTest(unittest.TestCase):
     def test_importlib_metadata_iteration(self):
         for distribution in distributions():
             self.assertFalse(isinstance(distribution, list))
+
+    def test_importlib_metadata_hyphens(self):
+        self.assertEqual(version("google-pasta"), "0.2.0")
