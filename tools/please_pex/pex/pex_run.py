@@ -1,4 +1,6 @@
 def run(explode=False):
+    # Add .bootstrap dir to path, after the initial pex entry
+    sys.path.insert(1, os.path.join(sys.path[0], '.bootstrap'))
     if explode or not ZIP_SAFE:
         with explode_zip()():
             add_module_dir_to_sys_path(MODULE_DIR, zip_safe=False)

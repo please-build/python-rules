@@ -19,12 +19,9 @@ PEX_STAMP = '__PEX_STAMP__'
 
 def add_module_dir_to_sys_path(dirname, zip_safe=True):
     """Adds the given dirname to sys.path if it's nonempty."""
-    # Add .bootstrap dir to path, after the initial pex entry
-    sys.path = sys.path[:1] + [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
-    # Now we have .bootstrap on the path, we can import our own hooks.
-    import plz
+    import plz  # this needs to be imported after paths are set up
     if dirname:
-        sys.path = sys.path[:1] + [os.path.join(sys.path[0], dirname)] + sys.path[1:]
+        sys.path.insert(1, os.path.join(sys.path[0], dirname))
         sys.meta_path.insert(0, plz.ModuleDirImport(dirname))
     if zip_safe:
         sys.meta_path.append(plz.SoImport(MODULE_DIR))
@@ -82,10 +79,10 @@ def explode_zip():
         os.makedirs(basepath, exist_ok=True)
         with pex_lockfile(basepath, uniquedir) as lockfile:
             if len(lockfile.read()) == 0:
-                import compileall, zipfile
+                import compileall, zipfile, plz
 
                 os.makedirs(PEX_PATH, exist_ok=True)
-                with ZipFileWithPermissions(PEX, "r") as zf:
+                with plz.ZipFileWithPermissions(PEX, "r") as zf:
                     zf.extractall(PEX_PATH)
 
                 if not no_cache:  # Don't bother optimizing; we're deleting this when we're done.
