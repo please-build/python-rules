@@ -1,3 +1,7 @@
+Version 1.6.1
+-------------
+    * Fix exploding of zip-unsafe pexes (#231)
+
 Version 1.6.0
 -------------
     * Import hooks are now added in the `plz` module and are hence more usefully importable (#229)
