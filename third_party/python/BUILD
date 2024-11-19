@@ -527,3 +527,11 @@ python_wheel(
     version = "0.4.0",
     deps = [],
 )
+
+pip_library(
+    name = "confluent-kafka",
+    licences = ["Apache-2.0"],
+    version = "2.6.1",
+    test_only = True,
+    zip_safe = False,
+)

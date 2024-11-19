@@ -194,3 +194,12 @@ python_test(
         "//third_party/python:six",
     ],
 )
+
+python_test(
+    name = "zip_unsafe_test",
+    srcs = ["zip_unsafe_test.py"],
+    deps = [
+        "//third_party/python:confluent-kafka",
+    ],
+    labels = ["manual"],
+)
