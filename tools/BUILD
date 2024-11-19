@@ -8,11 +8,11 @@ remote_file(
     name = "please_pex",
     url = f"https://github.com/please-build/python-rules/releases/download/tools-v{TOOLS_VERSION}/please_pex-{TOOLS_VERSION}-{CONFIG.OS}_{CONFIG.ARCH}",
     hashes = [
-        "f8c19359244f2470c6832a5ba6b19ae43cd5482be305b3a0177b44c02ab46121",  # please_pex-1.5.4-darwin_amd64
-        "4a64e768e4620182457feeb8cd7f5707efacc404b7af41d46996e56d467fbed1",  # please_pex-1.5.4-darwin_arm64
-        "bc0cddb71e3d16607f9e6fcb0fd7465e2863720c5659fc8fdf2d69311a083043",  # please_pex-1.5.4-freebsd_amd64
-        "6396b005313a29326a610e9de20e87a25670131dafcf5018be85f23c3a31f8d9",  # please_pex-1.5.4-linux_amd64
-        "85f5d0096008021cea952b51f839d8a3689040a2fd2e3d46b06e3da8314a3f5e",  # please_pex-1.5.4-linux_arm64
+        "bc430ad8f1b1ae5516490a26758d3e8efc65da64112ba69ecc79aa0251b4794e",  # please_pex-1.5.5-darwin_amd64
+        "28865fc2f67e406f6544aef7fe2ba334d3fac3096ed54df4a270390c220db240",  # please_pex-1.5.5-darwin_arm64
+        "1b47c2211b736891129f64659ef8f92afdb626477ca4ce428b808b3c6ce5d7ba",  # please_pex-1.5.5-freebsd_amd64
+        "772068a245d6c19f082ea5f53a3ea9201f7c169c6ed225e8ddbf6e8092752f22",  # please_pex-1.5.5-linux_amd64
+        "cdc04adcca95fd915328887083c50c38029409b5210c4a90bc81145b049002fe",  # please_pex-1.5.5-linux_arm64
     ],
     binary = True,
     visibility = ["PUBLIC"],
