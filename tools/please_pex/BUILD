@@ -33,7 +33,7 @@ genrule(
         # Have to make sure these exist.
         "touch third_party/__init__.py third_party/python/__init__.py",
         "touch tools/__init__.py tools/please_pex/__init__.py",
-        "mv third_party/python .bootstrap",
+        "mv third_party/python/* .bootstrap",
         # A little cleanup.
         "rm -rf third_party .bootstrap/xmlrunner/extra .bootstrap/coverage/htmlfiles .bootstrap/.*.pex.zip",
         '"$TOOL" z -d -i .bootstrap -o "$OUTS" --preamble_file $(location :pex_main)',
