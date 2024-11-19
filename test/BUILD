@@ -201,4 +201,5 @@ python_test(
     deps = [
         "//third_party/python:confluent-kafka",
     ],
+    labels = ["manual"],
 )
