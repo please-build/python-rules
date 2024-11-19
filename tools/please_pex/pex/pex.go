@@ -185,8 +185,14 @@ func (pw *Writer) Write(out, moduleDir string) error {
 		}
 	}
 
+	// Write plz.py which contains much of our import hooks etc
+	b := mustRead("plz.py")
+	if err := f.WriteFile(".bootstrap/plz.py", b, 0644); err != nil {
+		return err
+	}
+
 	// Always write pex_main.py, with some templating.
-	b := mustRead("pex_main.py")
+	b = mustRead("pex_main.py")
 	b = bytes.Replace(b, []byte("__MODULE_DIR__"), []byte(strings.ReplaceAll(moduleDir, ".", "/")), 1)
 	b = bytes.Replace(b, []byte("__ENTRY_POINT__"), []byte(pw.realEntryPoint), 1)
 	b = bytes.Replace(b, []byte("__ZIP_SAFE__"), []byte(pythonBool(pw.zipSafe)), 1)

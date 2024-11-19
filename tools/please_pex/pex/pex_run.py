@@ -1,11 +1,10 @@
 def run(explode=False):
     if explode or not ZIP_SAFE:
         with explode_zip()():
-            add_module_dir_to_sys_path(MODULE_DIR)
+            add_module_dir_to_sys_path(MODULE_DIR, zip_safe=False)
             return main()
     else:
         add_module_dir_to_sys_path(MODULE_DIR)
-        sys.meta_path.append(SoImport())
         return main()
 
 

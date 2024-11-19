@@ -1,18 +1,8 @@
 """Zipfile entry point which supports auto-extracting itself based on zip-safety."""
 
-from collections import defaultdict
-from importlib import import_module, machinery
-from importlib.abc import MetaPathFinder
-from importlib.metadata import Distribution
-from importlib.util import spec_from_loader
-from site import getsitepackages
-import itertools
 import os
-import re
 import runpy
 import sys
-import tempfile
-import zipfile
 
 # Put this pex on the path before anything else.
 PEX = os.path.abspath(sys.argv[0])
@@ -27,11 +17,17 @@ ZIP_SAFE = __ZIP_SAFE__
 PEX_STAMP = '__PEX_STAMP__'
 
 
-def add_module_dir_to_sys_path(dirname):
+def add_module_dir_to_sys_path(dirname, zip_safe=True):
     """Adds the given dirname to sys.path if it's nonempty."""
+    # Add .bootstrap dir to path, after the initial pex entry
+    sys.path = sys.path[:1] + [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
+    # Now we have .bootstrap on the path, we can import our own hooks.
+    import plz
     if dirname:
         sys.path = sys.path[:1] + [os.path.join(sys.path[0], dirname)] + sys.path[1:]
-        sys.meta_path.insert(0, ModuleDirImport(dirname))
+        sys.meta_path.insert(0, plz.ModuleDirImport(dirname))
+    if zip_safe:
+        sys.meta_path.append(plz.SoImport(MODULE_DIR))
 
 
 def pex_basepath(temp=False):
@@ -141,8 +137,6 @@ def main():
 
     N.B. This gets redefined by pex_test_main to run tests instead.
     """
-    # Add .bootstrap dir to path, after the initial pex entry
-    sys.path = sys.path[:1] + [os.path.join(sys.path[0], '.bootstrap')] + sys.path[1:]
     # Starts a debugging session, if defined, before running the entry point.
     if os.getenv("PLZ_DEBUG") is not None:
         start_debugger()
