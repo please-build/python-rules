@@ -2,7 +2,7 @@ subinclude("//build_defs:version")
 
 version(name = "version")
 
-TOOLS_VERSION = "1.5.4"
+TOOLS_VERSION = "1.5.5"
 
 remote_file(
     name = "please_pex",
