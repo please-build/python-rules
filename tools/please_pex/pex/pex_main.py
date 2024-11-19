@@ -191,7 +191,7 @@ class ModuleDirImport(MetaPathFinder):
 
     def create_module(self, spec):
         """Actually load a module that we said we'd handle in find_module."""
-        module = import_module(spec.name[len(self.prefix):])
+        module = import_module(spec.name.removeprefix(self.prefix))
         sys.modules[spec.name] = module
         return module
 
@@ -210,7 +210,7 @@ class ModuleDirImport(MetaPathFinder):
             return itertools.chain(*self._distributions.values())
 
     def get_code(self, fullname):
-        module = self.load_module(fullname)
+        module = import_module(fullname.removeprefix(self.prefix))
         return module.__loader__.get_code(fullname)
 
 
