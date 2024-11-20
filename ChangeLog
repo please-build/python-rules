@@ -1,3 +1,7 @@
+Version 1.12.2
+--------------
+    * Bootstrap libraries are correctly included in pexes (#233)
+
 Version 1.12.1
 --------------
     * Fix exploding of zip-unsafe pexes (#231)
