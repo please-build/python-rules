@@ -620,7 +620,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         cmd += ['find . %s | xargs rm -rf' % ' -or '.join(['-name "%s"' % s for s in strip])]
     if not licences:
         cmd += ['find . -name METADATA -or -name PKG-INFO | grep -v "^./build/" | '
-                'xargs grep -E "License ?:" | grep -v UNKNOWN | cat || true']
+                'xargs grep -hE "License ?:" | grep -v UNKNOWN | cat || true']
     if patch:
         patches, c = _patch_cmd(patch)
         cmd += c
