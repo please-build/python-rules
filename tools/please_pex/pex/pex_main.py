@@ -62,12 +62,12 @@ def explode_zip():
     def pex_lockfile(basepath, uniquedir):
         # Acquire the lockfile.
         lockfile_path = os.path.join(basepath, '.lock-%s' % uniquedir)
-        lockfile = open(lockfile_path, "a+")
-        # Block until we can acquire the lockfile.
-        portalocker.lock(lockfile, portalocker.LOCK_EX)
-        lockfile.seek(0)
-        yield lockfile
-        portalocker.lock(lockfile, portalocker.LOCK_UN)
+        with open(lockfile_path, "a+") as lockfile:
+            # Block until we can acquire the lockfile.
+            portalocker.lock(lockfile, portalocker.LOCK_EX)
+            lockfile.seek(0)
+            yield lockfile
+            portalocker.lock(lockfile, portalocker.LOCK_UN)
 
     @contextlib.contextmanager
     def _explode_zip():
