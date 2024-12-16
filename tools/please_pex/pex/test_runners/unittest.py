@@ -52,10 +52,7 @@ def import_tests():
             yield import_module(pkg_name)
         except ImportError:
             with open(filename, 'r') as f:
-                if PY_VERSION.major < 3:
-                    mod = imp.load_module(pkg_name, f, filename, ('.py', 'r', imp.PY_SOURCE))
-                else:
-                    mod = machinery.SourceFileLoader(pkg_name, filename).load_module()
+                mod = machinery.SourceFileLoader(pkg_name, filename).load_module()
 
                 # Have to set the attribute on the parent module too otherwise some things
                 # can't find it.
