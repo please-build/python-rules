@@ -803,7 +803,7 @@ def python_toolchain(name:str, version:str, release:str, arch:str=None,
                      hashes:list=None, visibility:list=None):
     """Defines download of a CPython interpreter for use within the repo.
 
-    These are taken from https://github.com/indygreg/python-build-standalone; see
+    These are taken from https://github.com/astral-sh/python-build-standalone; see
     https://gregoryszorc.com/docs/python-build-standalone/main/running.html for more info
     about the various os/arch/build options available.
     At minimum the Python version and release datestamp must be specified; other fields
@@ -822,8 +822,6 @@ def python_toolchain(name:str, version:str, release:str, arch:str=None,
       hashes: List of hashes that the downloaded tarball must match.
       visibility: Visibility of the toolchain.
     """
-    # TODO(peterebden): The URLs are going to change in like two days, once that happens
-    #                   we should update to point to appropriate new locations.
     if not arch:
         if CONFIG.HOSTARCH == "amd64":
             arch = "x86_64_v2"
@@ -854,7 +852,7 @@ def python_toolchain(name:str, version:str, release:str, arch:str=None,
 
     download = remote_file(
         name = f"_{name}#download",
-        url = f"https://github.com/indygreg/python-build-standalone/releases/download/{release}/cpython-{version}+{release}-{arch}-{vendor}-{os}-{build}-full.tar.zst",
+        url = f"https://github.com/astral-sh/python-build-standalone/releases/download/{release}/cpython-{version}+{release}-{arch}-{vendor}-{os}-{build}-full.tar.zst",
         hashes = hashes,
     )
     return build_rule(
