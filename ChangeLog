@@ -1,3 +1,7 @@
+Version 1.13.0
+--------------
+    * Allow overriding of repo-wide ModuleDir per `python_binary`, `python_test` and `python_wheel` (#240)
+
 Version 1.12.2
 --------------
     * Bootstrap libraries are correctly included in pexes (#233)
