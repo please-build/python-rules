@@ -808,3 +808,73 @@ if CONFIG.BAZEL_COMPATIBILITY:
     py_library = python_library
     py_binary = python_binary
     py_test = python_test
+
+
+def python_toolchain(name:str, version:str, release:str, arch:str=None,
+                     vendor:str=None, os:str=None, build:str=None,
+                     hashes:list=None, visibility:list=None):
+    """Defines download of a CPython interpreter for use within the repo.
+
+    These are taken from https://github.com/astral-sh/python-build-standalone; see
+    https://gregoryszorc.com/docs/python-build-standalone/main/running.html for more info
+    about the various os/arch/build options available.
+    At minimum the Python version and release datestamp must be specified; other fields
+    will attempt to autodetect based on the _host_ architecture. It may be useful to specify
+    these in some cases where we aren't able to select the name they would use.
+
+    Args:
+      name: Name of the target
+      version: Python version to download, e.g. "3.10.16"
+      release: Release datestamp, e.g. "20241206"
+      arch: Architecture to download for, e.g. "aarch64" or "x86_64".
+      vendor: Vendor to target, e.g. "unknown" (for linux) or "apple" (for macos).
+      os: OS to target, e.g. "linux" or "darwin".
+      build: The build type, one of "debug", "noopt", "lto", "pgo" or "pgo+lto".
+             By default will choose debug for dbg / cover builds and pgo+lto otherwise.
+      hashes: List of hashes that the downloaded tarball must match.
+      visibility: Visibility of the toolchain.
+    """
+    if not arch:
+        if CONFIG.HOSTARCH == "amd64":
+            arch = "x86_64_v2"
+        elif CONFIG.HOSTARCH == "arm64":
+            arch = "aarch64"
+        else:
+            fail(f"Unsure what arch to use for {CONFIG.HOSTARCH}, please specify")
+    if not vendor:
+        if CONFIG.HOSTOS == "linux":
+            vendor = "unknown"
+        elif CONFIG.HOSTOS == "darwin":
+            vendor = "apple"
+        elif CONFIG.HOSTOS == "windows":
+            vendor = "windows"
+        else:
+            fail(f"Unsure what vendor to use for {CONFIG.HOSTOS}, please specify")
+    if not os:
+        if CONFIG.HOSTOS == "linux":
+            os = "linux-gnu"
+        elif CONFIG.HOSTOS == "darwin":
+            os = "darwin"
+        elif CONFIG.HOSTOS == "windows":
+            os = "msvc"
+        else:
+            fail(f"Unsure what OS to use for {CONFIG.HOSTOS}, please specify")
+    if not build:
+        build = "debug" if (CONFIG.BUILD_CONFIG == "dbg" or CONFIG.BUILD_CONFIG == "cover") else "pgo+lto"
+
+    download = remote_file(
+        name = f"_{name}#download",
+        url = f"https://github.com/astral-sh/python-build-standalone/releases/download/{release}/cpython-{version}+{release}-{arch}-{vendor}-{os}-{build}-full.tar.zst",
+        hashes = hashes,
+    )
+    return build_rule(
+        name = name,
+        srcs = [download],
+        outs = [f"python-{version}"],  # We might want this to be more specific so you could mix multiple in a directory?
+        cmd = "tar --strip-components=1 -xf $SRCS && mv install $OUTS",
+        binary = True,
+        entry_points = {
+            "python": f"python-{version}/bin/python3",
+        },
+        visibility = visibility,
+    )
