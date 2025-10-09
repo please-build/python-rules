@@ -19,6 +19,7 @@ jobs:
           - '3.11'
           - '3.12'
           - '3.13'
+          - '3.14'
   test:
     name: Test (Python ${{ matrix.python }}, stable please_pex release)
     uses: ./.github/workflows/plugin_test.yaml
