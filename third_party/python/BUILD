@@ -121,7 +121,7 @@ python_wheel(
     deps = [":six"],
 )
 
-_coverage_version = "7.6.4"
+_coverage_version = "7.10.7"
 
 _coverage_tags = {
     "darwin_amd64": {
@@ -133,6 +133,7 @@ _coverage_tags = {
         "macosx_10_13_x86_64": [
             ["cp312", "cp312"],
             ["cp313", "cp313"],
+            ["cp314", "cp314"],
         ],
     },
     "darwin_arm64": {
@@ -142,15 +143,17 @@ _coverage_tags = {
             ["cp311", "cp311"],
             ["cp312", "cp312"],
             ["cp313", "cp313"],
+            ["cp314", "cp314"],
         ],
     },
     "linux_amd64": {
-        "manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64": [
+        "manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64": [
             ["cp39", "cp39"],
             ["cp310", "cp310"],
             ["cp311", "cp311"],
             ["cp312", "cp312"],
             ["cp313", "cp313"],
+            ["cp314", "cp314"],
         ],
     },
     "linux_arm64": {
@@ -160,11 +163,14 @@ _coverage_tags = {
             ["cp311", "cp311"],
             ["cp312", "cp312"],
             ["cp313", "cp313"],
+            ["cp314", "cp314"],
         ],
     },
+    # There are no pre-built architecture-specific wheels for FreeBSD, so fall back to the pure-Python one.
+    # This means that native-speed tracing support is unavailable on FreeBSD.
     "other": {
         "any": [
-            ["pp39.pp310", "none"],
+            ["py3", "none"],
         ],
     },
 }
