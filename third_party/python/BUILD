@@ -162,8 +162,11 @@ _coverage_tags = {
             ["cp314", "cp314t"],
         ],
         "musllinux_1_2_x86_64": [
-            ["cp39", "cp39"],
-            ["cp310", "cp310"],
+            # The SOABI used by musl-linked Python 3.9 and 3.10 interpreters is "x86_64-linux-gnu", making
+            # it indistinguishable from the SOABI used by glibc-linked interpreters (and causing file name
+            # collisions for the tracer shared object in the multi-arch wheel). Because of this, we aren't
+            # able to provide native-speed tracing support for musl-linked Python 3.9 and 3.10
+            # interpreters.
             ["cp311", "cp311"],
             ["cp312", "cp312"],
             ["cp313", "cp313"],
@@ -184,8 +187,11 @@ _coverage_tags = {
             ["cp314", "cp314t"],
         ],
         "musllinux_1_2_aarch64": [
-            ["cp39", "cp39"],
-            ["cp310", "cp310"],
+            # The SOABI used by musl-linked Python 3.9 and 3.10 interpreters is "x86_64-linux-gnu", making
+            # it indistinguishable from the SOABI used by glibc-linked interpreters (and causing file name
+            # collisions for the tracer shared object in the multi-arch wheel). Because of this, we aren't
+            # able to provide native-speed tracing support for musl-linked Python 3.9 and 3.10
+            # interpreters.
             ["cp311", "cp311"],
             ["cp312", "cp312"],
             ["cp313", "cp313"],
