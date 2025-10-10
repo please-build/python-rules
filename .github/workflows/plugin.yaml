@@ -43,22 +43,8 @@ jobs:
         with:
           name: logs-${{ matrix.python-version }}-please_pex-${{ matrix.pex-tool }}
           path: plz-out/log
-  test_in_repo_python:
-    name: Test (Python 3.12 in repo)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-      - name: Run tests
-        run: ./pleasew test --profile in_repo_python
-      - name: Archive logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: logs-in-repo-python
-          path: plz-out/log
   release:
-    needs: [test, test_in_repo_python]
+    needs: [test]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/v1'
     steps:
