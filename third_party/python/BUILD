@@ -133,7 +133,9 @@ _coverage_tags = {
         "macosx_10_13_x86_64": [
             ["cp312", "cp312"],
             ["cp313", "cp313"],
+            ["cp313", "cp313t"],
             ["cp314", "cp314"],
+            ["cp314", "cp314t"],
         ],
     },
     "darwin_arm64": {
@@ -143,7 +145,9 @@ _coverage_tags = {
             ["cp311", "cp311"],
             ["cp312", "cp312"],
             ["cp313", "cp313"],
+            ["cp313", "cp313t"],
             ["cp314", "cp314"],
+            ["cp314", "cp314t"],
         ],
     },
     "linux_amd64": {
@@ -153,7 +157,22 @@ _coverage_tags = {
             ["cp311", "cp311"],
             ["cp312", "cp312"],
             ["cp313", "cp313"],
+            ["cp313", "cp313t"],
             ["cp314", "cp314"],
+            ["cp314", "cp314t"],
+        ],
+        "musllinux_1_2_x86_64": [
+            # The SOABI used by musl-linked Python 3.9 and 3.10 interpreters is "x86_64-linux-gnu", making
+            # it indistinguishable from the SOABI used by glibc-linked interpreters (and causing file name
+            # collisions for the tracer shared object in the multi-arch wheel). Because of this, we aren't
+            # able to provide native-speed tracing support for musl-linked Python 3.9 and 3.10
+            # interpreters.
+            ["cp311", "cp311"],
+            ["cp312", "cp312"],
+            ["cp313", "cp313"],
+            ["cp313", "cp313t"],
+            ["cp314", "cp314"],
+            ["cp314", "cp314t"],
         ],
     },
     "linux_arm64": {
@@ -163,7 +182,22 @@ _coverage_tags = {
             ["cp311", "cp311"],
             ["cp312", "cp312"],
             ["cp313", "cp313"],
+            ["cp313", "cp313t"],
             ["cp314", "cp314"],
+            ["cp314", "cp314t"],
+        ],
+        "musllinux_1_2_aarch64": [
+            # The SOABI used by musl-linked Python 3.9 and 3.10 interpreters is "x86_64-linux-gnu", making
+            # it indistinguishable from the SOABI used by glibc-linked interpreters (and causing file name
+            # collisions for the tracer shared object in the multi-arch wheel). Because of this, we aren't
+            # able to provide native-speed tracing support for musl-linked Python 3.9 and 3.10
+            # interpreters.
+            ["cp311", "cp311"],
+            ["cp312", "cp312"],
+            ["cp313", "cp313"],
+            ["cp313", "cp313t"],
+            ["cp314", "cp314"],
+            ["cp314", "cp314t"],
         ],
     },
     # There are no pre-built architecture-specific wheels for FreeBSD, so fall back to the pure-Python one.
