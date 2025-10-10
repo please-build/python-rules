@@ -18,9 +18,9 @@ jobs:
           - in-repo
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Use this Python in Please build environments
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: Run tests
         run: ./pleasew test --profile in_repo_python
       - name: Archive logs
@@ -63,17 +63,17 @@ jobs:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/v1'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
       - name: Build
         run: ./pleasew build //package:release_files
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: thought-machine/release-action@v0.3.0
+        uses: thought-machine/release-action@master
       - name: Release tools
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: thought-machine/release-action@v0.3.0
+        uses: thought-machine/release-action@master
         with:
           release-files: plz-out/package
           version-file: tools/VERSION
