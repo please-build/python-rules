@@ -1,3 +1,9 @@
+Version 1.14.0
+--------------
+    * Upgrade coverage to 7.10.7 in built-in test runners (#250)
+    * Support native-speed coverage tracing for `python_test`s under Python 3.14 (#250)
+    * Support native-speed coverage tracing for `python_test`s under musl and free-threaded Python interpreters (#250)
+
 Version 1.13.0
 --------------
     * Allow overriding of repo-wide ModuleDir per `python_binary`, `python_test` and `python_wheel` (#240)
