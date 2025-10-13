@@ -23,7 +23,6 @@ python_test(
     name = "strip_source_test",
     srcs = ["strip_source_test.py"],
     data = [":strip_source"],
-    labels = ["py3"],
 )
 
 # Test that has no actual tests in it. Should still count as a pass.
@@ -89,16 +88,11 @@ python_test(
 python_library(
     name = "python_coverage",
     srcs = ["python_coverage.py"],
-    labels = [
-        "py2",
-        "py3",
-    ],
 )
 
 python_test(
     name = "python3_coverage_test",
     srcs = ["python_coverage_test.py"],
-    labels = ["py3"],
     deps = [":python_coverage"],
 )
 
@@ -111,7 +105,6 @@ python_test(
     name = "namespaced_packages_test",
     srcs = ["namespaced_packages_test.py"],
     labels = [
-        "py3",
         "pip",
     ],
     deps = [
@@ -124,14 +117,12 @@ python_test(
     name = "data_dict_test",
     srcs = ["data_dict_test.py"],
     data = {"txt": ["data.txt"]},
-    labels = ["py3"],
 )
 
 python_test(
     name = "cx_oracle_darwin_build_test",
     srcs = ["cx_oracle_darwin_build_test.py"],
     labels = [
-        "py3",
         "pip",
     ],
     deps = ["//third_party/python:cx_oracle"],
@@ -141,7 +132,6 @@ plz_e2e_test(
     name = "correct_labels_on_pip_libary_non_zip_safe",
     cmd = "plz query print -f labels //third_party/python:pyyaml",
     expected_output = "expected_labels_on_pyyaml.txt",
-    labels = ["py3"],
     deps = ["//third_party/python:pyyaml"],
 )
 
@@ -149,7 +139,6 @@ plz_e2e_test(
     name = "correct_labels_on_pip_libary_zip_safe",
     cmd = "plz query print -f labels //third_party/python:grpcio",
     expected_output = "expected_labels_on_grpcio.txt",
-    labels = ["py3"],
     deps = ["//third_party/python:grpcio"],
 )
 
@@ -158,9 +147,6 @@ plz_e2e_test(
 python_test(
     name = "name_scheme_test",
     srcs = ["name_scheme_test.py"],
-    labels = [
-        "py3",
-    ],
     deps = [
         "//third_party/python:click",
         "//third_party/python:click-log",
