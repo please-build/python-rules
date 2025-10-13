@@ -38,9 +38,7 @@ jobs:
           cp $(./pleasew query outputs //tools/please_pex) $HOME/please_pex
           echo "PLZ_ARGS="$(grep ^PLZ_ARGS= $GITHUB_ENV | cut -d= -f2-)" -o plugin.python.pextool:$HOME/please_pex" >> $GITHUB_ENV
       - name: Run tests
-        run: ./pleasew test --log_file plz-out/log/test.log -e e2e
-      - name: Run e2e tests
-        run: ./pleasew test --log_file plz-out/log/e2e.log -i e2e
+        run: ./pleasew test --keep_going --log_file plz-out/log/test.log
       - name: Archive logs
         uses: actions/upload-artifact@v4
         with:
