@@ -1,61 +1,51 @@
-name: Python rules
-on: [push, pull_request]
+name: Plugin
+on:
+  - push
+  - pull_request
 jobs:
-  test:
-    name: Test (Python ${{ matrix.python-version }}, ${{ matrix.pex-tool }} pex tool)
-    runs-on: ubuntu-latest
+  test-please_pex:
+    name: Test (Python ${{ matrix.python }}, in-repo please_pex)
+    uses: ./.github/workflows/plugin_test.yaml
+    with:
+      runner: ubuntu-latest
+      python: ${{ matrix.python }}
+      please_pex_from_repo: true
     strategy:
       fail-fast: false
       matrix:
-        python-version:
+        python:
           - '3.9'
           - '3.10'
           - '3.11'
           - '3.12'
           - '3.13'
-        pex-tool:
-          - default
-          - in-repo
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Use this Python in Please build environments
-        run: |
-          echo "CI_PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
-          echo "PLZ_ARGS=-o plugin.python.defaultinterpreter:$(which python3) -o build.passenv:CI_PYTHON_VERSION" >> $GITHUB_ENV
-      - name: Build and use in-repo pex tool
-        if: matrix.pex-tool == 'in-repo'
-        run: |
-          ./pleasew build //tools/please_pex
-          cp $(./pleasew query outputs //tools/please_pex) $HOME/please_pex
-          echo "PLZ_ARGS="$(grep ^PLZ_ARGS= $GITHUB_ENV | cut -d= -f2-)" -o plugin.python.pextool:$HOME/please_pex" >> $GITHUB_ENV
-      - name: Run tests
-        run: ./pleasew test --log_file plz-out/log/test.log -e e2e
-      - name: Run e2e test
-        run: ./pleasew test --log_file plz-out/log/e2e.log -i e2e
-      - name: Archive logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: logs-${{ matrix.python-version }}-please_pex-${{ matrix.pex-tool }}
-          path: plz-out/log
-  release:
-    needs: [test]
+  test:
+    name: Test (Python ${{ matrix.python }}, stable please_pex release)
+    uses: ./.github/workflows/plugin_test.yaml
+    with:
+      runner: ubuntu-latest
+      python: ${{ matrix.python }}
+      please_pex_from_repo: false
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - '3.9'
+          - '3.10'
+          - '3.11'
+          - '3.12'
+          - '3.13'
+  release-tools:
+    name: Release tools
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - test-please_pex
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/v1'
     steps:
-      - name: Checkout code
+      - name: Check out code
         uses: actions/checkout@v5
-      - name: Build
+      - name: Build tools
         run: ./pleasew build //package:release_files
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: thought-machine/release-action@master
       - name: Release tools
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,3 +55,16 @@ jobs:
           version-file: tools/VERSION
           change-log-file: tools/ChangeLog
           release-prefix: tools
+  release-plugin:
+    name: Release plugin
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+      - name: Release plugin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: thought-machine/release-action@master
