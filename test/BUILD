@@ -1,4 +1,8 @@
-subinclude("//build_defs:python", "///shell//build_defs:shell")
+subinclude(
+    "///e2e//build_defs:e2e",
+    "///shell//build_defs:shell",
+    "//build_defs:python",
+)
 
 package(
     default_visibility = ["PUBLIC"],

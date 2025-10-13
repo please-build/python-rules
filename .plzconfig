@@ -4,9 +4,6 @@ Version = >=17.12.2
 [Build]
 hashcheckers = sha256
 
-[Parse]
-PreloadBuildDefs = test/build_defs/test.build_defs
-
 [Plugin "go"]
 Target = //plugins:go
 ImportPath = github.com/please-build/python-rules
@@ -18,6 +15,9 @@ DisableVendorFlags = true
 
 [Plugin "shell"]
 Target = //plugins:shell
+
+[Plugin "e2e"]
+Target = //plugins:e2e
 
 [PluginDefinition]
 name = python
