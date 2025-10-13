@@ -1,0 +1,46 @@
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: "The GitHub runner type on which this workflow should run."
+        required: true
+        type: string
+      python:
+        description: "The Python version to configure the plugin to use. Must be a value of python-version recognised by the actions/setup-python action."
+        required: true
+        type: string
+      please_pex_from_repo:
+        description: "Whether to build please_pex from source and use that as the plugin's please_pex tool (true), or use the existing binary version of please_pex downloaded by //tools:please_pex (false)."
+        required: false
+        type: boolean
+        default: false
+jobs:
+  test:
+    name: Run tests
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Install Python in CI environment
+        id: python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ inputs.python }}
+          update-environment: false
+      - name: Check out code
+        uses: actions/checkout@v5
+      - name: Configure plugin's default Python interpreter
+        run: |
+          echo "PLZ_ARGS=-o plugin.python.defaultinterpreter:${{ steps.python.outputs.python-path }}" >> $GITHUB_ENV
+      - name: Build please_pex
+        if: inputs.please_pex_from_repo
+        # This copies the please_pex binary into the runner user's home directory so it persists across steps.
+        run: |
+          ./pleasew build //tools/please_pex
+          cp $(./pleasew query outputs //tools/please_pex) $HOME/please_pex
+          echo "PLZ_ARGS="$(grep ^PLZ_ARGS= $GITHUB_ENV | cut -d= -f2-)" -o plugin.python.pextool:$HOME/please_pex" >> $GITHUB_ENV
+      - name: Run tests
+        run: ./pleasew test --keep_going --log_file plz-out/log/test.log
+      - name: Archive logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-python_${{ inputs.python }}-please_pex_${{ inputs.please_pex_from_repo && 'repo' || 'stable' }}
+          path: plz-out/log
