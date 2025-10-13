@@ -78,3 +78,34 @@ UsePypi = True
 PipFlags = ""
 DisableVendorFlags = False
 ```
+
+## Compatibility
+
+This plugin is compatible with the same operating systems as Please itself:
+
+- Darwin (amd64, arm64)
+- FreeBSD (amd64)
+- Linux (amd64, arm64)
+
+and is compatible with the following Python versions:
+
+- 3.9
+- 3.10
+- 3.11 (as of python-rules v1.7.0)
+- 3.12 (as of python-rules v1.7.0)
+- 3.13 (as of python-rules v1.8.0)
+- 3.14 (as of python-rules v1.14.0)
+
+Whenever possible, we aim to ensure the plugin works with all of the
+[supported Python branches](https://devguide.python.org/versions/#supported-versions). Please
+[report](https://github.com/please-build/cc-rules/issues) any bugs you encounter when building,
+testing or running Python code under one of these versions.
+
+### Unsupported versions
+
+The following Python versions are no longer supported by this plugin:
+
+- 3.8 (last supported by python-rules v1.7.4)
+
+Outputs that this plugin generates may not run correctly under these Python versions, or may run
+with significantly reduced performance.
