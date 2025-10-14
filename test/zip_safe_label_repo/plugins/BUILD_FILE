@@ -1,0 +1,4 @@
+plugin_repo(
+    name = "python",
+    revision = "e2e",
+)

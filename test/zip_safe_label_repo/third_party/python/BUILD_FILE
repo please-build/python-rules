@@ -1,0 +1,33 @@
+subinclude("///python//build_defs:python")
+
+package(
+    # The pip_library targets below aren't real Python modules, and don't need to be downloaded in
+    # order for this test to run - make sure we don't accidentally look for them on PyPI.
+    python = {
+        "default_pip_repo": "https://nonexistent.example",
+        "use_pypi": False,
+    },
+)
+
+# This target is explicitly zip-safe:
+pip_library(
+    name = "safe",
+    licences = ["MIT"],
+    version = "1.0.0",
+    zip_safe = True,
+)
+
+# This target is implicitly zip-safe, because it specifies no value for zip_safe:
+pip_library(
+    name = "safe_implicit",
+    licences = ["MIT"],
+    version = "1.0.0",
+)
+
+# This target is explicitly zip-unsafe:
+pip_library(
+    name = "unsafe",
+    licences = ["MIT"],
+    version = "1.0.0",
+    zip_safe = False,
+)

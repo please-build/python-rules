@@ -1,3 +1,0 @@
-py
-pip:PyYAML==6.0.2
-py:zip-unsafe
