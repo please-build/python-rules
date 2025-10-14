@@ -17,6 +17,20 @@ package(
     },
 )
 
+e2e_test_plugin(
+    name = "python-rules",
+    srcs = [
+        "//build_defs:archs",
+        "//build_defs:python",
+        "//build_defs:version",
+        "//tools:please_pex",
+        "//:plzconfig",
+    ],
+    visibility = [
+        "//test/...",
+    ],
+)
+
 python_binary(
     name = "strip_source",
     main = "strip_source.py",
@@ -132,18 +146,19 @@ python_test(
     deps = ["//third_party/python:cx_oracle"],
 )
 
-plz_e2e_test(
-    name = "correct_labels_on_pip_libary_non_zip_safe",
-    cmd = "plz query print -f labels //third_party/python:pyyaml",
-    expected_output = "expected_labels_on_pyyaml.txt",
-    deps = ["//third_party/python:pyyaml"],
-)
-
-plz_e2e_test(
-    name = "correct_labels_on_pip_libary_zip_safe",
-    cmd = "plz query print -f labels //third_party/python:grpcio",
-    expected_output = "expected_labels_on_grpcio.txt",
-    deps = ["//third_party/python:grpcio"],
+plugin_e2e_test(
+    name = "pip_libary_zip_safe_label_test",
+    repo = "zip_safe_label_repo",
+    test_cmd = [
+        "plz query print -f labels //third_party/python:safe > safe",
+        "plz query print -f labels //third_party/python:safe_implicit > safe_implicit",
+        "plz query print -f labels //third_party/python:unsafe > unsafe",
+    ],
+    expected_output = {
+        "safe": "py\npip:safe==1.0.0",
+        "safe_implicit": "py\npip:safe_implicit==1.0.0",
+        "unsafe": "py\npip:unsafe==1.0.0\npy:zip-unsafe",
+    },
 )
 
 # Test that python_wheel targets can have name_scheme as a list or a string
