@@ -17,23 +17,6 @@ package(
 )
 
 python_wheel(
-    name = "flatbuffers",
-    licences = ["Apache-2.0"],
-    test_only = True,
-    version = "2.0",
-)
-
-python_wheel(
-    name = "astunparse",
-    licences = [
-        "BSD-3-Clause",
-        "PSF-2.0",
-    ],
-    test_only = True,
-    version = "1.6.3",
-)
-
-python_wheel(
     name = "xmlrunner",
     package_name = "unittest_xml_reporting",
     licences = ["BSD-2-Clause"],
@@ -94,13 +77,6 @@ python_wheel(
     licences = ["MIT"],
     test_only = True,
     version = "1.26.20",
-)
-
-python_wheel(
-    name = "colorlog",
-    hashes = ["732c191ebbe9a353ec160d043d02c64ddef9028de8caae4cfa8bd49b6afed53e"],
-    licences = ["MIT"],
-    version = "4.1.0",
 )
 
 python_wheel(
@@ -367,22 +343,6 @@ python_wheel(
 )
 
 pip_library(
-    name = "pyyaml",
-    package_name = "PyYAML",
-    test_only = True,
-    licences = ["MIT"],
-    version = "6.0.2",
-    zip_safe = False,
-)
-
-pip_library(
-    name = "grpcio",
-    test_only = True,
-    licences = ["Apache-2.0"],
-    version = "1.75.1",
-)
-
-pip_library(
     name = "google-pasta",
     test_only = True,
     licences = ["Apache-2.0"],
@@ -390,34 +350,6 @@ pip_library(
     deps = [
         ":six",
     ],
-)
-
-pip_library(
-    name = "gast",
-    test_only = True,
-    licences = ["BSD-3-Clause"],
-    version = "0.2.2",
-)
-
-pip_library(
-    name = "astor",
-    test_only = True,
-    licences = ["BSD-3-Clause"],
-    version = "0.8.1",
-)
-
-pip_library(
-    name = "termcolor",
-    test_only = True,
-    licences = ["MIT"],
-    version = "1.1.0",
-)
-
-pip_library(
-    name = "wrapt",
-    test_only = True,
-    licences = ["BSD-2-Clause"],
-    version = "1.12.1",
 )
 
 pip_library(
