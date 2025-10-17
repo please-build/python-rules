@@ -3,6 +3,25 @@ on:
   - push
   - pull_request
 jobs:
+  test-wheel_resolver:
+    name: Test wheel_resolver (Python ${{ matrix.python }})
+    uses: ./.github/workflows/plugin_test.yaml
+    with:
+      id: wheel_resolver
+      runner: ubuntu-latest
+      python: ${{ matrix.python }}
+      please_pex_from_repo: false
+      test_targets: //tools/wheel_resolver/...
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - '3.9'
+          - '3.10'
+          - '3.11'
+          - '3.12'
+          - '3.13'
+          - '3.14'
   test-please_pex:
     name: Test (Python ${{ matrix.python }}, in-repo please_pex)
     uses: ./.github/workflows/plugin_test.yaml
@@ -37,8 +56,8 @@ jobs:
           - '3.12'
           - '3.13'
           - '3.14'
-  release-tools:
-    name: Release tools
+  release-please_pex:
+    name: Release please_pex
     if: github.ref == 'refs/heads/master'
     needs:
       - test-please_pex
@@ -46,17 +65,37 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v5
-      - name: Build tools
-        run: ./pleasew build //package:release_files
-      - name: Release tools
+      - name: Build release files
+        run: ./pleasew build //package:please_pex_release_files
+      - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: thought-machine/release-action@master
         with:
-          release-files: plz-out/package
-          version-file: tools/VERSION
-          change-log-file: tools/ChangeLog
-          release-prefix: tools
+          release-files: plz-out/package/please_pex
+          version-file: tools/please_pex/VERSION
+          change-log-file: tools/please_pex/ChangeLog
+          release-prefix: please_pex
+  release-wheel_resolver:
+    name: Release wheel_resolver
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - test-wheel_resolver
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+      - name: Build release files
+        run: ./pleasew build //package:wheel_resolver_release_files
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: thought-machine/release-action@master
+        with:
+          release-files: plz-out/package/wheel_resolver
+          version-file: tools/wheel_resolver/VERSION
+          change-log-file: tools/wheel_resolver/ChangeLog
+          release-prefix: wheel_resolver
   release-plugin:
     name: Release plugin
     if: github.ref == 'refs/heads/master'

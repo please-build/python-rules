@@ -1,3 +1,7 @@
+Version 2.0.0
+-------------
+    * Release please_pex and wheel_resolver tools independently of each other
+
 Version 1.7.0
 -------------
     * Upgrade coverage package in please_pex's bootstrap .pex to v7.10.7 (#243)
@@ -46,7 +50,6 @@ Version 1.4.2
     * Upgrade `coverage` package to 7.6.4 in please_pex's bootstrap pex (#197)
       This drops native-speed tracing support for Python 3.8 and adds it for Python 3.13.
     * Remove unnecessary six dependency in the unittest test runner dependency bundle (#199)
-    * Remove redundant requests dependency from wheel resolver (#200)
     * Prevent Python >= 3.12 from emitting a `DeprecationWarning` when using `importlib.metadata`
       on modules in pex files (#203)
 
@@ -68,11 +71,11 @@ Version 1.3.5
 
 Version 1.3.4
 -------------
-    * Refactor wheel_resolver to allow for non-PyPI downloads (#167)
+    * No changes were made to please_pex in this release
 
 Version 1.3.3
 -------------
-    * Include wheel_resolver in tools release (#164)
+    * No changes were made to please_pex in this release
 
 Version 1.3.2
 -------------
@@ -84,8 +87,7 @@ Version 1.3.1
 
 Version 1.3.0
 -------------
-    * Added wheel_resolver tool; see [README](./wheel_resolver/README.md)
-    (#149)
+    * No changes were made to please_pex in this release
 
 Version 1.2.2
 -------------

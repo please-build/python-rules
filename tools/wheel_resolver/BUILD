@@ -1,4 +1,9 @@
-subinclude("//build_defs:python")
+subinclude(
+    "//build_defs:python",
+    "//build_defs:version",
+)
+
+version(name = "version")
 
 python_binary(
     name="wheel_resolver",
