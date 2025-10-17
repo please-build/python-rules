@@ -1,0 +1,67 @@
+Version 2.0.0
+-------------
+    * Release please_pex and wheel_resolver tools independently of each other
+
+Version 1.7.0
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.6.2
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.6.1
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.6.0
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.5.5
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.5.4
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.5.3
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.5.2
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.5.1
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.5.0
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.4.2
+-------------
+    * Remove redundant requests dependency from wheel resolver (#200)
+
+Version 1.4.1
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.4.0
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.3.5
+-------------
+    * No changes were made to wheel_resolver in this release
+
+Version 1.3.4
+-------------
+    * Refactor wheel_resolver to allow for non-PyPI downloads (#167)
+
+Version 1.3.3
+-------------
+    * Include wheel_resolver in tools release (#164)

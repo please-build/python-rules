@@ -1,4 +1,10 @@
-subinclude("//build_defs:python", "///go//build_defs:go")
+subinclude(
+    "///go//build_defs:go",
+    "//build_defs:python",
+    "//build_defs:version",
+)
+
+version(name = "version")
 
 go_binary(
     name = "pex_main",

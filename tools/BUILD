@@ -1,12 +1,8 @@
-subinclude("//build_defs:version")
-
-version(name = "version")
-
-TOOLS_VERSION = "1.7.0"
+_PLEASE_PEX_VERSION = "1.7.0"
 
 remote_file(
     name = "please_pex",
-    url = f"https://github.com/please-build/python-rules/releases/download/tools-v{TOOLS_VERSION}/please_pex-{TOOLS_VERSION}-{CONFIG.OS}_{CONFIG.ARCH}",
+    url = f"https://github.com/please-build/python-rules/releases/download/tools-v{_PLEASE_PEX_VERSION}/please_pex-{_PLEASE_PEX_VERSION}-{CONFIG.OS}_{CONFIG.ARCH}",
     hashes = [
         "d8f518764c06e690ea1a4fb90fd532b00c15247cd7d8fb58562748df5b1a0db7",  # darwin_amd64
         "3a4ff1599c757d2dff4ed9a11e2efa429bb7e644fe8f6ee7191ae1dec903e57b",  # darwin_arm64

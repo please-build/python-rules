@@ -1,9 +1,9 @@
-def version(name:str, version_file:str="VERSION", visibility:list=["PUBLIC"]):
+def version(name:str, version_const:str="VERSION", version_file:str="VERSION", visibility:list=["PUBLIC"]):
+    assert version_const == version_const.upper(), "version_const must be a constant identifier"
     return genrule(
-    name = name,
-    srcs = [version_file],
-    outs = [f"{name}.build_defs"],
-    cmd = "echo VERSION = \\\"$(cat $SRCS)\\\" > $OUT",
-    visibility = visibility,
-)
-
+        name = name,
+        srcs = [version_file],
+        outs = [f"{name}.build_defs"],
+        cmd = f'''echo "{version_const} = '$(cat $SRCS)'" > $OUTS''',
+        visibility = visibility,
+    )
