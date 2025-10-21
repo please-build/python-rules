@@ -62,7 +62,8 @@ The available configuration options are:
 
 ```ini
 [Plugin "python"]
-InterpreterOptions = -b -s
+InterpreterOptions = -b
+InterpreterOptions = -s
 DefaultInterpreter = python3
 PexTool = //tools/please_pex
 TestRunner = unittest

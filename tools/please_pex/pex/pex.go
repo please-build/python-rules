@@ -47,7 +47,7 @@ type Writer struct {
 }
 
 // NewWriter constructs a new Writer.
-func NewWriter(entryPoint, interpreter, options, stamp string, zipSafe, noSite bool) *Writer {
+func NewWriter(entryPoint, interpreter string, options []string, stamp string, zipSafe, noSite bool) *Writer {
 	pw := &Writer{
 		zipSafe:        zipSafe,
 		noSite:         noSite,
@@ -59,8 +59,8 @@ func NewWriter(entryPoint, interpreter, options, stamp string, zipSafe, noSite b
 }
 
 // SetShebang sets the leading shebang that will be written to the file.
-func (pw *Writer) SetShebang(shebang string, options string) {
-	shebang = strings.TrimSpace(fmt.Sprintf("%s %s", shebang, options))
+func (pw *Writer) SetShebang(shebang string, options []string) {
+	shebang = strings.TrimSpace(fmt.Sprintf("%s %s", shebang, strings.Join(options, " ")))
 	if !path.IsAbs(shebang) {
 		shebang = "/usr/bin/env " + shebang
 	}

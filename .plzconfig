@@ -42,8 +42,9 @@ Help = A path or build label for the pex tool, which is used to create .pex file
 
 [PluginConfig "interpreter_options"]
 ConfigKey = InterpreterOptions
-DefaultValue = ""
-Help = Any additional flags to pass to the python interpreter
+Optional = true
+Repeatable = true
+Help = Additional command line arguments to pass to the Python interpreter.
 
 [PluginConfig "test_runner"]
 ConfigKey = TestRunner
