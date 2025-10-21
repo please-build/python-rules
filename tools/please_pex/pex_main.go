@@ -22,7 +22,7 @@ var opts = struct {
 	TestRunner         string        `short:"r" long:"test_runner" default:"unittest" description:"Test runner to use"`
 	Shebang            string        `short:"s" long:"shebang" description:"Explicitly set shebang to this"`
 	Stamp              string        `long:"stamp" description:"Unique value used to derive cache directory for pex"`
-	InterpreterOptions string        `long:"interpreter_options" description:"Options-string to pass to the python interpreter"`
+	InterpreterOptions []string      `long:"interpreter_options" description:"Additional command line arguments to pass to the Python interpreter"`
 	Test               bool          `short:"t" long:"test" description:"True if we're to build a test"`
 	Debug              pex.Debugger  `short:"d" long:"debug" optional:"true" optional-value:"pdb" choice:"pdb" choice:"debugpy" description:"Debugger to generate a debugging pex"`
 	Site               bool          `short:"S" long:"site" description:"Allow the pex to import site at startup"`

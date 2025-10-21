@@ -147,8 +147,9 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
 
     shebang = shebang or _interpreter_cmd(interpreter)
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
-    cmd = '$TOOLS_PEX -s "%s" -m "%s" %s --interpreter_options="%s"' % (
-        shebang, module_dir, zipsafe_flag, CONFIG.PYTHON.INTERPRETER_OPTIONS)
+    interpreter_opts = _interpreter_opts(CONFIG.PYTHON.INTERPRETER_OPTIONS)
+    cmd = '$TOOLS_PEX -s "%s" -m "%s" %s %s' % (
+        shebang, module_dir, zipsafe_flag, interpreter_opts)
 
     # If content hashing feature flag is enabled, we use the hash of the built
     # dependencies instead of the RULE_HASH as the base of the pex extraction
@@ -270,7 +271,8 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     """
     test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
     shebang = shebang or _interpreter_cmd(interpreter)
-    cmd = f'$TOOLS_PEX -t -s "{shebang}" -m "{module_dir}" -r "{test_runner}" --zip_safe --add_test_runner_deps --interpreter_options="{CONFIG.PYTHON.INTERPRETER_OPTIONS}" --stamp="$RULE_HASH"'
+    interpreter_opts = _interpreter_opts(CONFIG.PYTHON.INTERPRETER_OPTIONS)
+    cmd = f'$TOOLS_PEX -t -s "{shebang}" -m "{module_dir}" -r "{test_runner}" --zip_safe --add_test_runner_deps {interpreter_opts} --stamp="$RULE_HASH"'
     if site:
         cmd += ' -S'
 
@@ -744,6 +746,10 @@ def _wheel_entrypoint_binary(name:str, entrypoint:str, lib_rule, visibility, tes
 
 def _interpreter_cmd(interpreter:str):
     return f'$(out {interpreter})' if looks_like_build_label(interpreter) else interpreter
+
+
+def _interpreter_opts(opts:list):
+    return " ".join([f'--interpreter_options="{o}"' for o in opts])
 
 
 def _patch_cmd(patch):
