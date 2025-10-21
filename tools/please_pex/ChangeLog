@@ -1,3 +1,7 @@
+Version 2.1.0
+-------------
+    * Make `--interpreter_options` option repeatable (#259)
+
 Version 2.0.0
 -------------
     * Release please_pex and wheel_resolver tools independently of each other
