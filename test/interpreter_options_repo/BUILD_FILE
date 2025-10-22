@@ -1,0 +1,16 @@
+subinclude("///python//build_defs:python")
+
+package(
+    # If InterpreterOptions is being honoured, the Python interpreter should execute plzmodule.py
+    # as the __main__ module instead of main.py, causing "Executed plzmodule.py" to be printed on
+    # stdout rather than "Executed binary.py".
+    python = {
+        "interpreter_options": ["-m", "plzmodule"],
+    },
+)
+
+python_binary(
+    name = "binary",
+    main = "binary.py",
+    srcs = ["plzmodule.py"],
+)

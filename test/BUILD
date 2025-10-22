@@ -202,3 +202,14 @@ python_test(
     ],
     labels = ["manual"],
 )
+
+plugin_e2e_test(
+    name = "interpreter_options_test",
+    repo = "interpreter_options_repo",
+    test_cmd = [
+        "plz run //:binary > binary",
+    ],
+    expected_output = {
+        "binary": "Executed plzmodule.py",
+    },
+)
