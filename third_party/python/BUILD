@@ -396,12 +396,6 @@ pip_library(
 )
 
 pip_library(
-    name = "argparse",
-    licences = ["PSF-2.0"],
-    version = "1.4.0",
-)
-
-pip_library(
     name = "distlib",
     licences = ["PSF-2.0"],
     version = "0.3.8",
