@@ -13,16 +13,3 @@ remote_file(
     binary = True,
     visibility = ["PUBLIC"],
 )
-
-# This target is only intended for use during plugin development. Its only purpose is to break the
-# mutual dependency between please_pex and the python_wheels in the bootstrap pex, which prevents
-# PexTool from being set to //tools/please_pex in order to test changes to please_pex.
-#
-# See .plzconfig.tool_test for more details.
-filegroup(
-    name = "please_pex_dev",
-    srcs = ["please_pex_dev"],
-    binary = True,
-    labels = ["manual"],
-    visibility = ["PUBLIC"],
-)
