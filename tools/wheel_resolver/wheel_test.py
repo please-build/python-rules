@@ -1,7 +1,7 @@
-import pytest
 import tools.wheel_resolver.wheel as sut
 import collections
 import typing
+import unittest
 import unittest.mock
 import distlib.locators
 import distlib.database
@@ -13,7 +13,7 @@ IsCompatibleCase = collections.namedtuple(
 )
 
 
-class TestUrl:
+class TestUrl(unittest.TestCase):
     def _mock_locator(
         self,
         *,
@@ -36,7 +36,7 @@ class TestUrl:
         )
 
     def test_no_distribution(self) -> None:
-        with pytest.raises(sut.DistributionNotFoundError):
+        with self.assertRaises(sut.DistributionNotFoundError):
             sut.url(
                 package_name="",
                 package_version=None,
@@ -45,7 +45,7 @@ class TestUrl:
             )
 
     def test_no_compatible_urls(self) -> None:
-        with pytest.raises(sut.CompatibleUrlNotFoundError):
+        with self.assertRaises(sut.CompatibleUrlNotFoundError):
             sut.url(
                 package_name="",
                 package_version=None,
@@ -53,7 +53,7 @@ class TestUrl:
                 locator=self._mock_locator(),
             )
 
-    @pytest.mark.skip("caplog doesn't capture logging")
+    @unittest.skip("caplog doesn't capture logging")
     def test_warns_multiple_compatible_urls(self, caplog) -> None:
         with caplog.at_level(logging.WARNING, logger=sut.__name__):
             sut.url(
@@ -73,7 +73,7 @@ class TestUrl:
             assert len(caplog.records) > 0
             assert any(x.level == logging.WARNING for x in caplog.records)
 
-    @pytest.mark.skip(
+    @unittest.skip(
         "ordering and selection is unclear; this test case should be updated if we have a preference for a specific URL when collissions happen."
     )
     def test_preferred_url(self) -> None:
