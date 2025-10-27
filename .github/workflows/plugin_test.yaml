@@ -41,7 +41,7 @@ jobs:
       - name: Configure plugin to use please_pex tool built from source
         if: inputs.please_pex_from_repo
         run: |
-          echo "PLZ_ARGS="$(grep ^PLZ_ARGS= $GITHUB_ENV | cut -d= -f2-)" -o plugin.python.pextool://tools/please_pex" >> $GITHUB_ENV
+          echo "PLZ_ARGS=${PLZ_ARGS:+$PLZ_ARGS }-o plugin.python.pextool://tools/please_pex" >> $GITHUB_ENV
       - name: Run tests
         run: ./pleasew test --keep_going --log_file plz-out/log/test.log ${{ inputs.test_targets }}
       - name: Archive logs
