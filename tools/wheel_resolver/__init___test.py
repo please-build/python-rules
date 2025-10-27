@@ -1,9 +1,10 @@
 import click.testing
+import unittest
 import unittest.mock
 import tools.wheel_resolver as sut
 
 
-class TestMain:
+class TestMain(unittest.TestCase):
     def test_help(self) -> None:
         runner = click.testing.CliRunner()
         result = runner.invoke(cli=sut.main, args=["--help"])

@@ -36,9 +36,7 @@ python_test(
         "__init___test.py",
         "wheel_test.py",
     ],
-    test_runner="pytest",
     deps=[
         ":wheel",
-        "//third_party/python:pytest",
     ],
 )
