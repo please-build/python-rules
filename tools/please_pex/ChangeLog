@@ -1,3 +1,7 @@
+Version 2.2.0
+-------------
+    * Don't require a please_pex binary in order to build please_pex from source (#266)
+
 Version 2.1.0
 -------------
     * Make `--interpreter_options` option repeatable (#259)
