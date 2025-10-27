@@ -38,13 +38,10 @@ jobs:
       - name: Configure plugin's default Python interpreter
         run: |
           echo "PLZ_ARGS=-o plugin.python.defaultinterpreter:${{ steps.python.outputs.python-path }}" >> $GITHUB_ENV
-      - name: Build please_pex
+      - name: Configure plugin to use please_pex tool built from source
         if: inputs.please_pex_from_repo
-        # This copies the please_pex binary into the runner user's home directory so it persists across steps.
         run: |
-          ./pleasew build //tools/please_pex
-          cp $(./pleasew query outputs //tools/please_pex) $HOME/please_pex
-          echo "PLZ_ARGS="$(grep ^PLZ_ARGS= $GITHUB_ENV | cut -d= -f2-)" -o plugin.python.pextool:$HOME/please_pex" >> $GITHUB_ENV
+          echo "PLZ_ARGS="$(grep ^PLZ_ARGS= $GITHUB_ENV | cut -d= -f2-)" -o plugin.python.pextool://tools/please_pex" >> $GITHUB_ENV
       - name: Run tests
         run: ./pleasew test --keep_going --log_file plz-out/log/test.log ${{ inputs.test_targets }}
       - name: Archive logs
