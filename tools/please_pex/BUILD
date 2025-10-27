@@ -22,30 +22,30 @@ go_binary(
 genrule(
     name = "please_pex",
     srcs = {
-        "bootstraps": [
-            "//third_party/python:coverage",
-            "//third_party/python:portalocker",
-            "//third_party/python:pytest",
-            "//third_party/python:xmlrunner",
-            "//third_party/python:behave",
-        ],
         "main": [":pex_main"],
     },
     outs = ["please_pex"],
     binary = True,
     cmd = [
-        'for i in $SRCS_BOOTSTRAPS; do if echo "$i" | grep -q \'\\.pex$\'; then "$TOOL" x -o . "$i"; rm -f "$i"; fi; done',
+        'for i in third_party/python/*.pex.zip; do "$TOOL" x -o . "$i"; rm -f "$i"; done',
         "rm -f third_party/python/__*_main__.py*",
         # Have to make sure these exist.
         "touch third_party/__init__.py third_party/python/__init__.py",
         "touch tools/__init__.py tools/please_pex/__init__.py",
+        "mkdir -p .bootstrap",
         "mv third_party/python/* .bootstrap",
         # A little cleanup.
         "rm -rf third_party .bootstrap/xmlrunner/extra .bootstrap/coverage/htmlfiles .bootstrap/.*.pex.zip",
         '"$TOOL" z -d -i .bootstrap -o "$OUTS" --preamble_file $(location :pex_main)',
     ],
+    needs_transitive_deps = True,
     tools = [CONFIG.ARCAT_TOOL],
     visibility = ["PUBLIC"],
+    deps = [
+        "//third_party/python:behave_bootstrap",
+        "//third_party/python:pytest_bootstrap",
+        "//third_party/python:unittest_bootstrap",
+    ],
 )
 
 python_test(

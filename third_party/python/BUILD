@@ -232,7 +232,6 @@ python_wheel(
         "_pytest",
         "pytest",
     ],
-    entry_points = "pytest:main",
     hashes = ["1d881c6124e08ff0a1bb75ba3ec0bfd8b5354a01c194ddd5a0a870a48d99b002"],
     licences = ["MIT"],
     version = "7.4.2",
@@ -271,10 +270,6 @@ python_wheel(
     outs = [
         "behave",
     ],
-    entry_points = {
-        "behave": "behave.__main__:main",
-        "behave_test": "setuptools_behave:behave_test",
-    },
     hashes = ["ebda1a6c9e5bfe95c5f9f0a2794e01c7098b3dde86c10a95d8621c5907ff6f1c"],
     licences = ["BSD-2-Clause"],
     version = "1.2.6",
@@ -417,7 +412,7 @@ python_wheel(
 
 # This is the minimum set of third-party packages required for the built-in test runners to work
 # with "plz test" and "plz cover". All built-in test runners should include this as a source.
-filegroup(
+python_library(
     name = "test_bootstrap",
     deps = [
         ":coverage",
@@ -425,7 +420,7 @@ filegroup(
     ],
 )
 
-filegroup(
+python_library(
     name = "unittest_bootstrap",
     deps = [
         ":test_bootstrap",
@@ -433,7 +428,7 @@ filegroup(
     ],
 )
 
-filegroup(
+python_library(
     name = "pytest_bootstrap",
     deps = [
         ":pytest",
@@ -441,7 +436,7 @@ filegroup(
     ],
 )
 
-filegroup(
+python_library(
     name = "behave_bootstrap",
     deps = [
         ":behave",
