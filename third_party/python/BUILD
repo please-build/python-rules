@@ -384,13 +384,6 @@ pip_library(
 )
 
 pip_library(
-    name = "cx_oracle",
-    package_name = "cx-Oracle",
-    licences = ["BSD-3-Clause"],
-    version = "8.2.1",
-)
-
-pip_library(
     name = "distlib",
     licences = ["PSF-2.0"],
     version = "0.3.8",

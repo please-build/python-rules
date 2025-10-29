@@ -137,15 +137,6 @@ python_test(
     data = {"txt": ["data.txt"]},
 )
 
-python_test(
-    name = "cx_oracle_darwin_build_test",
-    srcs = ["cx_oracle_darwin_build_test.py"],
-    labels = [
-        "pip",
-    ],
-    deps = ["//third_party/python:cx_oracle"],
-)
-
 plugin_e2e_test(
     name = "pip_libary_zip_safe_label_test",
     repo = "zip_safe_label_repo",
