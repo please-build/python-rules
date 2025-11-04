@@ -3,15 +3,15 @@ subinclude("//build_defs:archs", "///go//build_defs:go")
 go_toolchain(
     name = "toolchain",
     hashes = [
-        "ecb3cecb1e0bcfb24e50039701f9505b09744cc4730a8b9fc512b0a3b47cf232",  # darwin-amd64
-        "0db27ff8c3e35fd93ccf9d31dd88a0f9c6454e8d9b30c28bd88a70b930cc4240",  # darwin-arm64
-        "16b0f6417350711c123b160fe33a8bc53e1ea8a4a9cf2f410b427e3ac14195a1",  # freebsd-amd64
-        "6842c516ca66c89d648a7f1dbe28e28c47b61b59f8f06633eb2ceb1188e9251d",  # linux-amd64
-        "38ac33b4cfa41e8a32132de7a87c6db49277ab5c0de1412512484db1ed77637e",  # linux-arm64
+        "1641050b422b80dfd6299f8aa7eb8798d1cd23eac7e79f445728926e881b7bcd",  # darwin-amd64
+        "7c083e3d2c00debfeb2f77d9a4c00a1aac97113b89b9ccc42a90487af3437382",  # darwin-arm64
+        "77a36eef352609f616813ec710274d122738510b62efd0fac1435cb480a07170",  # freebsd-amd64
+        "0335f314b6e7bfe08c3d0cfaa7c19db961b7b99fb20be62b0a826c992ad14e0f",  # linux-amd64
+        "1d42ebc84999b5e2069f5e31b67d6fc5d67308adad3e178d5a2ee2c9ff2001f5",  # linux-arm64
     ],
     install_std = False,
     architectures = SUPPORTED_ARCHS,
-    version = "1.24.8",
+    version = "1.25.3",
 )
 
 go_stdlib(
