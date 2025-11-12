@@ -97,12 +97,11 @@ python_wheel(
     deps = [":six"],
 )
 
-_coverage_version = "7.10.7"
+_coverage_version = "7.11.3"
 
 _coverage_tags = {
     "darwin_amd64": {
         "macosx_10_9_x86_64": [
-            ["cp39", "cp39"],
             ["cp310", "cp310"],
             ["cp311", "cp311"],
         ],
@@ -116,7 +115,6 @@ _coverage_tags = {
     },
     "darwin_arm64": {
         "macosx_11_0_arm64": [
-            ["cp39", "cp39"],
             ["cp310", "cp310"],
             ["cp311", "cp311"],
             ["cp312", "cp312"],
@@ -128,7 +126,6 @@ _coverage_tags = {
     },
     "linux_amd64": {
         "manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64": [
-            ["cp39", "cp39"],
             ["cp310", "cp310"],
             ["cp311", "cp311"],
             ["cp312", "cp312"],
@@ -138,11 +135,10 @@ _coverage_tags = {
             ["cp314", "cp314t"],
         ],
         "musllinux_1_2_x86_64": [
-            # The SOABI used by musl-linked Python 3.9 and 3.10 interpreters is "x86_64-linux-gnu", making
-            # it indistinguishable from the SOABI used by glibc-linked interpreters (and causing file name
+            # The SOABI used by musl-linked Python 3.10 interpreters is "x86_64-linux-gnu", making it
+            # indistinguishable from the SOABI used by glibc-linked interpreters (and causing file name
             # collisions for the tracer shared object in the multi-arch wheel). Because of this, we aren't
-            # able to provide native-speed tracing support for musl-linked Python 3.9 and 3.10
-            # interpreters.
+            # able to provide native-speed tracing support for musl-linked Python 3.10 interpreters.
             ["cp311", "cp311"],
             ["cp312", "cp312"],
             ["cp313", "cp313"],
@@ -153,7 +149,6 @@ _coverage_tags = {
     },
     "linux_arm64": {
         "manylinux_2_17_aarch64.manylinux2014_aarch64": [
-            ["cp39", "cp39"],
             ["cp310", "cp310"],
             ["cp311", "cp311"],
             ["cp312", "cp312"],
@@ -163,10 +158,10 @@ _coverage_tags = {
             ["cp314", "cp314t"],
         ],
         "musllinux_1_2_aarch64": [
-            # The SOABI used by musl-linked Python 3.9 and 3.10 interpreters is "x86_64-linux-gnu", making
-            # it indistinguishable from the SOABI used by glibc-linked interpreters (and causing file name
+            # The SOABI used by musl-linked Python 3.10 interpreters is "x86_64-linux-gnu", making it
+            # indistinguishable from the SOABI used by glibc-linked interpreters (and causing file name
             # collisions for the tracer shared object in the multi-arch wheel). Because of this, we aren't
-            # able to provide native-speed tracing support for musl-linked Python 3.9 and 3.10
+            # able to provide native-speed tracing support for musl-linked Python 3.10 interpreters.
             # interpreters.
             ["cp311", "cp311"],
             ["cp312", "cp312"],

@@ -90,7 +90,6 @@ This plugin is compatible with the same operating systems as Please itself:
 
 and is compatible with the following Python versions:
 
-- 3.9
 - 3.10
 - 3.11 (as of python-rules v1.7.0)
 - 3.12 (as of python-rules v1.7.0)
@@ -107,6 +106,7 @@ testing or running Python code under one of these versions.
 The following Python versions are no longer supported by this plugin:
 
 - 3.8 (last supported by python-rules v1.7.4)
+- 3.9 (last supported by python-rules v1.14.0)
 
 Outputs that this plugin generates may not run correctly under these Python versions, or may run
 with significantly reduced performance.
