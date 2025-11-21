@@ -4,6 +4,9 @@ Version = >=17.21.0
 [Build]
 hashcheckers = sha256
 
+[Plugin "cc"]
+Target = //plugins:cc
+
 [Plugin "go"]
 Target = //plugins:go
 ImportPath = github.com/please-build/python-rules
