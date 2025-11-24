@@ -150,7 +150,7 @@ _coverage_tags = {
         ],
     },
     "linux_arm64": {
-        "manylinux_2_17_aarch64.manylinux2014_aarch64": [
+        "manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64": [
             ["cp310", "cp310"],
             ["cp311", "cp311"],
             ["cp312", "cp312"],
