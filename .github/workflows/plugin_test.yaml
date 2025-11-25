@@ -5,12 +5,12 @@ on:
         description: "A identifier for this test run. Will be included in the Please log archive file name."
         type: string
         default: test
-      runner:
-        description: "The GitHub runner type on which this workflow should run."
+      platform:
+        description: "The platform on which this workflow should run. Must be one of darwin_amd64, darwin_arm64, freebsd_amd64, linux_amd64 or linux_arm64."
         required: true
         type: string
       python:
-        description: "The Python version to configure the plugin to use. Must be a value of python-version recognised by the actions/setup-python action."
+        description: "The major Python version to configure the plugin to use."
         required: true
         type: string
       please_pex_from_repo:
@@ -25,9 +25,10 @@ on:
 jobs:
   test:
     name: Run tests
-    runs-on: ${{ inputs.runner }}
+    runs-on: ${{ (inputs.platform == 'freebsd_amd64' || inputs.platform == 'linux_amd64') && 'ubuntu-24.04' || (inputs.platform == 'linux_arm64' && 'ubuntu-24.04-arm' || (inputs.platform == 'darwin_amd64' && 'macos-15-intel' || (inputs.platform == 'darwin_arm64' && 'macos-15' || 'unknown'))) }}
     steps:
       - name: Install Python in CI environment
+        if: ${{ inputs.platform != 'freebsd_amd64' }}
         id: python
         uses: actions/setup-python@v6
         with:
@@ -37,15 +38,30 @@ jobs:
         uses: actions/checkout@v5
       - name: Configure plugin's default Python interpreter
         run: |
-          echo "PLZ_ARGS=-o plugin.python.defaultinterpreter:${{ steps.python.outputs.python-path }}" >> $GITHUB_ENV
+          _python_path="${{ inputs.platform == 'freebsd_amd64' && format('python{0}', inputs.python) || steps.python.outputs.python-path }}"
+          echo "PLZ_ARGS=-o plugin.python.defaultinterpreter:$_python_path" >> $GITHUB_ENV
       - name: Configure plugin to use please_pex tool built from source
         if: inputs.please_pex_from_repo
         run: |
           echo "PLZ_ARGS=${PLZ_ARGS:+$PLZ_ARGS }-o plugin.python.pextool://tools/please_pex" >> $GITHUB_ENV
-      - name: Run tests
-        run: ./pleasew test --keep_going --log_file plz-out/log/test.log ${{ inputs.test_targets }}
+      - name: Run tests (in nested runner)
+        if: ${{ inputs.platform == 'freebsd_amd64' }}
+        uses: cross-platform-actions/action@v0.30.0
+        with:
+          operating_system: freebsd
+          architecture: x86-64
+          version: '14.3'
+          image_url: https://github.com/please-build/freebsd-builder/releases/download/v0.12.0-please.3/freebsd-14.3-x86-64.qcow2
+          shell: bash
+          environment_variables: PLZ_ARGS
+          shutdown_vm: true
+          run: ./pleasew test --keep_going --log_file plz-out/log/test.log ${{ inputs.test_targets }}
+      - name: Run tests (on host)
+        if: ${{ inputs.platform != 'freebsd_amd64' }}
+        run: |
+          ./pleasew test --keep_going --log_file plz-out/log/test.log ${{ inputs.test_targets }}
       - name: Archive logs
         uses: actions/upload-artifact@v4
         with:
-          name: logs-${{ inputs.id }}-python_${{ inputs.python }}-please_pex_${{ inputs.please_pex_from_repo && 'repo' || 'stable' }}
+          name: logs-${{ inputs.id }}-${{ inputs.platform }}-python_${{ inputs.python }}-please_pex_${{ inputs.please_pex_from_repo && 'repo' || 'stable' }}
           path: plz-out/log
