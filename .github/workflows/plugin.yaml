@@ -4,17 +4,23 @@ on:
   - pull_request
 jobs:
   test-wheel_resolver:
-    name: Test wheel_resolver (Python ${{ matrix.python }})
+    name: Test wheel_resolver (${{ matrix.platform }}, Python ${{ matrix.python }})
     uses: ./.github/workflows/plugin_test.yaml
     with:
       id: wheel_resolver
-      runner: ubuntu-latest
+      platform: ${{ matrix.platform }}
       python: ${{ matrix.python }}
       please_pex_from_repo: false
       test_targets: //tools/wheel_resolver/...
     strategy:
       fail-fast: false
       matrix:
+        platform:
+          - darwin_amd64
+          - darwin_arm64
+          - freebsd_amd64
+          - linux_amd64
+          - linux_arm64
         python:
           - '3.10'
           - '3.11'
@@ -22,15 +28,21 @@ jobs:
           - '3.13'
           - '3.14'
   test-please_pex:
-    name: Test (Python ${{ matrix.python }}, in-repo please_pex)
+    name: Test (${{ matrix.platform}}, Python ${{ matrix.python }}, in-repo please_pex)
     uses: ./.github/workflows/plugin_test.yaml
     with:
-      runner: ubuntu-latest
+      platform: ${{ matrix.platform }}
       python: ${{ matrix.python }}
       please_pex_from_repo: true
     strategy:
       fail-fast: false
       matrix:
+        platform:
+          - darwin_amd64
+          - darwin_arm64
+          - freebsd_amd64
+          - linux_amd64
+          - linux_arm64
         python:
           - '3.10'
           - '3.11'
@@ -38,15 +50,21 @@ jobs:
           - '3.13'
           - '3.14'
   test:
-    name: Test (Python ${{ matrix.python }}, stable please_pex release)
+    name: Test (${{ matrix.platform}}, Python ${{ matrix.python }}, stable please_pex release)
     uses: ./.github/workflows/plugin_test.yaml
     with:
-      runner: ubuntu-latest
+      platform: ${{ matrix.platform }}
       python: ${{ matrix.python }}
       please_pex_from_repo: false
     strategy:
       fail-fast: false
       matrix:
+        platform:
+          - darwin_amd64
+          - darwin_arm64
+          - freebsd_amd64
+          - linux_amd64
+          - linux_arm64
         python:
           - '3.10'
           - '3.11'
