@@ -7,13 +7,16 @@ package pex
 import (
 	"bytes"
 	"embed"
+	"encoding/json"
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 
+	"github.com/please-build/python-rules/tools/please_pex/preamble"
 	"github.com/please-build/python-rules/tools/please_pex/zip"
 )
 
@@ -30,13 +33,13 @@ const (
 //go:embed *.py
 //go:embed test_runners/*.py
 //go:embed debuggers/*.py
+//go:embed preamble
 var files embed.FS
 
 // A Writer implements writing a .pex file in various steps.
 type Writer struct {
+	preambleConfig   *preamble.Config
 	zipSafe          bool
-	noSite           bool
-	shebang          string
 	realEntryPoint   string
 	pexStamp         string
 	testSrcs         []string
@@ -47,36 +50,28 @@ type Writer struct {
 }
 
 // NewWriter constructs a new Writer.
-func NewWriter(entryPoint, interpreter string, options []string, stamp string, zipSafe, noSite bool) *Writer {
+func NewWriter(entryPoint string, interpreters []string, interpreterArgs []string, stamp string, zipSafe, noSite bool) *Writer {
+	if interpreterArgs == nil {
+		interpreterArgs = make([]string, 0)
+	}
 	pw := &Writer{
+		preambleConfig: &preamble.Config{
+			Interpreters:    interpreters,
+			InterpreterArgs: interpreterArgs,
+		},
 		zipSafe:        zipSafe,
-		noSite:         noSite,
 		realEntryPoint: toPythonPath(entryPoint),
 		pexStamp:       stamp,
 	}
-	pw.SetShebang(interpreter, options)
+	if noSite {
+		pw.preambleConfig.InterpreterArgs = append(pw.preambleConfig.InterpreterArgs, "-S")
+	}
 	return pw
 }
 
-// SetShebang sets the leading shebang that will be written to the file.
-func (pw *Writer) SetShebang(shebang string, options []string) {
-	shebang = strings.TrimSpace(fmt.Sprintf("%s %s", shebang, strings.Join(options, " ")))
-	if !path.IsAbs(shebang) {
-		shebang = "/usr/bin/env " + shebang
-	}
-	if pw.noSite {
-		// In many environments shebangs cannot have more than one argument; we can work around
-		// that by treating it as a shell script.
-		if strings.Contains(shebang, " ") {
-			shebang = "#!/bin/sh\nexec " + shebang + ` -S $0 "$@"`
-		} else {
-			shebang += " -S"
-		}
-	}
-	if !strings.HasPrefix(shebang, "#") {
-		shebang = "#!" + shebang
-	}
-	pw.shebang = shebang + "\n"
+// SetPreambleVerbosity sets the preamble's default minimum logging level.
+func (pw *Writer) SetPreambleVerbosity(verbosity preamble.Verbosity) {
+	pw.preambleConfig.Verbosity = verbosity
 }
 
 // SetTest sets this Writer to write tests using the given sources.
@@ -162,10 +157,22 @@ func (pw *Writer) Write(out, moduleDir string) error {
 	f := zip.NewFile(out, true)
 	defer f.Close()
 
-	// Write preamble (i.e. the shebang that makes it executable)
-	if err := f.WritePreamble([]byte(pw.shebang)); err != nil {
+	// Write preamble (i.e. the binary that makes the .pex executable)
+	nf := mustOpen("preamble")
+	defer nf.Close()
+	if err := f.WritePreambleFile(nf); err != nil {
 		return err
 	}
+
+	// Write preamble configuration file
+	preambleConfig, err := json.Marshal(&pw.preambleConfig)
+	if err != nil {
+		return fmt.Errorf("marshal preamble configuration: %w", err)
+	}
+	if err := f.WriteFile(preamble.ConfigPath, preambleConfig, 0644); err != nil {
+		return fmt.Errorf("write preamble configuration: %w", err)
+	}
+
 	// Non-zip-safe pexes need portalocker
 	if !pw.zipSafe {
 		pw.includeLibs = append(pw.includeLibs, ".bootstrap/portalocker")
@@ -227,6 +234,15 @@ func pythonBool(b bool) string { //nolint:unused
 func toPythonPath(p string) string {
 	ext := path.Ext(p)
 	return strings.ReplaceAll(p[:len(p)-len(ext)], "/", ".")
+}
+
+// mustOpen opens the given file from the embedded set. It dies on error.
+func mustOpen(filename string) fs.File {
+	f, err := files.Open(filename)
+	if err != nil {
+		panic(err)
+	}
+	return f
 }
 
 // mustRead reads the given file from the embedded set. It dies on error.

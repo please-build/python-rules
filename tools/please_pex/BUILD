@@ -14,6 +14,7 @@ go_binary(
         "///third_party/go/github.com_peterebden_go-cli-init_v5//logging",
         "///third_party/go/gopkg.in_op_go-logging.v1//:go-logging.v1",
         "//tools/please_pex/pex",
+        "//tools/please_pex/preamble:preamble_go",
     ],
 )
 

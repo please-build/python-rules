@@ -1,0 +1,24 @@
+subinclude("///cc//build_defs:c")
+
+package(
+    cc = {
+        "default_dbg_cflags": CONFIG.CC.DEFAULT_DBG_CFLAGS + ["-std=gnu99"],
+        "default_opt_cflags": CONFIG.CC.DEFAULT_OPT_CFLAGS + ["-std=gnu99"],
+    },
+)
+
+c_library(
+    name = "kuba_zip",
+    srcs = ["src/zip.c"],
+    hdrs = ["src/zip.h"],
+    defines = [
+        # Disable some unnecessary miniz features to save space.
+        "MINIZ_NO_TIME",
+        "MINIZ_NO_ZLIB_COMPATIBLE_NAMES",
+    ],
+    includes = ["src"],
+    private_hdrs = ["src/miniz.h"],
+    visibility = [
+        "@//tools/please_pex/preamble/...",
+    ],
+)

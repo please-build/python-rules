@@ -1,11 +1,31 @@
 [Please]
-Version = >=17.21.0
+Version = >=17.25.1
 
 [Build]
 hashcheckers = sha256
 
 [Plugin "cc"]
 Target = //plugins:cc
+LdGarbageCollection = true
+
+DefaultOptCFlags = -std=c99
+DefaultOptCFlags = -Os
+DefaultOptCFlags = -DNDEBUG
+DefaultOptCFlags = -Wall
+DefaultOptCFlags = -Wextra
+DefaultOptCFlags = -Werror
+DefaultOptCFlags = -flto
+DefaultOptCFlags = -D_LARGEFILE64_SOURCE
+DefaultOptCFlags = -D_FILE_OFFSET_BITS=64
+
+DefaultDbgCFlags = -std=c99
+DefaultDbgCFlags = -g3
+DefaultDbgCFlags = -DDEBUG
+DefaultDbgCFlags = -Wall
+DefaultDbgCFlags = -Wextra
+DefaultDbgCFlags = -Werror
+DefaultDbgCFlags = -D_LARGEFILE64_SOURCE
+DefaultDbgCFlags = -D_FILE_OFFSET_BITS=64
 
 [Plugin "go"]
 Target = //plugins:go
@@ -21,6 +41,7 @@ Target = //plugins:shell
 
 [Plugin "e2e"]
 Target = //plugins:e2e
+PleaseVersion = 17.25.1
 DefaultPlugin = //test:python-rules
 
 [PluginDefinition]
@@ -30,24 +51,33 @@ name = python
 ConfigKey = DefaultInterpreter
 DefaultValue = python3
 Inherit = true
-Help = The Python interpreter to use for any case where one is not explicitly specified
+Help = The default Python interpreter to use when building .pex files.
 
-[PluginConfig "default_shebang"]
-Inherit = true
+[PluginConfig "interpreter_options"]
+ConfigKey = InterpreterOptions
 Optional = true
-Help = The shebang to set on binaries / tests where one is not explicitly specified
+Repeatable = true
+Help = A list of additional arguments to pass to the Python interpreter when building .pex files.
+
+[PluginConfig "default_runtime_interpreters"]
+ConfigKey = DefaultRuntimeInterpreters
+Optional = true
+Repeatable = true
+Inherit = true
+Help = A list of possible paths to Python interpreters with which to run .pex files.
+
+[PluginConfig "default_runtime_interpreter_args"]
+ConfigKey = DefaultRuntimeInterpreterArgs
+Optional = true
+Repeatable = true
+Inherit = true
+Help = A list of additional arguments to pass to the Python interpreter when running .pex files.
 
 [PluginConfig "pex_tool"]
 ConfigKey = PexTool
 DefaultValue = //tools:please_pex
 Inherit = true
 Help = A path or build label for the pex tool, which is used to create .pex files from python sources
-
-[PluginConfig "interpreter_options"]
-ConfigKey = InterpreterOptions
-Optional = true
-Repeatable = true
-Help = Additional command line arguments to pass to the Python interpreter.
 
 [PluginConfig "test_runner"]
 ConfigKey = TestRunner
@@ -145,6 +175,12 @@ Help = If set, the licences field on pip_library and python_wheel will be mandat
 DefaultValue = "info"
 Help = Passes verbosity level to wheel_tool, for example: wheel_tool --verbosity info
 Optional = true
+
+[PluginConfig "default_preamble_verbosity"]
+ConfigKey = DefaultPreambleVerbosity
+DefaultValue = error
+Inherit = true
+Help = The default logging level for the .pex preamble. Must be one of trace, debug, info, warn, error or fatal.
 
 [PluginConfig "feature_flags"]
 DefaultValue = ""

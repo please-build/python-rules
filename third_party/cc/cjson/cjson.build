@@ -1,0 +1,18 @@
+subinclude("///cc//build_defs:c")
+
+package(
+    cc = {
+        "default_dbg_cflags": CONFIG.CC.DEFAULT_DBG_CFLAGS + ["-std=c89"],
+        "default_opt_cflags": CONFIG.CC.DEFAULT_OPT_CFLAGS + ["-std=c89"],
+    },
+)
+
+c_library(
+    name = "cjson",
+    srcs = ["cJSON.c"],
+    hdrs = ["cJSON.h"],
+    includes = ["."],
+    visibility = [
+        "@//tools/please_pex/preamble/...",
+    ],
+)

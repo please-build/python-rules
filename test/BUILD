@@ -23,8 +23,8 @@ e2e_test_plugin(
         "//build_defs:archs",
         "//build_defs:python",
         "//build_defs:version",
-        "//tools:please_pex",
         "//:plzconfig",
+        CONFIG.PYTHON.PEX_TOOL,
     ],
     visibility = [
         "//test/...",
