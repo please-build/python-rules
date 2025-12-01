@@ -98,14 +98,15 @@ func (pw *Writer) SetTest(srcs []string, testRunner string, addTestRunnerDeps bo
 		// (except for those from //third_party/python:test_bootstrap).
 		testRunnerDeps = append(testRunnerDeps,
 			".bootstrap/_pytest",
-			".bootstrap/colorama",
 			".bootstrap/exceptiongroup",
 			".bootstrap/iniconfig",
 			".bootstrap/packaging",
 			".bootstrap/pluggy",
 			".bootstrap/py",
+			".bootstrap/pygments",
 			".bootstrap/pytest",
 			".bootstrap/tomli",
+			".bootstrap/typing_extensions.py",
 		)
 		pw.testRunner = filepath.Join(testRunnersDir, "pytest.py")
 	case "behave":
