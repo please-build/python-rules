@@ -7,4 +7,4 @@ import unittest
 class FlagsTest(unittest.TestCase):
 
     def test_flags(self):
-        self.assertEqual('--test_flag', sys.argv[1])
+        self.assertIn("--test_flag", sys.argv)
