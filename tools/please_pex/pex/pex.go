@@ -158,9 +158,9 @@ func (pw *Writer) Write(out, moduleDir string) error {
 	defer f.Close()
 
 	// Write preamble (i.e. the binary that makes the .pex executable)
-	nf := mustOpen("preamble")
-	defer nf.Close()
-	if err := f.WritePreambleFile(nf); err != nil {
+	preambleFile := mustOpen("preamble")
+	defer preambleFile.Close()
+	if err := f.WritePreambleFile(preambleFile); err != nil {
 		return err
 	}
 
