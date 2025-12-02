@@ -196,7 +196,7 @@ err_t *get_plz_bin_path(char **path) {
             strncmp(tmp_dir_realpath, pex_dir_realpath, tmp_len) == 0 &&
             (
                 (pex_len == tmp_len) ||
-                (pex_len - tmp_len >= 1 && pex_dir_realpath[tmp_len] == '/')
+                (pex_len > tmp_len && pex_dir_realpath[tmp_len] == '/')
             )
         ) {
             if (((*path) = strdup(tmp_dir_realpath)) == NULL) {
