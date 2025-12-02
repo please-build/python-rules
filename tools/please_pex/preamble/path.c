@@ -137,9 +137,7 @@ err_t *get_pex_dir(char **pex_dir) {
     }
 
 end:
-#ifdef __APPLE__
     FREE(exe_path);
-#endif
 
     return err;
 }
