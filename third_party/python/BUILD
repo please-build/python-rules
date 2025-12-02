@@ -219,9 +219,9 @@ python_wheel(
 
 python_wheel(
     name = "pluggy",
-    hashes = ["d89c696a773f8bd377d18e5ecda92b7a3793cbe66c87060a6fb58c7b6e1061f7"],
+    hashes = ["e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746"],
     licences = ["MIT"],
-    version = "1.3.0",
+    version = "1.6.0",
 )
 
 python_wheel(
@@ -233,12 +233,12 @@ python_wheel(
 
 python_wheel(
     name = "packaging",
-    hashes = [],
+    hashes = ["29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"],
     licences = [
         "Apache-2.0",
         "BSD-2-Clause",
     ],
-    version = "24.1",
+    version = "25.0",
 )
 
 pip_library(
@@ -253,11 +253,10 @@ python_wheel(
         "_pytest",
         "pytest",
     ],
-    hashes = ["1d881c6124e08ff0a1bb75ba3ec0bfd8b5354a01c194ddd5a0a870a48d99b002"],
+    hashes = ["67be0030d194df2dfa7b556f2e56fb3c3315bd5c8822c6951162b92b32ce7dad"],
     licences = ["MIT"],
-    version = "7.4.2",
+    version = "9.0.1",
     deps = [
-        ":colorama",
         ":exceptiongroup",
         ":iniconfig",
         ":packaging",
@@ -266,24 +265,37 @@ python_wheel(
         # is installed, and the hack that makes the vendorised copy work doesn't play nicely with
         # pex archives - see https://github.com/pytest-dev/pytest/pull/10396
         ":py",
+        ":pygments",
         ":tomli",
     ],
 )
 
 python_wheel(
     name = "exceptiongroup",
-    hashes = ["343280667a4585d195ca1cf9cef84a4e178c4b6cf2274caef9859782b567d5e3"],
+    hashes = ["a7a39a3bd276781e98394987d3a5701d0c4edffb633bb7a5144577f82c773598"],
     licences = [
         "MIT",
         "PSF-2.0",
     ],
-    version = "1.1.3",
+    version = "1.3.1",
+    deps = [
+        ":typing_extensions",
+    ],
+)
+
+python_wheel(
+    name = "typing_extensions",
+    outs = ["typing_extensions.py"],
+    hashes = ["f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548"],
+    licences = ["PSF-2.0"],
+    version = "4.15.0",
 )
 
 python_wheel(
     name = "iniconfig",
+    hashes = ["f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12"],
     licences = ["MIT"],
-    version = "1.1.1",
+    version = "2.3.0",
 )
 
 python_wheel(
@@ -412,9 +424,9 @@ python_wheel(
 
 python_wheel(
     name = "tomli",
-    hashes = ["939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"],
+    hashes = ["e95b1af3c5b07d9e643909b5abbec77cd9f1217e6d0bca72b0234736b9fb1f1b"],
     licences = ["MIT"],
-    version = "2.0.1",
+    version = "2.3.0",
 )
 
 # This is the minimum set of third-party packages required for the built-in test runners to work
@@ -451,25 +463,19 @@ python_library(
     ],
 )
 
-# Note: this is used by //test:distribution_metadata_test as an example of a module that contains
-# distribution metadata. The importlib.metadata API should be able to identify the version of the
-# module from the contents of its .dist-info directory. The choice of module isn't that important,
-# and is fairly arbitrary - it just happens to be widely-used, written in pure Python, and has no
-# dependencies.
-
+# Note: this is also used by //test:distribution_metadata_test as an example of a module that
+# contains distribution metadata. The importlib.metadata API should be able to identify the version
+# of the module from the contents of its .dist-info directory. The choice of module for that test is
+# fairly arbitrary - it just needs to be written in pure Python and have no dependencies.
 python_wheel(
     name = "pygments",
     outs = [
         "pygments",
-        "pygments-2.18.0.dist-info",
+        "pygments-2.19.2.dist-info",
     ],
-    hashes = ["b8e6aca0523f3ab76fee51799c488e38782ac06eafcf95e7ba832985c8e7b13a"],
+    hashes = ["86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b"],
     licences = ["BSD-2-Clause"],
-    test_only = True,
-    version = "2.18.0",
-    visibility = [
-        "//test:distribution_metadata_test",
-    ],
+    version = "2.19.2",
 )
 
 # Note: this package is used for //test:name_scheme_test as an example of something using a list of

@@ -9,7 +9,7 @@ class DistributionMetadataTest(unittest.TestCase):
     """
 
     def test_importlib_metadata_version(self):
-        self.assertEqual(version("pygments"), "2.18.0")
+        self.assertEqual(version("pygments"), "2.19.2")
 
     def test_importlib_metadata_files(self):
         self.assertIn(PackagePath("pygments/__init__.py"), files("pygments"))
