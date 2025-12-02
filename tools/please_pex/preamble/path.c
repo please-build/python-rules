@@ -156,8 +156,8 @@ end:
 err_t *get_plz_bin_path(char **path) {
     char *pex_dir = NULL;
     char *tmp_dir = NULL;
-    char *pex_realpath = NULL;
-    char *tmp_realpath = NULL;
+    char *pex_dir_realpath = NULL;
+    char *tmp_dir_realpath = NULL;
     size_t pex_len = 0;
     size_t tmp_len = 0;
     err_t *err = NULL;
@@ -180,26 +180,26 @@ err_t *get_plz_bin_path(char **path) {
         }
 
         // Identify whether the .pex file exists inside the build environment.
-        if ((pex_realpath = realpath(pex_dir, NULL)) == NULL) {
+        if ((pex_dir_realpath = realpath(pex_dir, NULL)) == NULL) {
             err = err_from_errno("realpath pex_dir");
             goto end;
         }
-        if ((tmp_realpath = realpath(tmp_dir, NULL)) == NULL) {
+        if ((tmp_dir_realpath = realpath(tmp_dir, NULL)) == NULL) {
             err = err_from_errno("realpath tmp_dir");
             goto end;
         }
 
-        pex_len = strlen(pex_realpath);
-        tmp_len = strlen(tmp_realpath);
+        pex_len = strlen(pex_dir_realpath);
+        tmp_len = strlen(tmp_dir_realpath);
 
         if (
-            strncmp(tmp_realpath, pex_realpath, tmp_len) == 0 &&
+            strncmp(tmp_dir_realpath, pex_dir_realpath, tmp_len) == 0 &&
             (
                 (pex_len == tmp_len) ||
-                (pex_len - tmp_len >= 1 && pex_realpath[tmp_len] == '/')
+                (pex_len - tmp_len >= 1 && pex_dir_realpath[tmp_len] == '/')
             )
         ) {
-            if (((*path) = strdup(tmp_realpath)) == NULL) {
+            if (((*path) = strdup(tmp_dir_realpath)) == NULL) {
                 err = err_from_errno("strdup");
             }
             goto end;
@@ -225,8 +225,8 @@ no_plz_env:
     }
 
 end:
-    FREE(pex_realpath);
-    FREE(tmp_realpath);
+    FREE(pex_dir_realpath);
+    FREE(tmp_dir_realpath);
 
     return err;
 }
