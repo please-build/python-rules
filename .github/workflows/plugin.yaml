@@ -28,7 +28,7 @@ jobs:
           - '3.13'
           - '3.14'
   test-please_pex:
-    name: Test (${{ matrix.platform}}, Python ${{ matrix.python }}, in-repo please_pex)
+    name: Test please_pex
     uses: ./.github/workflows/plugin_test.yaml
     with:
       platform: ${{ matrix.platform }}
@@ -71,23 +71,46 @@ jobs:
           - '3.12'
           - '3.13'
           - '3.14'
+  build-please_pex-artifacts:
+    name: Build please_pex release artifacts
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - test-please_pex
+    uses: ./.github/workflows/please_pex_build.yaml
+    with:
+      platform: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - darwin_amd64
+          - darwin_arm64
+          - freebsd_amd64
+          - linux_amd64
+          - linux_arm64
   release-please_pex:
     name: Release please_pex
     if: github.ref == 'refs/heads/master'
     needs:
-      - test-please_pex
+      - build-please_pex-artifacts
     runs-on: ubuntu-latest
+    env:
+      BIN_DIR: /tmp/please_pex_release
     steps:
+      - name: Download please_pex binaries from artifact storage
+        uses: actions/download-artifact@v6
+        with:
+          path: ${{ env.BIN_DIR }}
+          pattern: please_pex_*
+          merge-multiple: true
       - name: Check out code
-        uses: actions/checkout@v5
-      - name: Build release files
-        run: ./pleasew build //package:please_pex_release_files
+        uses: actions/checkout@v6
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: thought-machine/release-action@master
         with:
-          release-files: plz-out/package/please_pex
+          release-files: ${{ env.BIN_DIR }}
           version-file: tools/please_pex/VERSION
           change-log-file: tools/please_pex/ChangeLog
           release-prefix: please_pex
