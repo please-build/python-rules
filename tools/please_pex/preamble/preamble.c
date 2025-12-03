@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <stdbool.h>
 #include <unistd.h>
 
 #include "cJSON.h"
@@ -211,9 +212,11 @@ end:
  */
 static err_t *get_interpreters(const cJSON *config, strlist_t **interps) {
     strlist_elem_t *interp = NULL;
+    bool tried_plz_bin_path = false;
     char *plz_bin_path = NULL;
     const cJSON *json_interps = NULL;
     const cJSON *json_interp = NULL;
+    int added = 0;
     err_t *err = NULL;
 
     json_interps = cJSON_GetObjectItemCaseSensitive(config, "interpreters");
@@ -235,30 +238,47 @@ static err_t *get_interpreters(const cJSON *config, strlist_t **interps) {
             goto end;
         }
 
-        STAILQ_ENTRY_NEW(interp, strlist_elem_t);
-
         if (STRPREFIX(json_interp->valuestring, "$PLZ_BIN_PATH/")) {
-            if (plz_bin_path == NULL) {
+            if (!tried_plz_bin_path) {
+                tried_plz_bin_path = true;
+
                 if ((err = get_plz_bin_path(&plz_bin_path)) != NULL) {
-                    err = err_wrap("PLZ_BIN_PATH resolution failure", err);
+                    err = err_wrap("$PLZ_BIN_PATH resolution failure", err);
                     goto end;
                 }
-                log_debug("Resolved $PLZ_BIN_PATH to %s", plz_bin_path);
+
+                if (plz_bin_path == NULL) {
+                    log_warn(".pex file is not inside a Please repo; omitting interpreters prepended with '$PLZ_BIN_PATH'");
+                } else {
+                    log_debug("Resolved $PLZ_BIN_PATH to %s", plz_bin_path);
+                }
+            }
+
+            if (plz_bin_path == NULL) {
+                log_info("Omitting interpreter from search path: %s", json_interp->valuestring);
+                continue;
             }
 
             // Replace "$PLZ_BIN_PATH" with the path to Please's binary outputs directory at the
             // start of the interpreter path.
+            STAILQ_ENTRY_NEW(interp, strlist_elem_t);
             MALLOC(interp->str, char, strlen(plz_bin_path) + JSON_STRLEN(json_interp) - strlen("$PLZ_BIN_PATH") + 1); // 1 extra byte for trailing null
             strncpy(interp->str, plz_bin_path, strlen(plz_bin_path));
             strcpy(interp->str + strlen(plz_bin_path), json_interp->valuestring + strlen("$PLZ_BIN_PATH"));
+            STAILQ_INSERT_TAIL(*interps, interp, next);
         } else {
+            STAILQ_ENTRY_NEW(interp, strlist_elem_t);
             MALLOC(interp->str, char, JSON_STRLEN(json_interp) + 1); // 1 extra byte for trailing null
             strcpy(interp->str, json_interp->valuestring);
+            STAILQ_INSERT_TAIL(*interps, interp, next);
         }
 
-        STAILQ_INSERT_TAIL(*interps, interp, next);
-
         log_debug("Added interpreter to search path: %s", interp->str);
+        added++;
+    }
+
+    if (added == 0) {
+        err = err_from_str("interpreters list contains no resolvable paths");
     }
 
 end:
