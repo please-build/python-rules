@@ -153,13 +153,13 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         test_only=test_only,
     )
 
-    interpreter_opts, interpreter_deps = _runtime_interpreter(interpreter, runtime_interpreters, runtime_interpreter_args)
+    runtime_args, runtime_targets = _runtime_interpreter(interpreter, runtime_interpreters, runtime_interpreter_args)
     zipsafe_flag = '' if zip_safe is False else '--zip_safe'
     cmd = '$TOOLS_PEX --preamble_verbosity="%s" -m "%s" %s %s' % (
         CONFIG.PYTHON.DEFAULT_PREAMBLE_VERBOSITY,
         module_dir,
         zipsafe_flag,
-        interpreter_opts,
+        runtime_args,
     )
 
     # If content hashing feature flag is enabled, we use the hash of the built
@@ -191,7 +191,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
         output_is_complete=True,
         tools={
             'interpreter': [interpreter],
-            'runtime_interpreters': interpreter_deps,
+            'runtime_interpreters': runtime_targets,
             'pex': [CONFIG.PYTHON.PEX_TOOL],
         },
         test_only=test_only,
@@ -207,7 +207,7 @@ def python_binary(name:str, main:str, srcs:list=[], resources:list=[], out:str=N
     return build_rule(
         name=name,
         srcs=[pex_rule],
-        runtime_deps=interpreter_deps,
+        runtime_deps=runtime_targets,
         deps=[lib_rule],
         outs=[out or (name + '.pex')],
         data=data,
@@ -291,12 +291,12 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
                          `unittest`, `pytest`, or a custom test runner entry point.
     """
     test_runner = test_runner or CONFIG.PYTHON.TEST_RUNNER
-    interpreter_opts, interpreter_deps = _runtime_interpreter(interpreter, runtime_interpreters, runtime_interpreter_args)
+    runtime_args, runtime_targets = _runtime_interpreter(interpreter, runtime_interpreters, runtime_interpreter_args)
     cmd = '$TOOLS_PEX --preamble_verbosity="%s" -t -m "%s" -r "%s" --zip_safe --add_test_runner_deps %s --stamp="$RULE_HASH"' % (
         CONFIG.PYTHON.DEFAULT_PREAMBLE_VERBOSITY,
         module_dir,
         test_runner,
-        interpreter_opts,
+        runtime_args,
     )
     if site:
         cmd += ' -S'
@@ -331,7 +331,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
         deps=deps,
         tools={
             'interpreter': [interpreter],
-            'runtime_interpreters': interpreter_deps,
+            'runtime_interpreters': runtime_targets,
             'pex': [CONFIG.PYTHON.PEX_TOOL],
         },
         labels = labels,
@@ -375,7 +375,7 @@ def python_test(name:str, srcs:list, data:list|dict=[], resources:list=[], deps:
     return build_rule(
         name=name,
         srcs=[pex_rule],
-        runtime_deps=interpreter_deps,
+        runtime_deps=runtime_targets,
         deps=deps,
         data=data,
         outs=[f'{name}.pex'],
