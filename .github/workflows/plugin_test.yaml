@@ -24,7 +24,7 @@ on:
         default: //...
 jobs:
   test:
-    name: Run tests
+    name: ${{ inputs.platform }}, Python ${{ inputs.python }}
     runs-on: ${{ (inputs.platform == 'freebsd_amd64' || inputs.platform == 'linux_amd64') && 'ubuntu-24.04' || (inputs.platform == 'linux_arm64' && 'ubuntu-24.04-arm' || (inputs.platform == 'darwin_amd64' && 'macos-15-intel' || (inputs.platform == 'darwin_arm64' && 'macos-15' || 'unknown'))) }}
     steps:
       - name: Install Python in CI environment
