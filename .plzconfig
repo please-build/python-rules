@@ -53,12 +53,6 @@ DefaultValue = python3
 Inherit = true
 Help = The default Python interpreter to use when building .pex files.
 
-[PluginConfig "interpreter_options"]
-ConfigKey = InterpreterOptions
-Optional = true
-Repeatable = true
-Help = A list of additional arguments to pass to the Python interpreter when building .pex files.
-
 [PluginConfig "default_runtime_interpreters"]
 ConfigKey = DefaultRuntimeInterpreters
 Optional = true
