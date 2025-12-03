@@ -50,7 +50,7 @@ err_t *err_from_errno(const char *msg) {
  * and then returns the newly-created error.
  */
 err_t *err_wrap(const char *msg, err_t *wrapped) {
-    errmsg_t *first = SLIST_FIRST(wrapped);
+    errmsg_t *first = NULL;
     errmsg_t *errmsg = NULL;
     size_t len = strlen(msg);
 
@@ -58,6 +58,8 @@ err_t *err_wrap(const char *msg, err_t *wrapped) {
         fprintf(stderr, "err_wrap called with null value for wrapped");
         exit(EX_SOFTWARE);
     }
+
+    first = SLIST_FIRST(wrapped);
 
     MALLOC(errmsg, errmsg_t, 1);
     errmsg->msg = msg;
