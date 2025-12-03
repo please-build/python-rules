@@ -1,10 +1,6 @@
 #include <libgen.h>
-#include <unistd.h>
 
-#if defined(__linux__)
-#include <limits.h>
-#include <sys/stat.h>
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
 #include <mach-o/dyld.h>
 #elif defined(__FreeBSD__)
 #include <sys/stat.h>
@@ -16,76 +12,6 @@
 #include "pexerror.h"
 #include "util.h"
 
-#ifdef __linux__
-
-/*
- * get_path_max returns the maximum length of a relative path name when the given path is the
- * current working directory (although the path need not actually be a directory, or even exist).
- */
-static int get_path_max(char *path) {
-    int path_max = pathconf(path, _PC_PATH_MAX);
-
-    if (path_max <= 0) {
-        // PATH_MAX may be defined in <limits.h>, but this is not a POSIX requirement. If it isn't
-        // defined, fall back to 4096 (as recommended by Linux's realpath(3) man page).
-#ifdef PATH_MAX
-        path_max = PATH_MAX;
-#else
-        path_max = 4096;
-#endif
-    }
-
-    return path_max;
-}
-
-/*
- * get_link_path resolves the symbolic link at the path lpath and stores the link's destination path
- * in rpath. It returns NULL on success and an error on failure.
- */
-static err_t *get_link_path(char *lpath, char **rpath) {
-    struct stat sb = { 0 };
-    int slen = 0;
-    int rlen = 0;
-    err_t *err = NULL;
-
-    // Get the length of lpath's destination path so we can allocate a buffer of that length for
-    // readlink to write to (plus one byte, so we can determine whether readlink has truncated the
-    // path it writes, and also for the trailing null we'll append to the path afterwards). If lpath
-    // is a magic symlink (in which case sb.st_size is 0), assume the destination path is PATH_MAX
-    // bytes long - it's an overestimate, but at least the buffer will be large enough for readlink
-    // to safely write to.
-    if (lstat(lpath, &sb) == -1) {
-        err = err_from_errno("lstat");
-        goto end;
-    }
-    slen = (sb.st_size == 0 ? get_path_max(lpath) : sb.st_size) + 1;
-
-    MALLOC(*rpath, char *, slen);
-
-    if ((rlen = readlink(lpath, (*rpath), slen)) == -1) {
-        err = err_from_errno("readlink");
-        goto end;
-    }
-    // If readlink filled the buffer, it truncated the destination path it wrote. In this case, the
-    // value is untrustworthy, so we're better off not using it.
-    if (slen == rlen) {
-        err = err_from_str("readlink truncated destination path");
-        goto end;
-    }
-
-    // Otherwise, add the trailing null to the destination path that readlink omitted.
-    (*rpath)[rlen] = 0;
-
-end:
-    if (err != NULL) {
-        FREE(*rpath);
-    }
-
-    return err;
-}
-
-#endif /* __linux__ */
-
 /*
  * get_pex_dir stores the path to the .pex file in pex_dir. It returns NULL on success and an error
  * on failure.
@@ -96,8 +22,8 @@ err_t *get_pex_dir(char **pex_dir) {
     err_t *err = NULL;
 
 #if defined(__linux__)
-    if ((err = get_link_path("/proc/self/exe", &exe_path)) != NULL) {
-        err = err_wrap("get_link_path", err);
+    if ((exe_path = realpath("/proc/self/exe", NULL)) == NULL) {
+        err = err_from_errno("realpath /proc/self/exe");
         goto end;
     }
 #elif defined(__APPLE__)
