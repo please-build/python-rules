@@ -22,7 +22,7 @@ typedef struct errmsg_t {
     /*
      * msg is a diagnostic message describing this error.
      */
-    char *msg;
+    const char *msg;
 
     /*
      * wrapped is an error that is wrapped by this error.
@@ -34,9 +34,9 @@ SLIST_HEAD(err_t, errmsg_t);
 
 typedef struct err_t err_t;
 
-err_t *err_from_str(char *msg);
-err_t *err_from_errno(char *msg);
-err_t *err_wrap(char *msg, err_t *wrapped);
+err_t *err_from_str(const char *msg);
+err_t *err_from_errno(const char *msg);
+err_t *err_wrap(const char *msg, err_t *wrapped);
 char *err_str(err_t *err);
 
 #endif /* __PEXERROR_H__ */

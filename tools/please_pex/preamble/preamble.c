@@ -99,45 +99,47 @@ static void set_log_verbosity(const cJSON *config) {
 
 /*
  * get_config reads and parses the .pex preamble configuration, a JSON-encoded file at
- * .bootstrap/PLZ_PREAMBLE_CONFIG in the zip archive, and returns it as a cJSON struct. It returns
- * NULL on failure.
+ * .bootstrap/PLZ_PREAMBLE_CONFIG in the zip archive, and stores it in config. It returns NULL on
+ * success and an error on failure.
  */
-static const cJSON *get_config(char *pex_path) {
+static err_t *get_config(char *pex_path, const cJSON **config) {
     struct zip_t *zip = NULL;
     int ziperr = 0;
     char *configbuf = NULL;
     size_t configsize = 0;
-    const cJSON *config = NULL;
+    err_t *err = NULL;
 
     zip = zip_openwitherror(pex_path, 0, 'r', &ziperr);
     if (ziperr < 0) {
-        log_fatal("Failed to open .pex as zip file: %s", zip_strerror(ziperr));
+        err = err_wrap("open .pex", err_from_str(zip_strerror(ziperr)));
         goto end;
     }
 
     if ((ziperr = zip_entry_open(zip, PREAMBLE_CONFIG_PATH)) < 0) {
-        log_fatal("Failed to open .pex preamble configuration: %s", zip_strerror(ziperr));
+        err = err_wrap("open .pex configuration", err_from_str(zip_strerror(ziperr)));
         goto end;
     }
 
     if ((ziperr = (int)zip_entry_read(zip, (void **)&configbuf, &configsize)) < 0) {
-        log_fatal("Failed to read .pex preamble configuration: %s", zip_strerror(ziperr));
+        err = err_wrap("read .pex configuration", err_from_str(zip_strerror(ziperr)));
         goto end;
     }
 
     zip_entry_close(zip);
-
     zip_close(zip);
 
-    if ((config = cJSON_ParseWithLength(configbuf, configsize)) == NULL) {
-        log_fatal("Failed to parse .pex preamble configuration: JSON syntax error near '%s'", cJSON_GetErrorPtr());
+    if (((*config) = cJSON_ParseWithLength(configbuf, configsize)) == NULL) {
+        err = err_wrap(
+            "parse .pex configuration",
+            err_wrap("JSON syntax error near", err_from_str(cJSON_GetErrorPtr()))
+        );
         goto end;
     }
 
 end:
     FREE(configbuf);
 
-    return config;
+    return err;
 }
 
 /*
@@ -299,7 +301,8 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    if ((config = get_config(argv[0])) == NULL) {
+    if ((err = get_config(argv[0], &config)) != NULL) {
+        log_fatal("Failed to get .pex preamble configuration: %s", err_str(err));
         return 1;
     }
 

@@ -17,7 +17,7 @@
 /*
  * err_from_str returns an error from the given diagnostic message.
  */
-err_t *err_from_str(char *msg) {
+err_t *err_from_str(const char *msg) {
     err_t *err = NULL;
 
     MALLOC(err, err_t, 1);
@@ -39,7 +39,7 @@ err_t *err_from_str(char *msg) {
  * the responsibility of the caller to ensure that a system call or library function that sets
  * errno has actually returned a value indicating failure before calling err_from_errno.
  */
-err_t *err_from_errno(char *msg) {
+err_t *err_from_errno(const char *msg) {
     err_t *err = err_from_str(strerror(errno));
 
     return err_wrap(msg, err);
@@ -49,7 +49,7 @@ err_t *err_from_errno(char *msg) {
  * err_wrap creates an error from the given diagnostic message, using it to wrap the given error,
  * and then returns the newly-created error.
  */
-err_t *err_wrap(char *msg, err_t *wrapped) {
+err_t *err_wrap(const char *msg, err_t *wrapped) {
     errmsg_t *first = SLIST_FIRST(wrapped);
     errmsg_t *errmsg = NULL;
     size_t len = strlen(msg);
