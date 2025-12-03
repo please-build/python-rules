@@ -8,7 +8,11 @@ c_binary(
     srcs = glob(["*.c"]),
     hdrs = glob(["*.h"]),
     compiler_flags = ["-std=c11"],
-    defines = ["_XOPEN_SOURCE=700"],
+    defines = [
+        # path.c relies on realpath(3)'s resolved_path == NULL feature, which was not standardised
+        # until POSIX.1-2008:
+        "_XOPEN_SOURCE=700",
+    ],
     static = True,
     visibility = [
         "//tools/please_pex/pex:preamble",
