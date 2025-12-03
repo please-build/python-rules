@@ -28,6 +28,8 @@ jobs:
     runs-on: ${{ (inputs.platform == 'freebsd_amd64' || inputs.platform == 'linux_amd64') && 'ubuntu-24.04' || (inputs.platform == 'linux_arm64' && 'ubuntu-24.04-arm' || (inputs.platform == 'darwin_amd64' && 'macos-15-intel' || (inputs.platform == 'darwin_arm64' && 'macos-15' || 'unknown'))) }}
     steps:
       - name: Install Python in CI environment
+        # actions/setup-python doesn't support FreeBSD - instead, interpreters for the supported Python versions are
+        # pre-installed in the FreeBSD runner image.
         if: ${{ inputs.platform != 'freebsd_amd64' }}
         id: python
         uses: actions/setup-python@v6
@@ -36,14 +38,11 @@ jobs:
           update-environment: false
       - name: Check out code
         uses: actions/checkout@v5
-      - name: Configure plugin's default Python interpreter
-        run: |
-          _python_path="${{ inputs.platform == 'freebsd_amd64' && format('python{0}', inputs.python) || steps.python.outputs.python-path }}"
-          echo "PLZ_ARGS=-o plugin.python.defaultinterpreter:$_python_path" >> $GITHUB_ENV
       - name: Configure plugin to use please_pex tool built from source
         if: inputs.please_pex_from_repo
-        run: |
-          echo "PLZ_ARGS=${PLZ_ARGS:+$PLZ_ARGS }-o plugin.python.pextool://tools/please_pex" >> $GITHUB_ENV
+        # PexTool can't be set to //tools/please_pex for e2e tests because it can't be built inside the e2e test
+        # environment - skip the e2e tests if we're using //tools/please_pex as the pex tool.
+        run: echo "PLZ_ARGS=${PLZ_ARGS:+$PLZ_ARGS }-o plugin.python.pextool://tools/please_pex -e plz_e2e_test" >> $GITHUB_ENV
       - name: Run tests (in nested runner)
         if: ${{ inputs.platform == 'freebsd_amd64' }}
         uses: cross-platform-actions/action@v0.30.0
@@ -55,11 +54,22 @@ jobs:
           shell: bash
           environment_variables: PLZ_ARGS
           shutdown_vm: true
-          run: ./pleasew test --keep_going --log_file plz-out/log/test.log ${{ inputs.test_targets }}
+          run: |
+            _external_interpreter="python${{ inputs.python }}"
+            _in_repo_interpreter="//third_party/cc/cpython:cpython_${{ inputs.python }}|python"
+            echo "*** Running tests using external Python interpreter: $_external_interpreter"
+            ./pleasew -o "plugin.python.defaultinterpreter:$_external_interpreter" test --rerun --keep_going --log_file plz-out/log/test-external_interpreter.log ${{ inputs.test_targets }}
+            echo "*** Running tests using in-repo Python interpreter: $_in_repo_interpreter"
+            ./pleasew -o "plugin.python.defaultinterpreter:$_in_repo_interpreter" test --rerun --keep_going --log_file plz-out/log/test-in_repo_interpreter.log ${{ inputs.test_targets }}
       - name: Run tests (on host)
         if: ${{ inputs.platform != 'freebsd_amd64' }}
         run: |
-          ./pleasew test --keep_going --log_file plz-out/log/test.log ${{ inputs.test_targets }}
+          _external_interpreter="${{ steps.python.outputs.python-path }}"
+          _in_repo_interpreter="//third_party/cc/cpython:cpython_${{ inputs.python }}|python"
+          echo "*** Running tests using external Python interpreter: $_external_interpreter"
+          ./pleasew -o "plugin.python.defaultinterpreter:$_external_interpreter" test --rerun --keep_going --log_file plz-out/log/test-external_interpreter.log ${{ inputs.test_targets }}
+          echo "*** Running tests using in-repo Python interpreter: $_in_repo_interpreter"
+          ./pleasew -o "plugin.python.defaultinterpreter:$_in_repo_interpreter" test --rerun --keep_going --log_file plz-out/log/test-in_repo_interpreter.log ${{ inputs.test_targets }}
       - name: Archive logs
         uses: actions/upload-artifact@v4
         with:

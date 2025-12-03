@@ -7,6 +7,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"path"
 	"path/filepath"
@@ -28,7 +29,7 @@ const modTimeDOS = 10785
 type File struct {
 	f              io.WriteCloser
 	w              *zip.Writer
-	preambleLength int
+	preambleLength int64
 	filename       string
 	input          string
 	// Include and Exclude are prefixes of filenames to include or exclude from the zipfile.
@@ -415,11 +416,19 @@ func (f *File) WriteDir(filename string) error {
 	return nil
 }
 
-// WritePreamble writes a preamble to the zipfile.
-func (f *File) WritePreamble(preamble []byte) error {
-	f.preambleLength += len(preamble)
-	f.w.SetOffset(int64(f.preambleLength))
+// WritePreambleBytes writes a byte slice as a preamble to the zipfile.
+func (f *File) WritePreambleBytes(preamble []byte) error {
+	f.preambleLength += int64(len(preamble))
+	f.w.SetOffset(f.preambleLength)
 	_, err := f.f.Write(preamble)
+	return err
+}
+
+// WritePreambleFile writes a file as a preamble to the zipfile.
+func (f *File) WritePreambleFile(preamble fs.File) error {
+	length, err := io.Copy(f.f, preamble)
+	f.preambleLength += length
+	f.w.SetOffset(f.preambleLength)
 	return err
 }
 

@@ -1,6 +1,6 @@
 plugin_repo(
     name = "cc",
-    revision = "v0.7.0",
+    revision = "v0.7.1",
 )
 
 plugin_repo(

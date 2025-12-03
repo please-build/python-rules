@@ -59,7 +59,7 @@ go_repo(
 
 go_repo(
     module = "golang.org/x/sys",
-    version = "v0.20.0",
+    version = "v0.26.0",
 )
 
 go_repo(
