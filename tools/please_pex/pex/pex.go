@@ -51,9 +51,6 @@ type Writer struct {
 
 // NewWriter constructs a new Writer.
 func NewWriter(entryPoint string, interpreters []string, interpreterArgs []string, stamp string, zipSafe, noSite bool) *Writer {
-	if interpreterArgs == nil {
-		interpreterArgs = make([]string, 0)
-	}
 	pw := &Writer{
 		preambleConfig: &preamble.Config{
 			Interpreters:    interpreters,
