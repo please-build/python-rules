@@ -39,4 +39,4 @@ err_t *err_from_errno(const char *msg);
 err_t *err_wrap(const char *msg, err_t *wrapped);
 char *err_str(err_t *err);
 
-#endif /* __PEXERROR_H__ */
+#endif /* !__PEXERROR_H__ */
