@@ -13,19 +13,17 @@
 #include "util.h"
 
 /*
- * get_pex_dir stores the path to the .pex file in pex_dir. It returns NULL on success and an error
- * on failure.
+ * get_pex_dir stores the canonical absolute path to the .pex file in pex_dir. It returns NULL on
+ * success and an error on failure.
  */
 err_t *get_pex_dir(char **pex_dir) {
     char *exe_path = NULL;
+    char *exe_realpath = NULL;
     char *exe_dir = NULL;
     err_t *err = NULL;
 
 #if defined(__linux__)
-    if ((exe_path = realpath("/proc/self/exe", NULL)) == NULL) {
-        err = err_from_errno("realpath /proc/self/exe");
-        goto end;
-    }
+    exe_path = "/proc/self/exe";
 #elif defined(__APPLE__)
     uint32_t len = 0;
 
@@ -56,14 +54,22 @@ err_t *get_pex_dir(char **pex_dir) {
 #error "Unsupported operating system"
 #endif
 
-    exe_dir = dirname(exe_path);
+    if ((exe_realpath = realpath(exe_path, NULL)) == NULL) {
+        err = err_from_errno("realpath");
+        goto end;
+    }
+
+    exe_dir = dirname(exe_realpath);
     if (((*pex_dir) = strdup(exe_dir)) == NULL) {
         err = err_from_errno("strdup");
         goto end;
     }
 
 end:
+#ifndef __linux__
     FREE(exe_path);
+#endif
+    FREE(exe_realpath);
 
     return err;
 }
@@ -82,10 +88,9 @@ end:
 err_t *get_plz_bin_path(char **path) {
     char *pex_dir = NULL;
     char *tmp_dir = NULL;
-    char *pex_dir_realpath = NULL;
     char *tmp_dir_realpath = NULL;
-    size_t pex_len = 0;
-    size_t tmp_len = 0;
+    size_t pex_dir_len = 0;
+    size_t tmp_dir_len = 0;
     err_t *err = NULL;
 
     if ((err = get_pex_dir(&pex_dir)) != NULL) {
@@ -106,23 +111,19 @@ err_t *get_plz_bin_path(char **path) {
         }
 
         // Identify whether the .pex file exists inside the build environment.
-        if ((pex_dir_realpath = realpath(pex_dir, NULL)) == NULL) {
-            err = err_from_errno("realpath pex_dir");
-            goto end;
-        }
         if ((tmp_dir_realpath = realpath(tmp_dir, NULL)) == NULL) {
             err = err_from_errno("realpath tmp_dir");
             goto end;
         }
 
-        pex_len = strlen(pex_dir_realpath);
-        tmp_len = strlen(tmp_dir_realpath);
+        pex_dir_len = strlen(pex_dir);
+        tmp_dir_len = strlen(tmp_dir_realpath);
 
         if (
-            strncmp(tmp_dir_realpath, pex_dir_realpath, tmp_len) == 0 &&
+            strncmp(tmp_dir_realpath, pex_dir, tmp_dir_len) == 0 &&
             (
-                (pex_len == tmp_len) ||
-                (pex_len > tmp_len && pex_dir_realpath[tmp_len] == '/')
+                (pex_dir_len == tmp_dir_len) ||
+                (pex_dir_len > tmp_dir_len && pex_dir[tmp_dir_len] == '/')
             )
         ) {
             if (((*path) = strdup(tmp_dir_realpath)) == NULL) {
@@ -152,7 +153,7 @@ no_plz_env:
     }
 
 end:
-    FREE(pex_dir_realpath);
+    FREE(pex_dir);
     FREE(tmp_dir_realpath);
 
     return err;

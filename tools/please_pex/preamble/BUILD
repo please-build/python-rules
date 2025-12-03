@@ -8,7 +8,7 @@ c_binary(
     srcs = glob(["*.c"]),
     hdrs = glob(["*.h"]),
     compiler_flags = ["-std=c11"],
-    defines = ["_XOPEN_SOURCE=600"],
+    defines = ["_XOPEN_SOURCE=700"],
     static = True,
     visibility = [
         "//tools/please_pex/pex:preamble",
