@@ -217,6 +217,7 @@ no_plz_env:
     if (STREQ(pex_dir, "/") || STREQ(pex_dir, ".")) {
         // If we reached the left-most component in the path, the .pex file doesn't exist within a
         // plz-out/ directory tree.
+        err = err_from_str(".pex file is in neither a Please build environment nor a Please repo");
         goto end;
     }
     MALLOC(*path, char, strlen(pex_dir) + strlen("/bin") + 1);
