@@ -79,7 +79,7 @@ end:
  * directory (which is assumed to be the value of TMP_DIR in the environment, as created by Please).
  * Otherwise, get_plz_bin_path returns the path to the bin/ subdirectory within the plz-out/ directory
  * to which this .pex file belongs. If the .pex file does not exist within a plz-out/ directory
- * tree, get_plz_bin_path fails.
+ * tree, get_plz_bin_path stores NULL in path.
  */
 err_t *get_plz_bin_path(char **path) {
     char *pex_path = NULL;
@@ -89,6 +89,8 @@ err_t *get_plz_bin_path(char **path) {
     size_t pex_dir_len = 0;
     size_t tmp_dir_len = 0;
     err_t *err = NULL;
+
+    (*path) = NULL;
 
     if ((err = get_pex_path(&pex_path)) != NULL) {
         err = err_wrap("get_pex_path", err);
@@ -141,8 +143,7 @@ no_plz_env:
     }
     if (STREQ(pex_dir, "/") || STREQ(pex_dir, ".")) {
         // If we reached the left-most component in the path, the .pex file doesn't exist within a
-        // plz-out/ directory tree.
-        err = err_from_str(".pex file is in neither a Please build environment nor a Please repo");
+        // plz-out/ directory tree - return NULL.
         goto end;
     }
     MALLOC(*path, char, strlen(pex_dir) + strlen("/bin") + 1);
