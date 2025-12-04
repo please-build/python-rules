@@ -13,13 +13,11 @@
 #include "util.h"
 
 /*
- * get_pex_dir stores the canonical absolute path to the .pex file in pex_dir. It returns NULL on
+ * get_pex_path stores the canonical absolute path to the .pex file in pex_dir. It returns NULL on
  * success and an error on failure.
  */
-err_t *get_pex_dir(char **pex_dir) {
+err_t *get_pex_path(char **pex_path) {
     char *exe_path = NULL;
-    char *exe_realpath = NULL;
-    char *exe_dir = NULL;
     err_t *err = NULL;
 
 #if defined(__linux__)
@@ -54,22 +52,20 @@ err_t *get_pex_dir(char **pex_dir) {
 #error "Unsupported operating system"
 #endif
 
-    if ((exe_realpath = realpath(exe_path, NULL)) == NULL) {
+    if (((*pex_path) = realpath(exe_path, NULL)) == NULL) {
         err = err_from_errno("realpath");
         goto end;
     }
-
-    exe_dir = dirname(exe_realpath);
-    if (((*pex_dir) = strdup(exe_dir)) == NULL) {
-        err = err_from_errno("strdup");
-        goto end;
-    }
+    log_debug("Canonical path of .pex file is %s", (*pex_path));
 
 end:
 #ifndef __linux__
     FREE(exe_path);
 #endif
-    FREE(exe_realpath);
+
+    if (err != NULL) {
+        FREE(pex_path);
+    }
 
     return err;
 }
@@ -86,6 +82,7 @@ end:
  * tree, get_plz_bin_path fails.
  */
 err_t *get_plz_bin_path(char **path) {
+    char *pex_path = NULL;
     char *pex_dir = NULL;
     char *tmp_dir = NULL;
     char *tmp_dir_realpath = NULL;
@@ -93,10 +90,11 @@ err_t *get_plz_bin_path(char **path) {
     size_t tmp_dir_len = 0;
     err_t *err = NULL;
 
-    if ((err = get_pex_dir(&pex_dir)) != NULL) {
-        err = err_wrap("get_pex_dir", err);
+    if ((err = get_pex_path(&pex_path)) != NULL) {
+        err = err_wrap("get_pex_path", err);
         goto end;
     }
+    pex_dir = dirname(pex_path);
 
     if (getenv("PLZ_ENV") != NULL) {
         if ((tmp_dir = getenv("TMP_DIR")) == NULL) {
@@ -153,7 +151,7 @@ no_plz_env:
     }
 
 end:
-    FREE(pex_dir);
+    FREE(pex_path);
     FREE(tmp_dir_realpath);
 
     return err;

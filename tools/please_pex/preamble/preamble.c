@@ -285,6 +285,7 @@ end:
 
 int main(int argc, char **argv) {
     err_t *err = NULL;
+    char *pex_path = NULL;
     const cJSON *config = NULL;
     int config_args_len = 0;
     strlist_t *config_args = NULL;
@@ -301,7 +302,12 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    if ((err = get_config(argv[0], &config)) != NULL) {
+    if ((err = get_pex_path(&pex_path)) != NULL) {
+        log_fatal("Failed to resolve path to .pex file: %s", err_str(err));
+        return 1;
+    }
+
+    if ((err = get_config(pex_path, &config)) != NULL) {
         log_fatal("Failed to get .pex preamble configuration: %s", err_str(err));
         return 1;
     }
