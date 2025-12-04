@@ -1,3 +1,8 @@
+Version 2.0.1
+-------------
+    * Open the .pex preamble from its canonical path (#292)
+    * Continue executing the .pex preamble if the .pex file is outside a Please repo (#293)
+
 Version 2.0.0
 -------------
     * Use Please v17.24.2's `pleasew` script, which downloads the correct Please binary for linux_arm64 (#279)
