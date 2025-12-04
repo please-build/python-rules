@@ -1,3 +1,8 @@
+Version 3.0.1
+-------------
+    * Open the preamble from its canonical path (#292)
+    * Continue executing the preamble if the .pex file is outside a Please repo (#293)
+
 Version 3.0.0
 -------------
     * Upgrade pytest to 9.0.1 (#285)
