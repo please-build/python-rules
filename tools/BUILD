@@ -1,14 +1,14 @@
-_PLEASE_PEX_VERSION = "3.0.0"
+_PLEASE_PEX_VERSION = "3.0.1"
 
 remote_file(
     name = "please_pex",
     url = f"https://github.com/please-build/python-rules/releases/download/please_pex-v{_PLEASE_PEX_VERSION}/please_pex-{_PLEASE_PEX_VERSION}-{CONFIG.OS}_{CONFIG.ARCH}",
     hashes = [
-        "bb593d2c594a03c1ce92a948c56704b7adeb46b6eab1643678d1d2fd6d4cc6e4",  # darwin_amd64
-        "affed12bef63b96f6582de04135f0ce524b1b87de19a07e05b4bdbee5e4aba8f",  # darwin_arm64
-        "16453328e690ec5b850777d8796e0a5290994a59e841cdd6485979ae416ddeeb",  # freebsd_amd64
-        "82792c5494fc6fe2c202890d5bf779bfd627083ca1b663d17d386bbc5212a023",  # linux_amd64
-        "35661a9ca52b8807f0b0dcf68c6859a1692a6b8b79b27df3e29c324674de06cb",  # linux_arm64
+        "4f3f18bae50653efac7d2f86fffbe4611f58af2fe5a53cbd7906fa69016a6a90",  # darwin_amd64
+        "456cb9256cbc08eb8a39698ac4c3ebea2478c8e181c03fd2ed6eb153cc111f16",  # darwin_arm64
+        "b4843318d2ee1bd639b44ca1003845445fe5d561711772ffcfe1fb31ae387ff4",  # freebsd_amd64
+        "f1d3aa335af9e5058f90d25dfd473ceb01bb88a5e3ee1ffaceec047e5983ae6b",  # linux_amd64
+        "a460892f2c9466bec1f06407b049e783f62e7868e229e089672efeafeb4c0379",  # linux_arm64
     ],
     binary = True,
     visibility = ["PUBLIC"],
