@@ -417,9 +417,24 @@ pip_library(
 
 python_wheel(
     name = "debugpy",
-    hashes = ["f058c204341fd7ff800ee0edafc106ca0fb1c9857e8a8895a6e04cca3ddcb7bf"],
+    hashes = [
+        "c1178ae571aff42e61801a38b007af504ec8e05fde1c5c12e5a7efef21009642",  # linux_amd64, Python 3.10
+        "7de0b7dfeedc504421032afba845ae2a7bcc32ddfb07dae2c3ca5442f821c344",  # linux_amd64, Python 3.11
+        "88f47850a4284b88bd2bfee1f26132147d5d504e4e86c22485dfa44b97e19b4b",  # linux_amd64, Python 3.12
+        "84562982dd7cf5ebebfdea667ca20a064e096099997b175fe204e86817f64eaf",  # linux_amd64, Python 3.13
+        "077a7447589ee9bc1ff0cdf443566d0ecf540ac8aa7333b775ebcb8ce9f4ecad",  # linux_amd64, Python 3.14
+        "157e96ffb7f80b3ad36d808646198c90acb46fdcfd8bb1999838f0b6f2b59c64",  # darwin_amd64, Python 3.10
+        "eada6042ad88fa1571b74bd5402ee8b86eded7a8f7b827849761700aff171f1b",  # darwin_amd64/darwin_arm64, Python 3.11
+        "4ae3135e2089905a916909ef31922b2d733d756f66d87345b3e5e52b7a55f13d",  # darwin_amd64/darwin_arm64, Python 3.12
+        "5dff4bb27027821fdfcc9e8f87309a28988231165147c31730128b1c983e282a",  # darwin_amd64/darwin_arm64, Python 3.13
+        "9c74df62fc064cd5e5eaca1353a3ef5a5d50da5eb8058fcef63106f7bebe6173",  # darwin_amd64/darwin_arm64, Python 3.14
+        "5be9bed9ae3be00665a06acaa48f8329d2b9632f15fd09f6a9a8c8d9907e54d7",  # any
+    ],
     licences = ["MIT"],
-    version = "1.5.0",
+    version = "1.8.20",
+    zip_safe = False,
+    # There doesn't seem to be a predictable URL for this version of debugpy so we need to resolve it instead.
+    tool = "//tools:wheel_resolver",
 )
 
 python_wheel(
