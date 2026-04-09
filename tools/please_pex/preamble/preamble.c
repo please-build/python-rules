@@ -306,6 +306,7 @@ end:
 int main(int argc, char **argv) {
     err_t *err = NULL;
     char *pex_path = NULL;
+    char *argv0_path = NULL;
     const cJSON *config = NULL;
     int config_args_len = 0;
     strlist_t *config_args = NULL;
@@ -323,7 +324,7 @@ int main(int argc, char **argv) {
     }
 
     if ((err = get_pex_path(&pex_path)) != NULL) {
-        log_fatal("Failed to resolve path to .pex file: %s", err_str(err));
+        log_fatal("Failed to get real path to .pex file: %s", err_str(err));
         return 1;
     }
 
@@ -366,9 +367,14 @@ int main(int argc, char **argv) {
         i++;
     }
     // - the name of the currently-executing program (which is also the .pex file that the
-    //   Python interpreter needs to execute) and the command line arguments given to this
-    //   process (if any);
-    for (i = 0; i < argc; i++) {
+    //   Python interpreter needs to execute);
+    if ((err = resolve_path(argv[0], &argv0_path)) != NULL) {
+        log_fatal("Failed to resolve path to .pex file: %s", err_str(err));
+        return 1;
+    }
+    interp_argv[1 + config_args_len] = argv0_path;
+    // - the remaining command line arguments given to this process (if any);
+    for (i = 1; i < argc; i++) {
         interp_argv[1 + config_args_len + i] = argv[i];
     }
     // - NULL (the terminator for execvp()).

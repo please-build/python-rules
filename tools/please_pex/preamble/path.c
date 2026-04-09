@@ -1,4 +1,6 @@
 #include <libgen.h>
+#include <paths.h>
+#include <unistd.h>
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h>
@@ -13,7 +15,136 @@
 #include "util.h"
 
 /*
- * get_pex_path stores the canonical absolute path to the .pex file in pex_dir. It returns NULL on
+ * get_path_var stores the value of the PATH variable in path. It returns NULL on success and an
+ * error on failure.
+ *
+ * The value of the PATH variable is taken to be the first non-empty value in the following list:
+ * - The value of the PATH environment variable.
+ * - The value of the C standard library's _CS_PATH configuration variable.
+ * - The value of the C standard library's hardcoded default PATH variable.
+ */
+static err_t *get_path_var(char **path) {
+    char *path_env = getenv("PATH");
+    size_t len = 0;
+    err_t *err = NULL;
+
+    (*path) = NULL;
+
+    if (path_env != NULL) {
+        if (((*path) = strdup(path_env)) == NULL) {
+            err = err_from_errno("strdup path_env");
+        }
+        goto end;
+    }
+
+    if ((len = confstr(_CS_PATH, NULL, 0)) != 0) {
+        MALLOC(*path, char, len);
+        if (confstr(_CS_PATH, *path, len) == 0) {
+            err = err_from_errno("confstr write");
+        }
+        goto end;
+    }
+
+    MALLOC(*path, char, strlen(_PATH_DEFPATH) + 1); // 1 extra byte for trailing null
+    strcpy(*path, _PATH_DEFPATH);
+
+end:
+    if (err != NULL) {
+        FREE(*path);
+    }
+
+    return err;
+}
+
+/*
+ * resolve_path resolves the given path and stores the resolved path in res_path. It returns NULL on
+ * success and an error on failure.
+ *
+ * The given path is resolved as follows:
+ * - If the path contains a "/" character, resolve_path returns a copy of the given path.
+ * - If the path does not contain a "/" character, resolve_path treats it as a file name, and
+ *   searches directories in the PATH variable from left to right for a file with that name,
+ *   similarly to how a shell would. It returns the path to the first file it finds, which is
+ *   relative if the current directory is present in PATH and the file was found in the current
+ *   directory, or absolute otherwise.
+ */
+err_t *resolve_path(char *path, char **res_path) {
+    char *path_dirs = NULL;
+    char *dir_start = NULL;
+    char *dir_end = NULL;
+    size_t path_len = strlen(path);
+    size_t dir_len = 0;
+    err_t *err = NULL;
+
+    (*res_path) = NULL;
+
+    if (path_len == 0) {
+        err = err_from_str("empty path name given");
+        goto end;
+    }
+
+    // If the given path is a relative path containing a "/" or an absolute path, we don't need to
+    // do any PATH searching - just return a copy of the path we were given.
+    if (strchr(path, '/') != NULL) {
+        if (((*res_path) = strdup(path)) == NULL) {
+            err = err_from_errno("strdup path");
+        }
+        goto end;
+    }
+
+    if ((err = get_path_var(&path_dirs)) != NULL) {
+        err = err_wrap("get PATH variable", err);
+        goto end;
+    }
+
+    // Iterate over the directories in PATH:
+    dir_end = path_dirs;
+    do {
+        // Point dir_end to the end of the next directory in PATH.
+        for (dir_start = dir_end; *dir_end != 0 && *dir_end != ':'; dir_end++) {
+            continue;
+        }
+
+        // Construct a candidate path by concatenating the next directory in PATH and the file name
+        // we were given.
+        if (dir_start == dir_end) {
+            if (((*res_path) = strdup(path)) == NULL) {
+                err = err_from_errno("strdup path");
+                goto end;
+            }
+        } else {
+            dir_len = dir_end - dir_start;
+            MALLOC(*res_path, char, dir_len + 1 + path_len + 1); // 2 extra bytes for "/" separator and trailing null
+            strncpy(*res_path, dir_start, dir_len);
+            (*res_path)[dir_len] = '/';
+            strcpy((*res_path) + dir_len + 1, path);
+            (*res_path)[dir_len + 1 + path_len] = 0;
+        }
+
+        // If a file exists at this candidate path, stop searching PATH and return this path. We
+        // don't check whether it is executable, only whether it exists - this replicates the
+        // behaviour of (some) shells when they search PATH.
+        if (access(*res_path, F_OK) == 0) {
+            goto end;
+        }
+
+        FREE(*res_path);
+    } while (*dir_end++ == ':');
+
+    err = err_wrap("file not found in PATH", err_from_str(path));
+
+end:
+    FREE(path_dirs);
+
+    if (err != NULL) {
+        FREE(*res_path);
+    }
+
+    return err;
+}
+
+/*
+ * get_pex_path stores the canonical absolute path to the .pex file in pex_path. It returns NULL on
  * success and an error on failure.
  */
 err_t *get_pex_path(char **pex_path) {
