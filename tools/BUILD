@@ -8,7 +8,7 @@ remote_file(
         "ba5868b241dc136509d827db6a6a65b71a5b9d003f9dbf439777467d5cd3ebd5",  # darwin_arm64
         "26f8624d81036f3672a2280e6937b04ef1a54ebde041f61e5b34b6837df24817",  # freebsd_amd64
         "1ee0046ed5c2a8b3300a36510ac76dd15eb2b6e9dc494313eda698987467bcac",  # linux_amd64
-        "0cf17e7adc75e66670d0c662cfe094cd15359433877d29d1f07d159e1d197751",  # linux_arm64
+        "a20e952208b421d12a4ebd5ef313cbe4ee740de51a975e739a758b30bc39cb9f",  # linux_arm64
     ],
     binary = True,
     visibility = ["PUBLIC"],
