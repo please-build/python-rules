@@ -98,7 +98,7 @@ jobs:
       BIN_DIR: /tmp/please_pex_release
     steps:
       - name: Download please_pex binaries from artifact storage
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           path: ${{ env.BIN_DIR }}
           pattern: please_pex_*
