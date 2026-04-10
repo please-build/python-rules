@@ -1,3 +1,7 @@
+Version 3.0.2
+-------------
+    * Search `PATH` when .pex is invoked at a relative path with no `/` (#299)
+
 Version 3.0.1
 -------------
     * Open the preamble from its canonical path (#292)
