@@ -106,7 +106,9 @@ err_t *resolve_path(char *path, char **res_path) {
         }
 
         // Construct a candidate path by concatenating the next directory in PATH and the file name
-        // we were given.
+        // we were given. Shells treat a zero-length directory name in PATH as shorthand for the
+        // current working directory, in which case there's no need for any concatenation - the
+        // candidate path can just be the (relative) file name we were given.
         if (dir_start == dir_end) {
             if (((*res_path) = strdup(path)) == NULL) {
                 err = err_from_errno("strdup path");
