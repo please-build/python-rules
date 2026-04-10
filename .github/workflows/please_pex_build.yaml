@@ -52,7 +52,7 @@ jobs:
         if: ${{ startsWith(inputs.platform, 'darwin_') }}
         run: package/gha_release.sh //package:please_pex_${{ inputs.platform }}
       - name: Upload please_pex binary to artifact storage
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: please_pex_${{ inputs.platform }}
           path: ${{ env.ARTIFACT_PATH }}
