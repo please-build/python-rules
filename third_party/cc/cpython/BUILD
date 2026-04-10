@@ -46,16 +46,16 @@ _python_build_standalone_hashes = {
 }
 
 _freebsd_ports_hashes = {
-    "py310-sqlite3-3.10.19_10": "b5f9ea064158b99f8ba4d07b29f40248ce53dbc1cbe66b8feb5812579d21b0b7",
-    "py311-sqlite3-3.11.14_10": "4204b1ef19e99fc210063537b04c2e6d4726ca5caaf8a86e19c5a1c3f6bd71de",
-    "py312-sqlite3-3.12.12_10": "99913911d9344ee9e6295ee94c42bc8249825f8cfa3e763b6a747d2c96ffb4ca",
-    "py313-sqlite3-3.13.9_10": "51aa38d1f5f0ee44fb193104ffdd4f3f81980151e177f87ea3af428305e222d1",
-    "py314-sqlite3-3.14.0_10": "8065f6f790cc8b2fb053739772b0cb75aa5baf2db1e0a5d1ce102dcf7b181edf",
-    "python310-3.10.19": "df2c924f1bf36352139c6c86adef4cca0c5461b1f127ed1cd4a40921402d2a75",
-    "python311-3.11.14": "af51ac586e722005655402f8d191d3da60a18825b51afb0b482d2f96161ac32e",
-    "python312-3.12.12_2": "9c307087a16a2d01d94a05c27ed124af66b8c7e0b34b55c4973508f3445f45c7",
-    "python313-3.13.9": "667931b37d69046191681313fc8283bfca68b1e389bbfc1cfc266a0209134ed3",
-    "python314-3.14.0_1": "b6e9e69ed6b0ab92ac47f5f9e1a8e9aaec0534041aa738854d14088b17ba2608",
+    "py310-sqlite3-3.10.20_10": "50c38e86975195c01053604fd6871cd50182772b4d3b14e9a7a8d6634467f274",
+    "py311-sqlite3-3.11.15_10": "605efeb4f3a188bc8a52b0724d590953b946311dd07b176c49afa1d0a6f0acb0",
+    "py312-sqlite3-3.12.13_10": "1a1f0ec7d4e43f8872e675edad2885b2600af2c200e9e912b14eb5c8a683c9fd",
+    "py313-sqlite3-3.13.12_10": "4564298122c1ad6e4b98426057b4b5c0eff6462f328b38420854cccb12a27030",
+    "py314-sqlite3-3.14.3_10": "b30aae7a987a08db6b8ce1b35bd99db2aaf89c4ec492ea25c0b2f14a325419e2",
+    "python310-3.10.20_1": "4193d13e2b16c6df662911cd1c81118df013d027678dda37beddf0f604069509",
+    "python311-3.11.15_1": "6f6908030cf3031615773a9e353b8d2dee991a4b4b50e6da8991ca57b20d3d9e",
+    "python312-3.12.13_1": "f599d17c4baecdd4df24ec98b63610221f8d6c0c55e1f870289bebbfd7ff9a1a",
+    "python313-3.13.12_1": "9bc1c96c345b7928bcdec199dd58caaa37982ce18c4e86ee71becf05206c68f5",
+    "python314-3.14.3_1": "3b4934d4c324fd1a388e7a807988c9325175ebe69f2cd3ddf7923338e36499ea",
 }
 
 for minor in ["3.10", "3.11", "3.12", "3.13", "3.14"]:
@@ -67,13 +67,13 @@ for minor in ["3.10", "3.11", "3.12", "3.13", "3.14"]:
 
         python_pkg = remote_file(
             name = tag(f"cpython_{minor}", "python_pkg"),
-            url = f"https://pkg.freebsd.org/FreeBSD:14:amd64/latest/All/{python_pkg_name}.pkg",
+            url = f"https://pkg.freebsd.org/FreeBSD:14:amd64/quarterly/All/{python_pkg_name}.pkg",
             hashes = [_freebsd_ports_hashes[python_pkg_name]],
         )
 
         python_sqlite3_pkg = remote_file(
             name = tag(f"cpython_{minor}", "python_sqlite3_pkg"),
-            url = f"https://pkg.freebsd.org/FreeBSD:14:amd64/latest/All/{python_sqlite3_pkg_name}.pkg",
+            url = f"https://pkg.freebsd.org/FreeBSD:14:amd64/quarterly/All/{python_sqlite3_pkg_name}.pkg",
             hashes = [_freebsd_ports_hashes[python_sqlite3_pkg_name]],
         )
 
