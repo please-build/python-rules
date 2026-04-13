@@ -45,7 +45,7 @@ jobs:
         run: echo "PLZ_ARGS=${PLZ_ARGS:+$PLZ_ARGS }-o plugin.python.pextool://tools/please_pex -e plz_e2e_test" >> $GITHUB_ENV
       - name: Run tests (in nested runner)
         if: ${{ inputs.platform == 'freebsd_amd64' }}
-        uses: cross-platform-actions/action@v0.30.0
+        uses: cross-platform-actions/action@v1.0.0
         with:
           operating_system: freebsd
           architecture: x86-64

@@ -28,7 +28,7 @@ jobs:
             }
       - name: Build please_pex binary (on freebsd-builder image)
         if: ${{ inputs.platform == 'freebsd_amd64' }}
-        uses: cross-platform-actions/action@v0.30.0
+        uses: cross-platform-actions/action@v1.0.0
         with:
           operating_system: freebsd
           architecture: x86-64
