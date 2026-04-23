@@ -44,6 +44,7 @@ genrule(
     visibility = ["PUBLIC"],
     deps = [
         "//third_party/python:behave_bootstrap",
+        "//third_party/python:debugpy",
         "//third_party/python:pytest_bootstrap",
         "//third_party/python:unittest_bootstrap",
     ],
