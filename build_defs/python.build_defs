@@ -513,8 +513,8 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
         labels = ["dlink:plz-out/python/venv"]
     )
 
-    # Don't include the dependency whl's into our whl. They are later picked up by py_binary anyway.
-    cmd = f'$TOOLS_ARCAT z --suffix="" --exclude_suffix=whl --include_other -i . -r $PKG/{name}:$PKG'
+    # Don't include the dependency pex.zips or whls into our whl. They are later picked up by python_binary anyway.
+    cmd = f'$TOOLS_ARCAT z --suffix="" --exclude_suffix=whl --exclude_suffix=pex.zip --include_other -i . -r $PKG/{name}:$PKG'
     if not licences:
         cmd += ' && find . -name METADATA -or -name PKG-INFO | grep -v "^./build/" | xargs grep -E "License ?:" | grep -v UNKNOWN | cat || true'
 
@@ -531,6 +531,7 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
         tools = {
             'arcat': [CONFIG.ARCAT_TOOL],
         },
+        requires = ["py"],
         post_build = None if licences else _add_licences,
         labels = labels + ['py', 'pip:' + package_name] + (['py:zip-unsafe'] if not zip_safe else []),
         visibility = visibility,
