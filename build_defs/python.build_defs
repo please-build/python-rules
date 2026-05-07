@@ -513,8 +513,8 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
         labels = ["dlink:plz-out/python/venv"]
     )
 
-    # Don't include the dependency whl's into our whl. They are later picked up by py_binary anyway.
-    cmd = f'$TOOLS_ARCAT z --suffix="" --exclude_suffix=whl --include_other -i . -r $PKG/{name}:$PKG'
+    # Don't include the dependency pex.zips or whls into our whl. They are later picked up by python_binary anyway.
+    cmd = f'$TOOLS_ARCAT z --suffix="" --exclude_suffix=whl --exclude_suffix=pex.zip --include_other -i . -r $PKG/{name}:$PKG'
     if not licences:
         cmd += ' && find . -name METADATA -or -name PKG-INFO | grep -v "^./build/" | xargs grep -E "License ?:" | grep -v UNKNOWN | cat || true'
 
@@ -531,6 +531,7 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
         tools = {
             'arcat': [CONFIG.ARCAT_TOOL],
         },
+        requires = ["py"],
         post_build = None if licences else _add_licences,
         labels = labels + ['py', 'pip:' + package_name] + (['py:zip-unsafe'] if not zip_safe else []),
         visibility = visibility,
@@ -667,22 +668,19 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
     cmd += [
         # N.B. we need -b for legacy locations because that's all zipimport knows to look for :(
         '$TOOLS_PYTHON -m compileall -b -f .',
-        '$TOOLS_ARCAT z -d --prefix $PKG -i ' + ' -i '.join(outs or [name]),
     ]
     label = f'whl:{package_name}=={version}'
 
-    wheel_rule = build_rule(
+    srcs_rule = build_rule(
         name = name,
-        tag = 'wheel',
+        tag = 'srcs',
         cmd = ' && '.join(cmd),
-        outs = [name + '.pex.zip'],
+        outs = outs or [name],
         srcs = {
             'src': [file_rule],
             'res': patches if patch else [],
         },
-        building_description = 'Repackaging...',
-        requires = ['py'],
-        deps = deps,
+        building_description = 'Extracting...',
         test_only = test_only,
         licences = licences,
         tools = {
@@ -690,28 +688,32 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
             "python": [interpreter],
         },
         post_build = None if licences else _add_licences,
-        sandbox = False,
+        labels = [label] + ["link:plz-out/python/venv"],
+    )
+
+    wheel_rule = build_rule(
+        name = name,
+        tag = 'wheel',
+        cmd = '$TOOL z -d -i $PKG/' + ' -i $PKG/'.join(outs or [name]),
+        outs = [name + '.pex.zip'],
+        srcs = [srcs_rule],
+        building_description = 'Repackaging...',
+        requires = ['py'],
+        deps = deps,
+        test_only = test_only,
+        tools = [CONFIG.ARCAT_TOOL],
         labels = ['py:zip-unsafe', label] if not zip_safe else [label],
     )
-    cmd = '$TOOL x $SRCS -s $PKG_DIR'
-    if outs:
-        # Hacky solution to handle things being in subdirectories in awkward ways.
-        before, _, after = outs[0].partition('/')
-        if after:
-            cmd = f'rm -rf {before} && {cmd}'
 
-    lib_rule = build_rule(
+    lib_rule = filegroup(
         name = name,
         tag = "lib_rule" if binary else None,
-        srcs = [wheel_rule],
-        outs = outs or [name],
-        tools = [CONFIG.ARCAT_TOOL],
-        cmd = cmd,
+        srcs = [srcs_rule],
         deps = deps,
         visibility = visibility,
         licences = licences,
         test_only = test_only,
-        labels = labels + [label] + ["link:plz-out/python/venv"],
+        labels = labels + [label],
         provides = {
             "py": wheel_rule,
             "py_whl": file_rule,
