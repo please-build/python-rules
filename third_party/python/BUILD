@@ -412,7 +412,7 @@ pip_library(
 pip_library(
     name = "distlib",
     licences = ["PSF-2.0"],
-    version = "0.3.8",
+    version = "0.4.3",
 )
 
 python_wheel(
