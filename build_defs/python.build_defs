@@ -602,6 +602,10 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
     """
     binary = binary or entry_points
     package_name = package_name or name.replace('-', '_')
+    if not outs:
+        outs = [name]
+    if CONFIG.PYTHON.WHEEL_DIST_INFO:
+        outs += [f"{package_name}-{version}.dist-info"]
     initial = package_name[0]
     url_base = repo or CONFIG.PYTHON.WHEEL_REPO
     if not tool and not url_base:
@@ -667,7 +671,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
     cmd += [
         # N.B. we need -b for legacy locations because that's all zipimport knows to look for :(
         '$TOOLS_PYTHON -m compileall -b -f .',
-        '$TOOLS_ARCAT z -d --prefix $PKG -i ' + ' -i '.join(outs or [name]),
+        '$TOOLS_ARCAT z -d --prefix $PKG -i ' + ' -i '.join(outs),
     ]
     label = f'whl:{package_name}=={version}'
 
@@ -704,7 +708,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
         name = name,
         tag = "lib_rule" if binary else None,
         srcs = [wheel_rule],
-        outs = outs or [name],
+        outs = outs,
         tools = [CONFIG.ARCAT_TOOL],
         cmd = cmd,
         deps = deps,
