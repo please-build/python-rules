@@ -50,7 +50,7 @@ jobs:
           operating_system: freebsd
           architecture: x86-64
           version: '14.3'
-          image_url: https://github.com/please-build/freebsd-builder/releases/download/v0.12.0-please.3/freebsd-14.3-x86-64.qcow2
+          image_url: https://github.com/please-build/freebsd-builder/releases/download/v0.12.0-please.4/freebsd-14.3-x86-64.qcow2
           shell: bash
           environment_variables: PLZ_ARGS
           shutdown_vm: true
