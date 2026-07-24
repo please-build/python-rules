@@ -434,7 +434,7 @@ def pip_library(name:str, version:str, labels:list=[], hashes:list=None, package
     post_install_commands = post_install_commands or []
     use_pypi = CONFIG.PYTHON.USE_PYPI if use_pypi is None else use_pypi
     index_flag = '' if use_pypi else '--no-index'
-    pip_flags = pip_flags or CONFIG.PYTHON.PIP_FLAGS
+    pip_flags = pip_flags or CONFIG.PYTHON.PIP_FLAGS or ""
 
     repo_flag = ''
     repo = repo or CONFIG.PYTHON.DEFAULT_PIP_REPO
