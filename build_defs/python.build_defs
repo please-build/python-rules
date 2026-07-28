@@ -602,7 +602,7 @@ def python_wheel(name:str, version:str, labels:list=[], hashes:list=None, packag
     """
     binary = binary or entry_points
     package_name = package_name or name.replace('-', '_')
-    if not outs:
+    if outs is None:
         outs = [name]
     if CONFIG.PYTHON.WHEEL_DIST_INFO:
         outs += [f"{package_name}-{version}.dist-info"]
