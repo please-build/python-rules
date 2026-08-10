@@ -173,6 +173,14 @@ python_test(
 )
 
 python_test(
+    name = "resources_test",
+    srcs = ["resources_test.py"],
+    deps = [
+        "//third_party/python:pygments",
+    ],
+)
+
+python_test(
     name = "interpreter_not_included_test",
     srcs = ["interpreter_not_included_test.py"],
 )
