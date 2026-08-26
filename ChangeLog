@@ -1,3 +1,17 @@
+Version 2.1.0
+-------------
+    * `python_wheel`: allow packages to have metadata-only outputs (#316)
+    * `pip_library`: ensure `pip_flags` is always a string (#314)
+    * Bump distlib to version 0.4.3 to support Python 3.12 (#309)
+    * Add `WheelDistInfo` configuration option (#312)
+    * Tag wheel_resolver v2.1.0 (#311)
+    * Bump FreeBSD Ports Python package versions (#310)
+    * Update FreeBSD ports package hashes (#319)
+    * Project CICD updates and improvements:
+        * GHA: upgrade cross-platform-actions/action to v1.0.0 (#306)
+        * GHA: bump Docker action versions (#307)
+        * Add `PexDistribution` resources test (#318)
+
 Version 2.0.2
 -------------
     * In preamble, search `PATH` when .pex is invoked at a relative path containing no `/` character (#299)
