@@ -1,3 +1,16 @@
+Version 2.0.3
+-------------
+    * GHA: upgrade cross-platform-actions/action to v1.0.0 (#306)
+    * GHA: bump Docker action versions (#307)
+    * Bump FreeBSD Ports Python package versions (#310)
+    * Bump distlib to version 0.4.3 (#309)
+    * Tag wheel_resolver v2.1.0 (#311)
+    * Add `WheelDistInfo` configuration option (#312)
+    * `pip_library`: ensure `pip_flags` is always a string (#314)
+    * `python_wheel`: allow packages to have metadata-only outputs (#316)
+    * Update FreeBSD ports package hashes (#319)
+    * Add `PexDistribution` resources test (#318)
+
 Version 2.0.2
 -------------
     * In preamble, search `PATH` when .pex is invoked at a relative path containing no `/` character (#299)
