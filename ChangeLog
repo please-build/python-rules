@@ -1,4 +1,4 @@
-Version 2.0.3
+Version 2.1.0
 -------------
     * `python_wheel`: allow packages to have metadata-only outputs (#316)
     * `pip_library`: ensure `pip_flags` is always a string (#314)
