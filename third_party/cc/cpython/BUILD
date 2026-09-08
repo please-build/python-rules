@@ -45,7 +45,7 @@ _python_build_standalone_hashes = {
     },
 }
 
-# Note that 
+# Note that these are not stable over the longer term, we will need to update versions periodically.
 _freebsd_python_ports_packages = {
     "3.10": "py310-sqlite3-3.10.21_10",
     "3.11": "py311-sqlite3-3.11.16_10",
