@@ -55,7 +55,7 @@ _freebsd_python_ports_packages = {
 }
 
 _freebsd_python_sqlite_ports_packages = {
-    "3.10": ""python310-3.10.21",
+    "3.10": "python310-3.10.21",
     "3.11": "python311-3.11.16",
     "3.12": "python312-3.12.14",
     "3.13": "python313-3.13.15",
