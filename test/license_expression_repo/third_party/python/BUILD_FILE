@@ -1,0 +1,25 @@
+subinclude("///python//build_defs:python")
+
+package(
+    # The pip_library target below installs from a local wheelhouse fixture, not the network -
+    # make sure we don't accidentally try to look it up on PyPI.
+    python = {
+        "use_pypi": False,
+    },
+)
+
+# A local "package index" directory containing a single fixture wheel whose METADATA only
+# declares a PEP 639 `License-Expression:` field (no legacy `License:` or `Classifier: License`),
+# to exercise pip_library's auto-detection of that field.
+genrule(
+    name = "wheelhouse",
+    srcs = ["wheelhouse/fakepkg-1.0.0-py3-none-any.whl"],
+    cmd = "mkdir -p wheelhouse && cp $SRCS wheelhouse/",
+    output_dirs = ["wheelhouse"],
+)
+
+pip_library(
+    name = "fakepkg",
+    repo = ":wheelhouse",
+    version = "1.0.0",
+)
