@@ -193,6 +193,7 @@ python_test(
     deps = [
         "//third_party/python:pygments",
     ],
+    labels = ["manual"],    
 )
 
 python_test(
@@ -209,7 +210,6 @@ python_test(
     deps = [
         "//third_party/python:confluent-kafka",
     ],
-    labels = ["manual"],
 )
 
 plugin_e2e_test(
