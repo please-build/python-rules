@@ -1,0 +1,3 @@
+[cache]
+dircompress = true
+dirclean = false
