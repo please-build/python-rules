@@ -185,6 +185,16 @@ python_test(
     srcs = ["interpreter_not_included_test.py"],
 )
 
+# Regression test for ModuleDirImport not setting submodule_search_locations on the specs it
+# creates for module_dir packages, which breaks importlib.resources.
+python_test(
+    name = "module_dir_import_resources_test",
+    srcs = ["module_dir_import_resources_test.py"],
+    deps = [
+        "//third_party/python:pygments",
+    ],
+)
+
 python_test(
     name = "module_dir_import_test",
     srcs = ["module_dir_import_test.py"],
