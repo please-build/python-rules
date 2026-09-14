@@ -45,36 +45,38 @@ _python_build_standalone_hashes = {
     },
 }
 
-_freebsd_ports_hashes = {
-    "py310-sqlite3-3.10.21_10": "526488e795017d576919b5b5ba3de411e85d5834e41200803dade6351dfcc4d3",
-    "py311-sqlite3-3.11.16_10": "96114f55eef251e86e190ad55e5827fa3570847bda80366701d6268e44822e80",
-    "py312-sqlite3-3.12.14_10": "6cd9258a4be5fd1ee8332e565bb1943fefb6377768e0fd592c6aa3eae5399c59",
-    "py313-sqlite3-3.13.15_10": "a476a382dfe12476bde1092bc0c16c1b9724d6f51bc0a25fbb8f86d12bb0d0c7",
-    "py314-sqlite3-3.14.7_10": "ccba2842985c3f953eb471be59c8e05f511d44956ed719a995ab785577ada242",
-    "python310-3.10.21": "966fb154c311ad9c034b9f8087705b0f14a8dc3eb6a873acbaf43babbc7689e5",
-    "python311-3.11.16": "75551571166dc2019616c735e7c9f2af8f1aa5ba34d8956aa48949fefca89564",
-    "python312-3.12.14": "3063d5f856c3d54eb83484ebd415c09aebfe7fec949bf716417c9dc60d6447f5",
-    "python313-3.13.15": "70c6c8d8277987ab4bf3f61fe176a76fe3546a2525cf55605f5b990db74d6283",
-    "python314-3.14.7": "f06bcbb316439cdb47ea55c5798c83fe891fff47b33a2d3e7507e60ec31e5319",
+# Note that these are not stable over the longer term, we will need to update versions periodically.
+_freebsd_python_ports_packages = {
+    "3.10": "py310-sqlite3-3.10.21_10",
+    "3.11": "py311-sqlite3-3.11.16_10",
+    "3.12": "py312-sqlite3-3.12.14_10",
+    "3.13": "py313-sqlite3-3.13.15_10",
+    "3.14": "py314-sqlite3-3.14.7_10",
+}
+
+_freebsd_python_sqlite_ports_packages = {
+    "3.10": "python310-3.10.21",
+    "3.11": "python311-3.11.16",
+    "3.12": "python312-3.12.14",
+    "3.13": "python313-3.13.15",
+    "3.14": "python314-3.14.7",
 }
 
 for minor in ["3.10", "3.11", "3.12", "3.13", "3.14"]:
     if CONFIG.OS == "freebsd":
         minorint = int(minor.rpartition(".")[2])
 
-        python_pkg_name = filter(lambda v: v.startswith("python" + minor.replace(".", "") + "-"), _freebsd_ports_hashes.keys())[0]
-        python_sqlite3_pkg_name = filter(lambda v: v.startswith("py" + minor.replace(".", "") + "-sqlite3"), _freebsd_ports_hashes.keys())[0]
+        python_pkg_name = _freebsd_python_ports_packages[minor]
+        python_sqlite3_pkg_name = _freebsd_python_sqlite_ports_packages[minor]
 
         python_pkg = remote_file(
             name = tag(f"cpython_{minor}", "python_pkg"),
             url = f"https://pkg.freebsd.org/FreeBSD:14:amd64/quarterly/All/{python_pkg_name}.pkg",
-            hashes = [_freebsd_ports_hashes[python_pkg_name]],
         )
 
         python_sqlite3_pkg = remote_file(
             name = tag(f"cpython_{minor}", "python_sqlite3_pkg"),
             url = f"https://pkg.freebsd.org/FreeBSD:14:amd64/quarterly/All/{python_sqlite3_pkg_name}.pkg",
-            hashes = [_freebsd_ports_hashes[python_sqlite3_pkg_name]],
         )
 
         genrule(
