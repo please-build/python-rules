@@ -38,6 +38,20 @@ jobs:
           update-environment: false
       - name: Check out code
         uses: actions/checkout@v5
+      - name: Determine Please version
+        if: ${{ inputs.platform != 'freebsd_amd64' }}
+        id: please_version
+        run: echo "version=$(./pleasew --version | awk '{print $NF}')" >> "$GITHUB_OUTPUT"
+      - name: Cache Please downloads
+        # The FreeBSD tests run inside a nested VM, so the host's cache directory isn't visible to them.
+        if: ${{ inputs.platform != 'freebsd_amd64' }}
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/please
+          key: please-${{ inputs.platform }}-${{ steps.please_version.outputs.version }}-${{ hashFiles('plugins/BUILD', 'third_party/**/BUILD') }}
+          restore-keys: |
+            please-${{ inputs.platform }}-${{ steps.please_version.outputs.version }}-
+            please-${{ inputs.platform }}-
       - name: Configure plugin to use please_pex tool built from source
         if: inputs.please_pex_from_repo
         # PexTool can't be set to //tools/please_pex for e2e tests because it can't be built inside the e2e test
