@@ -210,6 +210,7 @@ python_test(
     deps = [
         "//third_party/python:confluent-kafka",
     ],
+    labels = ["manual"] if CONFIG.OS == "freebsd" else [],
 )
 
 plugin_e2e_test(
