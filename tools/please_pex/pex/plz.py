@@ -123,6 +123,8 @@ class ModuleDirImport(MetaPathFinder):
     def __init__(self, module_dir):
         self.prefix = module_dir.replace("/", ".") + "."
         self._distributions = self._find_all_distributions(module_dir)
+        # Real (unaliased) specs of modules we've imported, keyed by their aliased name.
+        self._real_specs = {}
 
     def _find_all_distributions(self, module_dir):
         pex_file = sys.argv[0]
@@ -149,11 +151,25 @@ class ModuleDirImport(MetaPathFinder):
     def create_module(self, spec):
         """Actually load a module that we said we'd handle in find_module."""
         module = import_module(spec.name.removeprefix(self.prefix))
+        # Carry over submodule_search_locations from the real module's spec, otherwise
+        # importlib.resources (which relies on it to find a package's files) breaks once
+        # the module's __spec__ gets overwritten with this one.
+        real_spec = module.__spec__
+        spec.submodule_search_locations = real_spec.submodule_search_locations
+        self._real_specs[spec.name] = real_spec
         sys.modules[spec.name] = module
         return module
 
     def exec_module(self, mod):
         """Nothing to do, create_module already did the work."""
+
+    def get_resource_reader(self, fullname):
+        """Delegates to the real module's loader so importlib.resources can find its files."""
+        real_spec = self._real_specs.get(fullname)
+        if real_spec is not None:
+            reader = getattr(real_spec.loader, "get_resource_reader", None)
+            if reader is not None:
+                return reader(real_spec.name)
 
     def find_distributions(self, context):
         """Return an iterable of all Distribution instances capable of
