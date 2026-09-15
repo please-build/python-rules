@@ -13,14 +13,9 @@ package(
 # pip_library's auto-detection of that field.
 genrule(
     name = "fakepkg_whl",
-    srcs = [
-        "fakepkg_src/fakepkg/__init__.py",
-        "fakepkg_src/fakepkg-1.0.0.dist-info/METADATA",
-        "fakepkg_src/fakepkg-1.0.0.dist-info/WHEEL",
-        "fakepkg_src/fakepkg-1.0.0.dist-info/RECORD",
-    ],
+    srcs = ["fakepkg_src"],
     outs = ["fakepkg-1.0.0-py3-none-any.whl"],
-    cmd = "cd $PKG/fakepkg_src && $TOOLS_ARCAT z -d -i . -o $OUT",
+    cmd = "cd $SRC && $TOOLS_ARCAT z -d -i . -o $OUT",
     tools = {"arcat": [CONFIG.ARCAT_TOOL]},
 )
 
