@@ -8,12 +8,25 @@ package(
     },
 )
 
-# A local "package index" directory containing a single fixture wheel whose METADATA only
-# declares a PEP 639 `License-Expression:` field (no legacy `License:` or `Classifier: License`),
-# to exercise pip_library's auto-detection of that field.
+# Builds a fixture wheel from plain-text sources whose METADATA only declares a PEP 639
+# `License-Expression:` field (no legacy `License:` or `Classifier: License`), to exercise
+# pip_library's auto-detection of that field.
+genrule(
+    name = "fakepkg_whl",
+    srcs = [
+        "fakepkg_src/fakepkg/__init__.py",
+        "fakepkg_src/fakepkg-1.0.0.dist-info/METADATA",
+        "fakepkg_src/fakepkg-1.0.0.dist-info/WHEEL",
+        "fakepkg_src/fakepkg-1.0.0.dist-info/RECORD",
+    ],
+    outs = ["fakepkg-1.0.0-py3-none-any.whl"],
+    cmd = "cd $PKG/fakepkg_src && $TOOLS_ARCAT z -d -i . -o $OUT",
+    tools = {"arcat": [CONFIG.ARCAT_TOOL]},
+)
+
 genrule(
     name = "wheelhouse",
-    srcs = ["wheelhouse/fakepkg-1.0.0-py3-none-any.whl"],
+    srcs = [":fakepkg_whl"],
     cmd = "mkdir -p wheelhouse && cp $SRCS wheelhouse/",
     output_dirs = ["wheelhouse"],
 )
