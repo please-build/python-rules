@@ -1,3 +1,8 @@
+Version 2.1.1
+-------------
+    * Support PEP-639 style License-Expression field (#322)
+    * Fix submodule_search_locations with module_dir setting (#324)
+
 Version 2.1.0
 -------------
     * `python_wheel`: allow packages to have metadata-only outputs (#316)
