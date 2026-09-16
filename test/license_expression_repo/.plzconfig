@@ -1,0 +1,3 @@
+[Plugin "python"]
+Target = //plugins:python
+RequireLicences = true

@@ -152,6 +152,14 @@ plugin_e2e_test(
     },
 )
 
+# Test that pip_library correctly auto-detects licences from a PEP 639 `License-Expression:`
+# metadata field (as well as the legacy `License:` field).
+plugin_e2e_test(
+    name = "pip_library_license_expression_test",
+    repo = "license_expression_repo",
+    test_cmd = "plz build //third_party/python:fakepkg",
+)
+
 # Test that python_wheel targets can have name_scheme as a list or a string
 
 python_test(
