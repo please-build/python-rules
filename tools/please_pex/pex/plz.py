@@ -154,9 +154,10 @@ class ModuleDirImport(MetaPathFinder):
         # Carry over submodule_search_locations from the real module's spec, otherwise
         # importlib.resources (which relies on it to find a package's files) breaks once
         # the module's __spec__ gets overwritten with this one.
-        real_spec = module.__spec__
-        spec.submodule_search_locations = real_spec.submodule_search_locations
-        self._real_specs[spec.name] = real_spec
+        real_spec = getattr(module, "__spec__", None)
+        if real_spec is not None:
+            spec.submodule_search_locations = real_spec.submodule_search_locations
+            self._real_specs[spec.name] = real_spec
         sys.modules[spec.name] = module
         return module
 
