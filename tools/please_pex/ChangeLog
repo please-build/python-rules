@@ -1,3 +1,7 @@
+Version 3.0.4
+-------------
+    * Handle 'stub' modules that don't have a __spec__
+
 Version 3.0.3
 -------------
     * Fix `importlib.resources` for some usages relating to packages in module_dir (#324)
