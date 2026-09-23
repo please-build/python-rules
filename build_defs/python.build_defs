@@ -10,7 +10,7 @@ we have a fairly elaborate optimisation whereby each python_library rule builds 
 zipfile containing just its sources, and all of those are combined at the end to produce
 the final .pex. This builds at roughly the same pace for a clean build of a single target,
 but is drastically faster for building many targets with similar dependencies or rebuilding
-a target which has only had small changes.
+. a target which has only had small changes.
 """
 
 
@@ -54,7 +54,7 @@ def python_library(name:str, srcs:list=[], resources:list=[], deps:list=[], visi
                 cmd = ' && '.join([compile_cmd, cmd])
         if looks_like_build_label(interpreter) and ('|' in interpreter):
             before, _, _ = interpreter.partition('|')
-            cmd += f' --exclude_tools="$(location {before})"'
+            cmd += f'--exclude_tools="$TOOLS_ARCAT" --exclude_tools="$(location {before})"'
         # Pre-zip the files for later collection by python_binary.
         zip_rule = build_rule(
             name=name,
