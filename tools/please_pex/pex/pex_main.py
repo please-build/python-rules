@@ -92,6 +92,7 @@ def explode_zip():
                 # that the cache has already been prepared.
                 lockfile.write("pex unzip completed")
         sys.path = [PEX_PATH] + [x for x in sys.path if x != PEX]
+        sys.path.insert(1, os.path.join(sys.path[0], '.bootstrap'))
         try:
             yield
         finally:
